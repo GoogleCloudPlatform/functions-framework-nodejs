@@ -10,6 +10,8 @@ before_install:
 cache:
   directories:
   - node_modules/
+before_script:
+  - npm run compile
 script:
   - npm run test
   - npm run check
