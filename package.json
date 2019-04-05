@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=10.0.0"
   },
+  "repository": "GoogleCloudPlatform/functions-framework-nodejs",
   "main": "build/src/index.js",
   "types": "build/src/invoker.d.ts",
   "dependencies": {
