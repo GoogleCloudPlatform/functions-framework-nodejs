@@ -151,7 +151,7 @@ For example:
   }
 ```
 
-# Enable CloudEvents handling for use with the event function signature
+# Enable CloudEvents
 
 The Functions Framework can unmarshall incoming
 [CloudEvents](http://cloudevents.io) payloads to `data` and `context` objects.
