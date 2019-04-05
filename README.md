@@ -54,6 +54,25 @@ exports.helloWorld = (req, res) => {
 };
 ```
 
+Run the following command:
+
+```sh
+npx @google-cloud/functions-framework --function-target=helloWorld
+```
+
+Open http://localhost:8080/ in your browser and see *Hello, World*.
+
+
+# Quickstart: Set up a new project
+
+Create an `index.js` file with the following contents:
+
+```js
+exports.helloWorld = (req, res) => {
+  res.send('Hello, World');
+};
+```
+
 To run a function locally, first create a `package.json` file using `npm init`:
 
 ```sh
