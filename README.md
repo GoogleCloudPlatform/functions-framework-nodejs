@@ -89,11 +89,9 @@ Add a `start` script to `package.json`, with configuration passed via
 command-line arguments:
 
 ```js
-...
   "scripts": {
     "start": "functions-framework --function-target=helloWorld"
   }
-...
 ```
 
 Use `npm start` to start the built-in local development server:
@@ -148,11 +146,9 @@ You can set command-line flags in your `package.json` via the `start` script.
 For example:
 
 ```js
-...
   "scripts": {
     "start": "functions-framework --function-target=helloWorld"
   }
-...
 ```
 
 # Enable CloudEvents handling for use with the event function signature
