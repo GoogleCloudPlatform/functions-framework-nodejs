@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "file:functions-framework"
+  },
+  "scripts": {
+    "preinstall": "npm --prefix functions install",
+    "start": "cd functions && functions-framework"
+  }
+}

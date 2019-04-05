@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "file:functions-framework"
+  },
+  "scripts": {
+    "start": "cd functions && functions-framework"
+  }
+}

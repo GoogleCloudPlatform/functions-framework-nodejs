@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Converts function source code into application source code that can be later
+# built using standard Node.js tooling (like npm install) or cloud builders.
+
+set -e
+
+echo 'Starting function to app conversion'
+
+temp_dir=$(mktemp -d)
+mv * ${temp_dir}
+mkdir functions
+mv ${temp_dir}/* functions
+
+mv /functions-framework .
+
+if [[ ! -f functions/package.json ]]; then
+  echo 'Handling functions without package.json'
+  cp /converter/without-package/package.json .
+  cp /converter/without-package/package-lock.json .
+  ln -s node_modules/.bin/functions-framework start-functions-framework
+elif ! cat functions/package.json | jq -e ".dependencies.\"@google-cloud/functions-framework\""; then
+  echo 'Handling functions with package.json without dependency on @google-cloud/functions-framework'
+  cp /converter/with-package-without-framework/package.json .
+  cp /converter/with-package-without-framework/package-lock.json .
+  ln -s node_modules/.bin/functions-framework start-functions-framework
+else
+  echo 'Handling functions with package.json with dependency on functions-framework'
+  cp /converter/with-package-with-framework/package.json .
+  cp /converter/with-package-with-framework/package-lock.json .
+  ln -s functions/node_modules/.bin/functions-framework start-functions-framework
+fi
+
+cp /converter/.npmrc .
+
+echo 'Function to app conversion done'

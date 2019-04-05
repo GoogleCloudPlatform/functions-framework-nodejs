@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "preinstall": "npm --prefix functions install",
+    "start": "cd functions && node_modules/.bin/functions-framework"
+  }
+}
