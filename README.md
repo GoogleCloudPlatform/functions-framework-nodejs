@@ -1,4 +1,4 @@
-# Functions Framework for Node.js [![Build Status](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs)
+# Functions Framework for Node.js [![Build Status](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs) [![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework)
 
 An open source FaaS (Function as a service) framework for writing portable
 Node.js functions -- brought to you by the Google Cloud Functions team.
