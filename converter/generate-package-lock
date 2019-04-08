@@ -7,10 +7,7 @@
 set -e
 
 for dir in without-package with-package-without-framework with-package-with-framework; do
-  mkdir ${dir}/functions-framework
-  cp ../package.json ${dir}/functions-framework/
   rm ${dir}/package-lock.json
   npm --prefix ${dir} --package-lock-only install
-  rm -rf ${dir}/functions-framework
   rm -rf ${dir}/functions
 done
