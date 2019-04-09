@@ -8,6 +8,7 @@ different environments, including:
 
 *   [Google Cloud Functions](https://cloud.google.com/functions/)
 *   Your local development machine
+*   [Cloud Run and Cloud Run on GKE](https://cloud.google.com/run/)
 *   [Knative](https://github.com/knative/)-based environments
 
 The framework allows you to go from:
@@ -125,10 +126,15 @@ After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
+## Cloud Run/Cloud Run on GKE
+
+Once you've written your function, added the Functions Framework and updated your `start` script in `package.json`, all that's left is to create a container image. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) for Node.js to create a container image and deploy it to Cloud Run. You'll write a `Dockerfile` when you build your container. This `Dockerfile` allows you to specify exactly what goes into your container (including custom binaries, a specific operating system, and more).
+
+If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
+
 ## Container environments based on Knative
 
-The Functions Framework is designed to be compatible with Knative environments.
-Just build and deploy your container to a Knative environment.
+Cloud Run and Cloud Run on GKE both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
 
 # Configure the Functions Framework
 
