@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@google-cloud/functions-framework": "file:functions-framework"
+    "@google-cloud/functions-framework": "^1.0.0"
   },
   "scripts": {
     "preinstall": "npm --prefix functions install",
