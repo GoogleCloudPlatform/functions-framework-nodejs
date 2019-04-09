@@ -1,0 +1,11 @@
+node_modules/
+build/
+/docs/
+.coverage/
+npm-debug.log
+.nyc_output
+.vscode
+.idea
+.DS_Store
+yarn.lock
+yarn-error.log
