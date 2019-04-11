@@ -28,6 +28,7 @@
 //     unmarshalled from an incoming request.
 
 import * as minimist from 'minimist';
+
 import {
   ErrorHandler,
   FunctionSignatureType,
@@ -35,23 +36,36 @@ import {
   getUserFunction,
 } from './invoker';
 
+// Supported command-line flags
+const FLAG = {
+  PORT: 'port',
+  TARGET: 'target',
+  SIGNATURE_TYPE: 'signature-type', // dash
+};
+
+// Supported environment variables
+const ENV_VARIABLE = {
+  PORT: 'PORT',
+  TARGET: 'TARGET',
+  SIGNATURE_TYPE: 'SIGNATURE_TYPE', // underscore
+};
+
 enum NodeEnv {
   PRODUCTION = 'production',
 }
 
 const argv = minimist(process.argv, {
-  string: ['port', 'function-target', 'function-signature-type'],
+  string: [ENV_VARIABLE.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
 });
 
 const CODE_LOCATION = process.cwd();
-const PORT = argv['port'] || process.env.PORT || '8080';
+const PORT =
+  argv[ENV_VARIABLE.PORT] || process.env[ENV_VARIABLE.PORT] || '8080';
 const FUNCTION_TARGET =
-  argv['function-target'] || process.env.FUNCTION_TARGET || 'function';
+  argv[FLAG.TARGET] || process.env[ENV_VARIABLE.TARGET] || 'function';
 
 const FUNCTION_SIGNATURE_TYPE_STRING =
-  argv['function-signature-type'] ||
-  process.env.FUNCTION_SIGNATURE_TYPE ||
-  'http';
+  argv[FLAG.SIGNATURE_TYPE] || process.env.FUNCTION_SIGNATURE_TYPE || 'http';
 const FUNCTION_SIGNATURE_TYPE =
   FunctionSignatureType[
     FUNCTION_SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof FunctionSignatureType

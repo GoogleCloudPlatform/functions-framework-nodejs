@@ -58,7 +58,7 @@ exports.helloWorld = (req, res) => {
 Run the following command:
 
 ```sh
-npx @google-cloud/functions-framework --function-target=helloWorld
+npx @google-cloud/functions-framework --target=helloWorld
 ```
 
 Open http://localhost:8080/ in your browser and see *Hello, World*.
@@ -91,7 +91,7 @@ command-line arguments:
 
 ```js
   "scripts": {
-    "start": "functions-framework --function-target=helloWorld"
+    "start": "functions-framework --target=helloWorld"
   }
 ```
 
@@ -145,15 +145,15 @@ ignored.
 Command-line flag         | Environment variable      | Description
 ------------------------- | ------------------------- | -----------
 `--port`                    | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`
-`--function-target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`
-`--function-signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event`
+`--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`
+`--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event`
 
 You can set command-line flags in your `package.json` via the `start` script.
 For example:
 
 ```js
   "scripts": {
-    "start": "functions-framework --function-target=helloWorld"
+    "start": "functions-framework --target=helloWorld"
   }
 ```
 
