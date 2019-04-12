@@ -45,9 +45,9 @@ const FLAG = {
 
 // Supported environment variables
 const ENV_VARIABLE = {
-  PORT: 'PORT',
-  TARGET: 'TARGET',
-  SIGNATURE_TYPE: 'SIGNATURE_TYPE', // underscore
+  PORT: 'FUNCTION_PORT',
+  TARGET: 'FUNCTION_TARGET',
+  SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
 };
 
 enum NodeEnv {
