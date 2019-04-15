@@ -44,7 +44,7 @@ const FLAG = {
 };
 
 // Supported environment variables
-const ENV_VARIABLE = {
+const ENV = {
   PORT: 'PORT',
   TARGET: 'TARGET',
   SIGNATURE_TYPE: 'SIGNATURE_TYPE', // underscore
@@ -55,27 +55,25 @@ enum NodeEnv {
 }
 
 const argv = minimist(process.argv, {
-  string: [ENV_VARIABLE.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
+  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
 });
 
 const CODE_LOCATION = process.cwd();
-const PORT =
-  argv[ENV_VARIABLE.PORT] || process.env[ENV_VARIABLE.PORT] || '8080';
-const FUNCTION_TARGET =
-  argv[FLAG.TARGET] || process.env[ENV_VARIABLE.TARGET] || 'function';
+const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
+const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
 
 const FUNCTION_SIGNATURE_TYPE_STRING =
-  argv[FLAG.SIGNATURE_TYPE] || process.env.FUNCTION_SIGNATURE_TYPE || 'http';
+  argv[FLAG.SIGNATURE_TYPE] || process.env[ENV.SIGNATURE_TYPE] || 'http';
 const FUNCTION_SIGNATURE_TYPE =
   FunctionSignatureType[
     FUNCTION_SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof FunctionSignatureType
   ];
 if (FUNCTION_SIGNATURE_TYPE === undefined) {
-  console.error(`FUNCTION_SIGNATURE_TYPE must be one of 'http' or 'event'.`);
+  console.error(`Function must be one of 'http' or 'event'.`);
   process.exit(1);
 }
 
-const USER_FUNCTION = getUserFunction(CODE_LOCATION, FUNCTION_TARGET);
+const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
 if (!USER_FUNCTION) {
   console.error('Could not load the function, shutting down.');
   process.exit(1);
@@ -87,7 +85,7 @@ SERVER.listen(PORT, () => {
   ERROR_HANDLER.register();
   if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
     console.log('Serving function...');
-    console.log(`Function: ${FUNCTION_TARGET}`);
+    console.log(`Function: ${TARGET}`);
     console.log(`URL: http://localhost:${PORT}/`);
   }
 }).setTimeout(0); // Disable automatic timeout on incoming connections.
