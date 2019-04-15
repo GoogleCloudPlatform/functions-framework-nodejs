@@ -69,7 +69,7 @@ const FUNCTION_SIGNATURE_TYPE =
     FUNCTION_SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof FunctionSignatureType
   ];
 if (FUNCTION_SIGNATURE_TYPE === undefined) {
-  console.error(`Function must be one of 'http' or 'event'.`);
+  console.error(`Function signature type must be one of 'http' or 'event'.`);
   process.exit(1);
 }
 
