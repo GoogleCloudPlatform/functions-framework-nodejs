@@ -31,7 +31,7 @@ import * as minimist from 'minimist';
 
 import {
   ErrorHandler,
-  FunctionSignatureType,
+  SignatureType,
   getServer,
   getUserFunction,
 } from './invoker';
@@ -46,8 +46,8 @@ const FLAG = {
 // Supported environment variables
 const ENV = {
   PORT: 'PORT',
-  TARGET: 'TARGET',
-  SIGNATURE_TYPE: 'SIGNATURE_TYPE', // underscore
+  TARGET: 'FUNCTION_TARGET',
+  SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
 };
 
 enum NodeEnv {
@@ -62,13 +62,13 @@ const CODE_LOCATION = process.cwd();
 const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
 const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
 
-const FUNCTION_SIGNATURE_TYPE_STRING =
+const SIGNATURE_TYPE_STRING =
   argv[FLAG.SIGNATURE_TYPE] || process.env[ENV.SIGNATURE_TYPE] || 'http';
-const FUNCTION_SIGNATURE_TYPE =
-  FunctionSignatureType[
-    FUNCTION_SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof FunctionSignatureType
+const SIGNATURE_TYPE =
+  SignatureType[
+    SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof SignatureType
   ];
-if (FUNCTION_SIGNATURE_TYPE === undefined) {
+if (SIGNATURE_TYPE === undefined) {
   console.error(`Function signature type must be one of 'http' or 'event'.`);
   process.exit(1);
 }
@@ -79,7 +79,7 @@ if (!USER_FUNCTION) {
   process.exit(1);
 }
 
-const SERVER = getServer(USER_FUNCTION!, FUNCTION_SIGNATURE_TYPE!);
+const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
 const ERROR_HANDLER = new ErrorHandler(SERVER);
 SERVER.listen(PORT, () => {
   ERROR_HANDLER.register();

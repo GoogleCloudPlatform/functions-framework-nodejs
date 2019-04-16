@@ -23,8 +23,8 @@
 import * as bodyParser from 'body-parser';
 import * as domain from 'domain';
 import * as express from 'express';
-import * as onFinished from 'on-finished';
 import * as http from 'http';
+import * as onFinished from 'on-finished';
 
 // HTTP header field that is added to Worker response to signalize problems with
 // executing the client function.
@@ -123,7 +123,7 @@ declare global {
   }
 }
 
-export enum FunctionSignatureType {
+export enum SignatureType {
   HTTP,
   EVENT,
 }
@@ -136,9 +136,9 @@ export enum FunctionSignatureType {
  */
 function isHttpFunction(
   fn: HandlerFunction,
-  functionSignatureType: FunctionSignatureType
+  functionSignatureType: SignatureType
 ): fn is HttpFunction {
-  return functionSignatureType === FunctionSignatureType.HTTP;
+  return functionSignatureType === SignatureType.HTTP;
 }
 
 /**
@@ -477,7 +477,7 @@ function wrapEventFunction(
 function registerFunctionRoutes(
   app: express.Application,
   userFunction: HandlerFunction,
-  functionSignatureType: FunctionSignatureType
+  functionSignatureType: SignatureType
 ) {
   if (isHttpFunction(userFunction!, functionSignatureType)) {
     app.use('/*', (req, res, next) => {
@@ -548,7 +548,7 @@ export class ErrorHandler {
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: FunctionSignatureType
+  functionSignatureType: SignatureType
 ): http.Server {
   // App to use for function executions.
   const app = express();
