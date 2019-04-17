@@ -13,10 +13,9 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as supertest from 'supertest';
 import * as express from 'express';
-
 import * as invoker from '../src/invoker';
+import * as supertest from 'supertest';
 
 describe('loading function', () => {
   it('should load the function', () => {
@@ -35,7 +34,7 @@ describe('request to HTTP function', () => {
       (req: express.Request, res: express.Response) => {
         res.send(req.body.text.toUpperCase());
       },
-      invoker.FunctionSignatureType.HTTP
+      invoker.SignatureType.HTTP
     );
     return supertest(server)
       .post('/')
@@ -106,7 +105,7 @@ describe('GCF event request to event function', () => {
       const server = invoker.getServer((data: {}, context: invoker.Context) => {
         receivedData = data;
         receivedContext = context as invoker.CloudFunctionsContext;
-      }, invoker.FunctionSignatureType.EVENT);
+      }, invoker.SignatureType.EVENT);
       await supertest(server)
         .post('/')
         .send(test.body)
@@ -169,7 +168,7 @@ describe('CloudEvents request to event function', () => {
       const server = invoker.getServer((data: {}, context: invoker.Context) => {
         receivedData = data;
         receivedContext = context as invoker.CloudEventsContext;
-      }, invoker.FunctionSignatureType.EVENT);
+      }, invoker.SignatureType.EVENT);
       await supertest(server)
         .post('/')
         .set(test.headers)
