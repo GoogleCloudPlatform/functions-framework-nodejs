@@ -14,18 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Functions framework entry point that configures and starts Node.js server
-// that runs user's code on HTTP request.
-// The following environment variables can be set to configure the framework:
-//   - PORT - defines the port on which this server listens to all HTTP
-//     requests.
-//   - FUNCTION_TARGET - defines the name of the function within user's
-//     node module to execute. If such a function is not defined,
-//     then falls back to 'function' name.
-//   - FUNCTION_SIGNATURE_TYPE - defines the type of the client function
-//     signature, 'http' for function signature with HTTP request and HTTP
-//     response arguments, or 'event' for function signature with arguments
-//     unmarshalled from an incoming request.
+// Functions Framework entrypoint configures and starts a Node.js server
+// that invokes a function in response to an HTTP request.
 
 import * as minimist from 'minimist';
 
