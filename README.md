@@ -142,11 +142,12 @@ You can configure the Functions Framework using command-line flags or
 environment variables. If you specify both, the environment variable will be
 ignored.
 
-Command-line flag         | Environment variable      | Description
-------------------------- | ------------------------- | -----------
-`--port`                    | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`
-`--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`
-`--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event`
+| Command-line flag  | Environment variable      | Description                                                                                                                                                                                      |
+| ------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--port`           | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`                                                                                                                  |
+| `--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`                                                                                                     |
+| `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` |
+| `--code-location`  | `CODE_LOCATION`           | The directory path to your code                                                                                                                                                                  |
 
 You can set command-line flags in your `package.json` via the `start` script.
 For example:

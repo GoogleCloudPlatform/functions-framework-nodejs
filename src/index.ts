@@ -40,14 +40,16 @@ import {
 const FLAG = {
   PORT: 'port',
   TARGET: 'target',
-  SIGNATURE_TYPE: 'signature-type', // dash
+  SIGNATURE_TYPE: 'signature-type',
+  CODE_LOCATION: 'code-location', // dash
 };
 
 // Supported environment variables
 const ENV = {
   PORT: 'PORT',
   TARGET: 'FUNCTION_TARGET',
-  SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
+  SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE',
+  CODE_LOCATION: 'CODE_LOCATION', // underscore
 };
 
 enum NodeEnv {
@@ -55,10 +57,11 @@ enum NodeEnv {
 }
 
 const argv = minimist(process.argv, {
-  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
+  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE, FLAG.CODE_LOCATION],
 });
 
-const CODE_LOCATION = process.cwd();
+const CODE_LOCATION =
+  argv[FLAG.CODE_LOCATION] || process.env[ENV.CODE_LOCATION] || process.cwd();
 const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
 const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
 
