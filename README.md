@@ -112,6 +112,46 @@ curl localhost:8080
 # Output: Hello, World
 ```
 
+## Optional: containerize your function
+
+To run your function in a container, create a `Dockerfile` with the following contents:
+
+```Dockerfile
+# Use the official Node.js 10 image.
+# https://hub.docker.com/_/node
+FROM node:10
+
+# Create and change to the app directory.
+WORKDIR /usr/src/app
+
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure both package.json AND package-lock.json are copied.
+# Copying this separately prevents re-running npm install on every code change.
+COPY package.json package*.json ./
+
+# Install production dependencies.
+RUN npm install --only=production
+
+# Copy local code to the container image.
+COPY . .
+
+# Run the web service on container startup.
+CMD [ "npm", "start" ]
+```
+
+Start the container locally by running `docker build` and `docker run`:
+
+```sh
+docker build -t helloworld . && docker run -p 8080:8080 -it helloworld
+```
+
+Send requests to this function using `curl` from another terminal window:
+
+```sh
+curl localhost:8080
+# Output: Hello, World
+```
+
 # Run your function on serverless platforms
 
 ## Google Cloud Functions
@@ -126,11 +166,27 @@ After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
+```sh
+gcloud functions deploy helloworld --runtime nodejs8 --trigger-http
+```
+
 ## Cloud Run/Cloud Run on GKE
 
-Once you've written your function, added the Functions Framework and updated your `start` script in `package.json`, all that's left is to create a container image. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) for Node.js to create a container image and deploy it to Cloud Run. You'll write a `Dockerfile` when you build your container. This `Dockerfile` allows you to specify exactly what goes into your container (including custom binaries, a specific operating system, and more).
+You can deploy your containerized function to Cloud Run or any Knative-based environment. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy).
+
+```sh
+docker build -t gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld .
+docker push gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld
+gcloud beta run deploy helloworld --image gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld --region us-central1
+```
 
 If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
+
+Create a GKE cluster with Cloud Run enabled (see docs above) and deploy the same container with `gcloud`:
+
+```sh
+gcloud beta run deploy helloworld --image gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld --cluster cloud-run-on-gke --cluster-location us-central1-a
+```
 
 ## Container environments based on Knative
 
