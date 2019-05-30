@@ -352,7 +352,7 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
     // Catch unhandled errors originating from this request.
     d.on('error', err => {
       if (res.locals.functionExecutionFinished) {
-        console.error(err);
+        console.error(`Exception from a finished function: ${err}`);
       } else {
         res.locals.functionExecutionFinished = true;
         logAndSendError(err, res);
