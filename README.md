@@ -180,7 +180,7 @@ documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
 
 ## Local testing of cloud events
-The setup for cloud functions that accept events is very similar to the instructions in the quickstart, with the following adjustments differences.
+The setup for cloud functions that accept events is very similar to the instructions in the quickstart, with the following adjustments:
 
 In your package.json, add a signature type (in bold) to your start command:
 <pre>
