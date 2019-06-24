@@ -179,6 +179,10 @@ For more details on this signature type, check out the Google Cloud Functions
 documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
 
+# Advanced Docs
+
+More advanced guides and docs can be found in the [`docs/` folder](docs/).
+
 # Contributing
 
 Contributions to this library are welcome and encouraged. See
