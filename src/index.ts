@@ -73,6 +73,16 @@ if (SIGNATURE_TYPE === undefined) {
   process.exit(1);
 }
 
+// CLI Help Flag
+if (process.argv[2] === '-h' || process.argv[2] === '--help') {
+  console.error(
+`Example usage:
+  functions-framework --target=helloWorld --port=8080
+Documentation:
+  https://github.com/GoogleCloudPlatform/functions-framework-nodejs`);
+  process.exit(1);
+}
+
 const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
 if (!USER_FUNCTION) {
   console.error('Could not load the function, shutting down.');
