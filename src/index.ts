@@ -76,10 +76,11 @@ if (SIGNATURE_TYPE === undefined) {
 // CLI Help Flag
 if (process.argv[2] === '-h' || process.argv[2] === '--help') {
   console.error(
-`Example usage:
+    `Example usage:
   functions-framework --target=helloWorld --port=8080
 Documentation:
-  https://github.com/GoogleCloudPlatform/functions-framework-nodejs`);
+  https://github.com/GoogleCloudPlatform/functions-framework-nodejs`
+  );
   process.exit(1);
 }
 
