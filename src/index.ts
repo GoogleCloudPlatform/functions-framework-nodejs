@@ -28,6 +28,7 @@
 //     unmarshalled from an incoming request.
 
 import * as minimist from 'minimist';
+import { resolve } from 'path';
 
 import {
   ErrorHandler,
@@ -41,6 +42,7 @@ const FLAG = {
   PORT: 'port',
   TARGET: 'target',
   SIGNATURE_TYPE: 'signature-type', // dash
+  SOURCE: 'source',
 };
 
 // Supported environment variables
@@ -48,6 +50,7 @@ const ENV = {
   PORT: 'PORT',
   TARGET: 'FUNCTION_TARGET',
   SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
+  SOURCE: 'SOURCE',
 };
 
 enum NodeEnv {
@@ -58,7 +61,10 @@ const argv = minimist(process.argv, {
   string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
 });
 
-const CODE_LOCATION = process.cwd();
+const CODE_LOCATION = resolve(
+  process.cwd(),
+  argv[FLAG.SOURCE] || process.env[ENV.SOURCE] || '/'
+);
 const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
 const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
 
