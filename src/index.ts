@@ -81,7 +81,7 @@ if (process.argv[2] === '-h' || process.argv[2] === '--help') {
 Documentation:
   https://github.com/GoogleCloudPlatform/functions-framework-nodejs`
   );
-  process.exit(1);
+  process.exit(0);
 }
 
 const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
