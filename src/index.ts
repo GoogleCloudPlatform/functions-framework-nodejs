@@ -50,7 +50,7 @@ const ENV = {
   PORT: 'PORT',
   TARGET: 'FUNCTION_TARGET',
   SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
-  SOURCE: 'SOURCE',
+  SOURCE: 'FUNCTION_SOURCE',
 };
 
 enum NodeEnv {
