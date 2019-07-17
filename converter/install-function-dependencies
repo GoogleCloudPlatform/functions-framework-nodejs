@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Installs dependencies specified by the function.
+
+set -euo pipefail
+
+echo 'Installing function dependencies'
+
+if [[ -f functions/yarn.lock ]]; then
+  echo 'Found yarn.lock; using yarn'
+  yarn install --cwd functions
+else
+  npm install --prefix functions
+fi
+
+echo 'Installing function dependencies done'
