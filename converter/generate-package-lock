@@ -8,6 +8,6 @@ set -e
 
 for dir in without-package with-package-without-framework with-package-with-framework; do
   rm ${dir}/package-lock.json
-  npm --prefix ${dir} --package-lock-only install
+  npm --prefix ${dir} --package-lock-only --ignore-scripts install
   rm -rf ${dir}/functions
 done
