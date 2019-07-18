@@ -3,7 +3,7 @@
     "@google-cloud/functions-framework": "^1.0.0"
   },
   "scripts": {
-    "preinstall": "npm --prefix functions install",
+    "preinstall": "./install-function-dependencies",
     "start": "cd functions && functions-framework"
   }
 }

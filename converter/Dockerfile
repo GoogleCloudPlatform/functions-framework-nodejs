@@ -1,6 +1,6 @@
 FROM gcr.io/gcp-runtimes/ubuntu_18_0_4
 
-COPY convert .npmrc /converter/
+COPY convert install-function-dependencies .npmrc /converter/
 
 COPY without-package /converter/without-package
 COPY with-package-without-framework /converter/with-package-without-framework
