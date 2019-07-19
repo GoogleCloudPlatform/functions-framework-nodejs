@@ -26,6 +26,8 @@ import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
 
+import { startTooling } from './tools';
+
 // HTTP header field that is added to Worker response to signalize problems with
 // executing the client function.
 const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
@@ -358,7 +360,10 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
         logAndSendError(err, res);
       }
     });
-    d.run(() => {
+    d.run(async () => {
+      // Start the debugger (if not alreay started)
+      const tools = startTooling();
+      if (tools) await tools.debug.isReady();
       process.nextTick(() => {
         execute(req, res);
       });

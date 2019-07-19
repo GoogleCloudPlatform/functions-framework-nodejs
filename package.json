@@ -34,6 +34,9 @@
   "author": "Google Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@google-cloud/debug-agent": "^4.0.1",
+    "@google-cloud/profiler": "^2.0.2",
+    "@google-cloud/trace-agent": "^4.1.0",
     "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.1",
     "@types/minimist": "^1.2.0",
