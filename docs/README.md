@@ -10,7 +10,7 @@ This directory contains advanced docs around the Functions Framework.
 
 The Functions Framework works with standard tooling that you might use when writing a function for a Node.js environment. You can attach a debugger to your function by following these steps.
 
-1. Write a Node.js function:
+1. Write an `index.js` file containing your Node.js function:
 
 ```js
 exports.helloWorld = (req, res) => {
