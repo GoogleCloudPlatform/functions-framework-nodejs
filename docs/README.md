@@ -24,7 +24,7 @@ exports.helloWorld = (req, res) => {
 npm install @google-cloud/functions-framework
 ```
 
-3. Launch the Functions Framework and attach a debugger:
+3. Run `node`, enable the inspector and run the Functions Framework (specifying the your target function):
 
 ```sh
 node --inspect node_modules/@google-cloud/functions-framework --target=helloWorld
