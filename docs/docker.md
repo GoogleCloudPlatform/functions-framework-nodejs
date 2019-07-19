@@ -23,7 +23,7 @@ CMD [ "npm", "start" ]
 Start the container locally by running `docker build` and `docker run`:
 
 ```sh
-docker build -t helloworld . && docker run -p 8080:8080 -it helloworld
+docker build -t helloworld . && docker run --rm -p 8080:8080 helloworld
 ```
 
 Send requests to this function using `curl` from another terminal window:
