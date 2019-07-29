@@ -18,7 +18,6 @@ if [[ ! -f functions/package.json ]]; then
   echo 'Handling functions without package.json'
   cp /converter/without-package/package.json .
   cp /converter/without-package/package-lock.json .
-  cp /converter/install-function-dependencies .
   ln -s node_modules/.bin/functions-framework start-functions-framework
 elif ! cat functions/package.json | jq -e ".dependencies.\"@google-cloud/functions-framework\""; then
   echo 'Handling functions with package.json without dependency on @google-cloud/functions-framework'
@@ -30,6 +29,7 @@ else
   echo 'Handling functions with package.json with dependency on functions-framework'
   cp /converter/with-package-with-framework/package.json .
   cp /converter/with-package-with-framework/package-lock.json .
+  cp /converter/install-function-dependencies .
   ln -s functions/node_modules/.bin/functions-framework start-functions-framework
 fi
 
