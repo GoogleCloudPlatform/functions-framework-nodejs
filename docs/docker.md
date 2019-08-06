@@ -35,7 +35,7 @@ curl localhost:8080
 
 ## Deploy a Container
 
-You can deploy your containerized function to Cloud Run or any Knative-based environment by following the [Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy).
+You can deploy your containerized function to Cloud Run by following the [Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy).
 
 Use the `docker` and `gcloud` CLIs to build and deploy a container to Cloud Run, replacing the project id `$GOOGLE_CLOUD_PROJECT` and image name `helloworld`:
 
