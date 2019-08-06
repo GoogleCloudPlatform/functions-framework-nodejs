@@ -33,6 +33,14 @@ curl localhost:8080
 # Output: Hello, World
 ```
 
+## Configure gcloud
+
+To use Docker with gcloud, (configure the Docker credential helper](https://cloud.google.com/container-registry/docs/advanced-authentication):
+
+```sh
+gcloud auth configure-docker
+```
+
 ## Deploy a Container
 
 You can deploy your containerized function to Cloud Run by following the [Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy).
