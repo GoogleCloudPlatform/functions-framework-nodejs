@@ -54,11 +54,13 @@ After setup, all notifications to the subscription topic will be pushed to your 
 Here is a sample script for creating subscription with a `pushEndpoint`:
 
  ```js
-{ PubSub } require('@google-cloud/pubsub');
+const { PubSub } = require('@google-cloud/pubsub');
 
 async function main() {
+  const apiEndpoint = 'localhost:8085';
+  console.log(`Listening to the Pub/Sub emulator event at: ${apiEndpoint}`);
   const pubsub = new PubSub({
-    apiEndpoint: 'localhost:8085', // Pubsub emulator endpoint
+    apiEndpoint, // Pub/Sub emulator endpoint
     projectId: 'myproject',
   });
   const topic = await pubsub.topic('my-topic');
