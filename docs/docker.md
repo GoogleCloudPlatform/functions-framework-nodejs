@@ -35,7 +35,7 @@ curl localhost:8080
 
 ## Configure gcloud
 
-To use Docker with gcloud, (configure the Docker credential helper](https://cloud.google.com/container-registry/docs/advanced-authentication):
+To use Docker with gcloud, [configure the Docker credential helper](https://cloud.google.com/container-registry/docs/advanced-authentication):
 
 ```sh
 gcloud auth configure-docker
