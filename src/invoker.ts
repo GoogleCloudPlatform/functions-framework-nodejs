@@ -548,13 +548,14 @@ export class ErrorHandler {
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
+  functionSignatureType: SignatureType,
+  functionTarget: string
 ): http.Server {
   // App to use for function executions.
   const app = express();
 
   // Set request-specific values in the very first middleware.
-  app.use('/*', (req, res, next) => {
+  app.use(`/${functionTarget}`, (req, res, next) => {
     latestRes = res;
     res.locals.functionExecutionFinished = false;
     next();
