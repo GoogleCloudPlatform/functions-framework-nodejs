@@ -571,7 +571,12 @@ export function getServer(
   // skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
 
-  registerFunctionRoutes(app, userFunction, functionTarget, functionSignatureType);
+  registerFunctionRoutes(
+    app,
+    userFunction,
+    functionTarget,
+    functionSignatureType
+  );
 
   app.enable('trust proxy'); // To respect X-Forwarded-For header.
 
