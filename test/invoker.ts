@@ -34,7 +34,8 @@ describe('request to HTTP function', () => {
       (req: express.Request, res: express.Response) => {
         res.send(req.body.text.toUpperCase());
       },
-      invoker.SignatureType.HTTP
+      invoker.SignatureType.HTTP,
+      'TARGET'
     );
     return supertest(server)
       .post('/')
@@ -105,7 +106,7 @@ describe('GCF event request to event function', () => {
       const server = invoker.getServer((data: {}, context: invoker.Context) => {
         receivedData = data;
         receivedContext = context as invoker.CloudFunctionsContext;
-      }, invoker.SignatureType.EVENT);
+      }, invoker.SignatureType.EVENT, 'TARGET');
       await supertest(server)
         .post('/')
         .send(test.body)
@@ -168,7 +169,7 @@ describe('CloudEvents request to event function', () => {
       const server = invoker.getServer((data: {}, context: invoker.Context) => {
         receivedData = data;
         receivedContext = context as invoker.CloudEventsContext;
-      }, invoker.SignatureType.EVENT);
+      }, invoker.SignatureType.EVENT, 'TARGET');
       await supertest(server)
         .post('/')
         .set(test.headers)
