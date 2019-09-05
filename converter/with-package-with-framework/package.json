@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "preinstall": "./install-function-dependencies",
-    "start": "cd functions && node_modules/.bin/functions-framework"
-  }
-}

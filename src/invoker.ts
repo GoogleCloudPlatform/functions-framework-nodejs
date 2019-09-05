@@ -193,7 +193,7 @@ export function getUserFunction(
   } catch (ex) {
     let additionalHint: string;
     // TODO: this should be done based on ex.code rather than string matching.
-    if (ex.stack.includes('Cannot find module')) {
+    if (ex.stack && ex.stack.includes('Cannot find module')) {
       additionalHint =
         'Did you list all required modules in the package.json ' +
         'dependencies?\n';
