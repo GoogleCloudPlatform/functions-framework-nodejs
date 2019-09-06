@@ -96,7 +96,7 @@ if (!USER_FUNCTION) {
   process.exit(1);
 }
 
-const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
+const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!, TARGET);
 const ERROR_HANDLER = new ErrorHandler(SERVER);
 SERVER.listen(PORT, () => {
   ERROR_HANDLER.register();

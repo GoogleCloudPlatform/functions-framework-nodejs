@@ -477,22 +477,23 @@ function wrapEventFunction(
 function registerFunctionRoutes(
   app: express.Application,
   userFunction: HandlerFunction,
+  functionTarget: string,
   functionSignatureType: SignatureType
 ) {
   if (isHttpFunction(userFunction!, functionSignatureType)) {
-    app.use('/*', (req, res, next) => {
+    app.use(`/${functionTarget}`, (req, res, next) => {
       onFinished(res, (err, res) => {
         res.locals.functionExecutionFinished = true;
       });
       next();
     });
 
-    app.all('/*', (req, res, next) => {
+    app.all(`/${functionTarget}`, (req, res, next) => {
       const handler = makeHttpHandler(userFunction);
       handler(req, res, next);
     });
   } else {
-    app.post('/*', (req, res, next) => {
+    app.post(`/${functionTarget}`, (req, res, next) => {
       const wrappedUserFunction = wrapEventFunction(userFunction);
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
@@ -548,13 +549,14 @@ export class ErrorHandler {
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
+  functionSignatureType: SignatureType,
+  functionTarget: string
 ): http.Server {
   // App to use for function executions.
   const app = express();
 
   // Set request-specific values in the very first middleware.
-  app.use('/*', (req, res, next) => {
+  app.use(`/${functionTarget}`, (req, res, next) => {
     latestRes = res;
     res.locals.functionExecutionFinished = false;
     next();
@@ -569,7 +571,12 @@ export function getServer(
   // skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
 
-  registerFunctionRoutes(app, userFunction, functionSignatureType);
+  registerFunctionRoutes(
+    app,
+    userFunction,
+    functionTarget,
+    functionSignatureType
+  );
 
   app.enable('trust proxy'); // To respect X-Forwarded-For header.
 
