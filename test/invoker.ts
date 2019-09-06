@@ -35,10 +35,10 @@ describe('request to HTTP function', () => {
         res.send(req.body.text.toUpperCase());
       },
       invoker.SignatureType.HTTP,
-      '/'
+      'testFunction'
     );
     return supertest(server)
-      .post('/')
+      .post('/testFunction')
       .send({ text: 'hello' })
       .set('Content-Type', 'application/json')
       .expect('HELLO')
@@ -109,10 +109,10 @@ describe('GCF event request to event function', () => {
           receivedContext = context as invoker.CloudFunctionsContext;
         },
         invoker.SignatureType.EVENT,
-        '/'
+        'testFunction'
       );
       await supertest(server)
-        .post('/')
+        .post('/testFunction')
         .send(test.body)
         .set('Content-Type', 'application/json')
         .expect(204);
@@ -176,10 +176,10 @@ describe('CloudEvents request to event function', () => {
           receivedContext = context as invoker.CloudEventsContext;
         },
         invoker.SignatureType.EVENT,
-        '/'
+        'testFunction'
       );
       await supertest(server)
-        .post('/')
+        .post('/testFunction')
         .set(test.headers)
         .send(test.body)
         .expect(204);
