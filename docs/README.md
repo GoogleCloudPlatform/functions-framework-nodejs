@@ -2,6 +2,8 @@
 
 This directory contains advanced docs around the Functions Framework.
 
+- [Testing events and Pub/Sub](events.md)
+- [Debugging Functions](debugging.md)
 - [Running and Deploying Docker Containers](docker.md)
 
 ## TODO Docs
