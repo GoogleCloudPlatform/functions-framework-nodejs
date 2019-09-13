@@ -63,7 +63,7 @@ const argv = minimist(process.argv, {
 
 const CODE_LOCATION = resolve(
   process.cwd(),
-  argv[FLAG.SOURCE] || process.env[ENV.SOURCE]
+  argv[FLAG.SOURCE] || process.env[ENV.SOURCE] || ''
 );
 const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
 const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
