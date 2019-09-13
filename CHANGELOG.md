@@ -4,6 +4,21 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## v1.3.1
+
+09-13-2019 10:00 PDT
+
+### Implementation Changes
+- fix: use empty string path when function source is not specified ([#90](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/90))
+
+### New Features
+
+### Dependencies
+
+### Documentation
+
+### Internal / Testing Changes
+
 ## v1.3.0
 
 09-11-2019 10:17 PDT
