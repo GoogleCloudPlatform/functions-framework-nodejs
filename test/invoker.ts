@@ -38,7 +38,7 @@ describe('request to HTTP function', () => {
       'testFunction'
     );
     return supertest(server)
-      .post('/testFunction')
+      .post('/')
       .send({ text: 'hello' })
       .set('Content-Type', 'application/json')
       .expect('HELLO')
@@ -112,7 +112,7 @@ describe('GCF event request to event function', () => {
         'testFunction'
       );
       await supertest(server)
-        .post('/testFunction')
+        .post('/')
         .send(test.body)
         .set('Content-Type', 'application/json')
         .expect(204);
@@ -179,7 +179,7 @@ describe('CloudEvents request to event function', () => {
         'testFunction'
       );
       await supertest(server)
-        .post('/testFunction')
+        .post('/')
         .set(test.headers)
         .send(test.body)
         .expect(204);

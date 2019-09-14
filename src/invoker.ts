@@ -481,19 +481,19 @@ function registerFunctionRoutes(
   functionSignatureType: SignatureType
 ) {
   if (isHttpFunction(userFunction!, functionSignatureType)) {
-    app.use(`/${functionTarget}`, (req, res, next) => {
+    app.use(`/*`, (req, res, next) => {
       onFinished(res, (err, res) => {
         res.locals.functionExecutionFinished = true;
       });
       next();
     });
 
-    app.all(`/${functionTarget}`, (req, res, next) => {
+    app.all(`/*`, (req, res, next) => {
       const handler = makeHttpHandler(userFunction);
       handler(req, res, next);
     });
   } else {
-    app.post(`/${functionTarget}`, (req, res, next) => {
+    app.post(`/*`, (req, res, next) => {
       const wrappedUserFunction = wrapEventFunction(userFunction);
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
