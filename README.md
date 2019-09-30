@@ -29,7 +29,7 @@ curl http://my-url
 All without needing to worry about writing an HTTP server or complicated request
 handling logic.
 
-> Watch [this video](https://youtu.be/yMEcyAkTliU?t=912) to learn about the Node Functions Framework.
+> Watch [this video](https://youtu.be/yMEcyAkTliU?t=912) to learn more about the Node Functions Framework.
 
 # Features
 
