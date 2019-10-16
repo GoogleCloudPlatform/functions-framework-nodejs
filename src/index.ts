@@ -102,6 +102,6 @@ SERVER.listen(PORT, () => {
   if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
     console.log('Serving function...');
     console.log(`Function: ${TARGET}`);
-    console.log(`URL: http://localhost:${PORT}/`);
+    console.log(`URL: http://0.0.0.0:${PORT}/`);
   }
 }).setTimeout(0); // Disable automatic timeout on incoming connections.
