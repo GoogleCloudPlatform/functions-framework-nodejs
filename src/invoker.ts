@@ -21,6 +21,7 @@
 //     functions with HTTP trigger).
 
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as domain from 'domain';
 import * as express from 'express';
 import * as http from 'http';
@@ -568,6 +569,8 @@ export function getServer(
   // MUST be last in the list of body parsers as subsequent parsers will be
   // skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
+
+  app.use(cookieParser());
 
   registerFunctionRoutes(app, userFunction, functionSignatureType);
 
