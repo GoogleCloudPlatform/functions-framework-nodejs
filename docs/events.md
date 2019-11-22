@@ -1,20 +1,44 @@
-## Local Testing of Cloud Events
+# Events
 
-The setup for cloud functions that accept events is very similar to the instructions in the quickstart, with the following adjustments:
+This guide shows you how to use the Functions Framework for local testing with:
 
-In your `package.json`, add a signature type (in bold) to your start command:
+- CloudEvents
+- The Pub/Sub Emulator
 
-<pre>
+## Local Testing of CloudEvents
+
+In your `package.json`, specify `--signature-type=event"` for the `functions-framework`:
+
+```sh
+{
   "scripts": {
-    "start": "functions-framework --target=helloWorld <b>--signature-type=event"</b>
+    "start": "functions-framework --target=helloWorld --signature-type=event"
   }
-</pre>
+}
+```
 
-Upon running ```sh npm start ```, you'll see the function is still being served at `http://localhost:8080/`. However, it is no longer accessible via GET requests from the browser. Instead, send a POST request where the request body conforms to the API defined by [push subscriptions](https://cloud.google.com/pubsub/docs/push). 
+Create an `index.js` file:
 
-### Submitting POST Request to Simulate Pub/Sub messages
+```js
+exports.helloPubSub = (data, context) => {
+  console.log(data);
+}
+```
 
-Create a `mockPubsub.json` file with the following contents:
+Start the Functions Framework:
+
+```sh
+npm start
+```
+
+Your function will be serving at `http://localhost:8080/`, however,
+it is no longer accessible via `HTTP GET` requests from the browser.
+
+Instead, send a POST request where the request body conforms to the API defined by [push subscriptions](https://cloud.google.com/pubsub/docs/push). 
+
+### Send POST Request to Simulate Pub/Sub messages
+
+Create a new file `mockPubsub.json` with the following contents:
 
 ```json
 {
@@ -29,7 +53,9 @@ Create a `mockPubsub.json` file with the following contents:
 }
 ```
 
-The file can be in any folder on your computer. From the terminal, go to the directory where `mockPubsub.json` is located, and run the following command (assuming your cloud function is hosted locally on port 8080):
+In the same directory as `mockPubsub.json`,
+use `curl` to invoke the Functions Framework including
+the Pub/Sub JSON in the POST data:
 
 ```sh 
 curl -d "@mockPubsub.json" \
@@ -38,10 +64,24 @@ curl -d "@mockPubsub.json" \
   -H "Ce-Specversion: true" \
   -H "Ce-Source: true" \
   -H "Ce-Id: true" \
+  -H "Content-Type: application/json" \
   http://localhost:8080
 ```
+
+In the shell that is running the Functions Framework, you'll see the message logged:
+
+```js
+{
+  message: {
+    attributes: { key: 'value' },
+    data: 'SGVsbG8gQ2xvdWQgUHViL1N1YiEgSGVyZSBpcyBteSBtZXNzYWdlIQ==',
+    messageId: '136969346945'
+  },
+  subscription: 'projects/myproject/subscriptions/mysubscription'
+}
+```
  
-### Using the Pub/Sub emulator
+## Using the Pub/Sub emulator
 
 Another way to test your cloud function Pub/Sub endpoint is to use the [Pub/Sub Emulator](https://cloud.google.com/pubsub/docs/emulator). This allows you to use the Pub/Sub notification from another service to trigger your cloud function.
 
