@@ -50,7 +50,7 @@ Use the `docker` and `gcloud` CLIs to build and deploy a container to Cloud Run,
 ```sh
 docker build -t gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld .
 docker push gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld
-gcloud beta run deploy helloworld --image gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld --region us-central1
+gcloud run deploy helloworld --image gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld --region us-central1
 ```
 
 If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
