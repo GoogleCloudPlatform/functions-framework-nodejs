@@ -16,6 +16,7 @@ import * as assert from 'assert';
 import * as express from 'express';
 import * as invoker from '../src/invoker';
 import * as supertest from 'supertest';
+import { CloudEvent } from 'cloudevents/build/src/interface';
 
 describe('loading function', () => {
   it('should load the function', () => {
@@ -125,11 +126,11 @@ describe('CloudEvents request to event function', () => {
   interface TestData {
     name: string;
     headers: { [key: string]: string };
-    body: {};
+    body: CloudEvent | {}; // structured CE or binary CE raw payload
   }
   const testData: TestData[] = [
     {
-      name: 'CloudEvents v0.2 structured content mode',
+      name: 'CloudEvents v1 structured content mode',
       headers: { 'Content-Type': 'application/cloudevents+json' },
       body: {
         type: 'testType',
@@ -145,7 +146,7 @@ describe('CloudEvents request to event function', () => {
       },
     },
     {
-      name: 'CloudEvents v0.2 binary content mode',
+      name: 'CloudEvents v1 binary content mode',
       headers: {
         'Content-Type': 'application/json',
         'ce-type': 'testType',
@@ -164,10 +165,10 @@ describe('CloudEvents request to event function', () => {
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
-      let receivedContext: invoker.CloudEventsContext | null = null;
+      let receivedContext: CloudEvent | null = null;
       const server = invoker.getServer((data: {}, context: invoker.Context) => {
         receivedData = data;
-        receivedContext = context as invoker.CloudEventsContext;
+        receivedContext = context as CloudEvent;
       }, invoker.SignatureType.EVENT);
       await supertest(server)
         .post('/')

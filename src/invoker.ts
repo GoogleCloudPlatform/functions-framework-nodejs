@@ -25,6 +25,7 @@ import * as domain from 'domain';
 import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
+import { CloudEvent } from 'cloudevents/build/src/interface';
 
 // HTTP header field that is added to Worker response to signalize problems with
 // executing the client function.
@@ -55,46 +56,7 @@ export interface CloudFunctionsContext {
   resource?: string;
 }
 
-/**
- * The CloudEvents v0.2 context object for the event.
- *
- * @link https://github.com/cloudevents/spec/blob/v0.2/spec.md#context-attributes
- */
-export interface CloudEventsContext {
-  /**
-   * Type of occurrence which has happened.
-   */
-  type?: string;
-  /**
-   * The version of the CloudEvents specification which the event uses.
-   */
-  specversion?: string;
-  /**
-   * The event producer.
-   */
-  source?: string;
-  /**
-   * ID of the event.
-   */
-  id?: string;
-  /**
-   * Timestamp of when the event happened.
-   */
-  time?: string;
-  /**
-   * A link to the schema that the event data adheres to.
-   */
-  schemaurl?: string;
-  /**
-   * Content type of the event data.
-   */
-  contenttype?: string;
-
-  // tslint:disable-next-line:no-any CloudEvents extension attributes.
-  [key: string]: any;
-}
-
-export type Context = CloudFunctionsContext | CloudEventsContext;
+export type Context = CloudFunctionsContext | CloudEvent;
 
 export interface HttpFunction {
   // tslint:disable-next-line:no-any express interface.
@@ -392,15 +354,15 @@ function isBinaryCloudEvent(req: express.Request): boolean {
  * @param req Express request object.
  * @return CloudEvents context.
  */
-function getBinaryCloudEventContext(req: express.Request): CloudEventsContext {
-  const context: CloudEventsContext = {};
+function getBinaryCloudEventContext(req: express.Request): CloudEvent {
+  const context: { [key: string]: string | undefined } = {};
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {
       const attributeName = name.substr('ce-'.length);
       context[attributeName] = req.header(name);
     }
   }
-  return context;
+  return context as CloudEvent;
 }
 
 /**
@@ -430,6 +392,7 @@ function wrapEventFunction(
     );
     let data = event.data;
     let context = event.context;
+
     if (isBinaryCloudEvent(req)) {
       // Support CloudEvents in binary content mode, with data being the whole
       // request body and context attributes retrieved from request headers.
