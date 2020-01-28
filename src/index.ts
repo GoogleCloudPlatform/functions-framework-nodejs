@@ -43,6 +43,7 @@ const FLAG = {
   TARGET: 'target',
   SIGNATURE_TYPE: 'signature-type', // dash
   SOURCE: 'source',
+  DRY_RUN: 'dry-run',
 };
 
 // Supported environment variables
@@ -51,6 +52,7 @@ const ENV = {
   TARGET: 'FUNCTION_TARGET',
   SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
   SOURCE: 'FUNCTION_SOURCE',
+  DRY_RUN: 'DRY_RUN',
 };
 
 enum NodeEnv {
@@ -58,7 +60,7 @@ enum NodeEnv {
 }
 
 const argv = minimist(process.argv, {
-  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
+  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE, FLAG.DRY_RUN],
 });
 
 const CODE_LOCATION = resolve(
@@ -77,6 +79,7 @@ if (SIGNATURE_TYPE === undefined) {
   console.error(`Function signature type must be one of 'http' or 'event'.`);
   process.exit(1);
 }
+const DRY_RUN = argv[FLAG.DRY_RUN] || process.env[ENV.DRY_RUN] || false;
 
 // CLI Help Flag
 if (process.argv[2] === '-h' || process.argv[2] === '--help') {
@@ -97,6 +100,14 @@ if (!USER_FUNCTION) {
 
 const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
 const ERROR_HANDLER = new ErrorHandler(SERVER);
+
+if (DRY_RUN) {
+  console.log(`Function: ${TARGET}`);
+  console.log(`URL: http://localhost:${PORT}/`);
+  console.log('Dry run successfully, shutting down.');
+  process.exit(0);
+}
+
 SERVER.listen(PORT, () => {
   ERROR_HANDLER.register();
   if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
