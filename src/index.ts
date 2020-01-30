@@ -104,7 +104,7 @@ const ERROR_HANDLER = new ErrorHandler(SERVER);
 if (DRY_RUN) {
   console.log(`Function: ${TARGET}`);
   console.log(`URL: http://localhost:${PORT}/`);
-  console.log('Dry run successfully, shutting down.');
+  console.log('Dry run successful, shutting down.');
   process.exit(0);
 }
 
