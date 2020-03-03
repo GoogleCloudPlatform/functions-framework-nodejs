@@ -29,19 +29,55 @@ describe('loading function', () => {
 });
 
 describe('request to HTTP function', () => {
-  it('should return transformed body', () => {
-    const server = invoker.getServer(
-      (req: express.Request, res: express.Response) => {
-        res.send(req.body.text.toUpperCase());
-      },
-      invoker.SignatureType.HTTP
-    );
-    return supertest(server)
-      .post('/')
-      .send({ text: 'hello' })
-      .set('Content-Type', 'application/json')
-      .expect('HELLO')
-      .expect(200);
+  interface TestData {
+    name: string;
+    path: string;
+    text: string;
+    status: number;
+  }
+
+  const testData: TestData[] = [
+    {
+      name: 'empty path',
+      path: '/',
+      text: 'HELLO',
+      status: 200,
+    },
+    {
+      name: 'simple path',
+      path: '/foo',
+      text: 'HELLO',
+      status: 200,
+    },
+    {
+      name: 'with favicon.ico',
+      path: '/favicon.ico',
+      text: 'Not Found',
+      status: 404,
+    },
+    {
+      name: 'with robots.txt',
+      path: '/robots.txt',
+      text: 'Not Found',
+      status: 404,
+    },
+  ];
+
+  testData.forEach(test => {
+    it(`should return transformed body: ${test.name}`, () => {
+      const server = invoker.getServer(
+        (req: express.Request, res: express.Response) => {
+          res.send(req.body.text.toUpperCase());
+        },
+        invoker.SignatureType.HTTP
+      );
+      return supertest(server)
+        .post(test.path)
+        .send({ text: 'hello' })
+        .set('Content-Type', 'application/json')
+        .expect(test.text)
+        .expect(test.status);
+    });
   });
 });
 
