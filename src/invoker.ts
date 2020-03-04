@@ -480,6 +480,10 @@ function registerFunctionRoutes(
   functionSignatureType: SignatureType
 ) {
   if (isHttpFunction(userFunction!, functionSignatureType)) {
+    app.use('/favicon.ico|/robots.txt', (req, res, next) => {
+      res.sendStatus(404);
+    });
+
     app.use('/*', (req, res, next) => {
       onFinished(res, (err, res) => {
         res.locals.functionExecutionFinished = true;
