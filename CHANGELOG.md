@@ -4,6 +4,21 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## v1.5.0
+
+03-06-2020 08:15 PST
+
+### Implementation Changes
+ - Adjust path handling ([#121](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/121))
+
+### New Features
+
+### Dependencies
+
+### Documentation
+
+### Internal / Testing Changes
+
 ## v1.4.0
 
 01-30-2020 11:54 PST
