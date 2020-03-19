@@ -445,6 +445,21 @@ function wrapEventFunction(
       context.data = undefined;
       delete context.data;
     }
+    // Populating data for behavior compliant with parameter settings of Cloud PubSub
+    // https://cloud.google.com/functions/docs/writing/background#function_parameters
+    if (!data && event.message) {
+      data = event.message!.data;
+      if (!context.eventId) {
+        context.eventId = event.message.messageId;
+      }
+      if (!context.timestamp) {
+        context.timestamp =
+          event.message.publishTime || new Date().toISOString();
+      }
+      if (!context.eventType) {
+        context.eventType = 'google.pubsub.topic.publish';
+      }
+    }
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {
       const fn = userFunction as EventFunctionWithCallback;

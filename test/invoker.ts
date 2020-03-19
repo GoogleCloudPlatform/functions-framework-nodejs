@@ -157,6 +157,51 @@ describe('GCF event request to event function', () => {
   });
 });
 
+describe('GCP PubSub local parity', () => {
+  interface TestData {
+    name: string;
+    body: {};
+  }
+  const testData: TestData[] = [
+    {
+      name: 'Local PubSub Request',
+      body: {
+        subscription: 'projects/test/subscriptions/time_sync_pub_sub',
+        message: {
+          data: { some: 'payload' },
+          messageId: 'testEventId',
+          attributes: {},
+        },
+      },
+    },
+  ];
+  testData.forEach(test => {
+    it(`should receive data and context from ${test.name}`, async () => {
+      let receivedData: {} | null = null;
+      let receivedContext: invoker.CloudFunctionsContext | null = null;
+      const server = invoker.getServer((data: {}, context: invoker.Context) => {
+        receivedData = data;
+        receivedContext = context as invoker.CloudFunctionsContext;
+      }, invoker.SignatureType.EVENT);
+      await supertest(server)
+        .post('/')
+        .send(test.body)
+        .set('Content-Type', 'application/json')
+        .expect(204);
+      assert.deepStrictEqual(receivedData, { some: 'payload' });
+      assert.notStrictEqual(receivedContext, null);
+      assert.strictEqual(receivedContext!.eventId, 'testEventId');
+      assert.notStrictEqual(receivedContext!.timestamp, null);
+      const validDate = Date.parse(receivedContext!.timestamp!);
+      assert.notStrictEqual(validDate, 0);
+      assert.strictEqual(
+        receivedContext!.eventType,
+        'google.pubsub.topic.publish'
+      );
+    });
+  });
+});
+
 describe('CloudEvents request to event function', () => {
   interface TestData {
     name: string;
