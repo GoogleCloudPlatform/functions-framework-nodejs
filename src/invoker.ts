@@ -535,9 +535,12 @@ export class ErrorHandler {
       logAndSendError(new Error(`Process exited with code ${code}`), latestRes);
     });
 
-    process.on('SIGTERM', () => {
-      this.server.close(() => {
-        process.exit();
+    ['SIGINT', 'SIGTERM'].forEach(signal => {
+      process.on(signal as NodeJS.Signals, () => {
+        console.log(`Received ${signal}`);
+        this.server.close(() => {
+          process.exit();
+        });
       });
     });
   }
