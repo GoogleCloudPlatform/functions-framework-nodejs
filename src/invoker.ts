@@ -26,9 +26,9 @@ import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
 
-// HTTP header field that is added to Worker response to signalize problems with
-// executing the client function.
-const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
+import { FUNCTION_STATUS_HEADER_FIELD } from './types';
+import { logAndSendError } from './logger';
+import { isBinaryCloudEvent } from './cloudevents';
 
 /**
  * The Cloud Functions context object for the event.
@@ -267,34 +267,6 @@ function sendResponse(result: any, err: Error | null, res: express.Response) {
   }
 }
 
-/**
- * Logs an error message and sends back an error response to the incoming
- * request.
- * @param err Error to be logged and sent.
- * @param res Express response object.
- * @param callback A function to be called synchronously.
- */
-function logAndSendError(
-  // tslint:disable-next-line:no-any
-  err: Error | any,
-  res: express.Response | null,
-  callback?: Function
-) {
-  console.error(err.stack || err);
-
-  // If user function has already sent response headers, the response with
-  // error message cannot be sent. This check is done inside the callback,
-  // right before sending the response, to make sure that no concurrent
-  // execution sends the response between the check and 'send' call below.
-  if (res && !res.headersSent) {
-    res.set(FUNCTION_STATUS_HEADER_FIELD, 'crash');
-    res.send(err.message || err);
-  }
-  if (callback) {
-    callback();
-  }
-}
-
 // Set limit to a value larger than 32MB, which is maximum limit of higher level
 // layers anyway.
 const requestLimit = '1024mb';
@@ -314,31 +286,6 @@ function rawBodySaver(
 ) {
   req.rawBody = buf;
 }
-
-const defaultBodySavingOptions = {
-  limit: requestLimit,
-  verify: rawBodySaver,
-};
-
-const cloudEventsBodySavingOptions = {
-  type: 'application/cloudevents+json',
-  limit: requestLimit,
-  verify: rawBodySaver,
-};
-
-// The parser will process ALL content types so must come last.
-const rawBodySavingOptions = {
-  limit: requestLimit,
-  verify: rawBodySaver,
-  type: '*/*',
-};
-
-// Use extended query string parsing for URL-encoded bodies.
-const urlEncodedOptions = {
-  limit: requestLimit,
-  verify: rawBodySaver,
-  extended: true,
-};
 
 /**
  * Wraps the provided function into an Express handler function with additional
@@ -364,25 +311,6 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
       });
     });
   };
-}
-
-/**
- * Checks whether the incoming request is a CloudEvents event in binary content
- * mode. This is verified by checking the presence of required headers.
- *
- * @link https://github.com/cloudevents/spec/blob/master/http-transport-binding.md#31-binary-content-mode
- *
- * @param req Express request object.
- * @return True if the request is a CloudEvents event in binary content mode,
- *     false otherwise.
- */
-function isBinaryCloudEvent(req: express.Request): boolean {
-  return !!(
-    req.header('ce-type') &&
-    req.header('ce-specversion') &&
-    req.header('ce-source') &&
-    req.header('ce-id')
-  );
 }
 
 /**
@@ -566,6 +494,30 @@ export function getServer(
     res.locals.functionExecutionFinished = false;
     next();
   });
+
+  const defaultBodySavingOptions = {
+    limit: requestLimit,
+    verify: rawBodySaver,
+  };
+  const cloudEventsBodySavingOptions = {
+    type: 'application/cloudevents+json',
+    limit: requestLimit,
+    verify: rawBodySaver,
+  };
+
+  // The parser will process ALL content types so must come last.
+  const rawBodySavingOptions = {
+    limit: requestLimit,
+    verify: rawBodySaver,
+    type: '*/*',
+  };
+
+  // Use extended query string parsing for URL-encoded bodies.
+  const urlEncodedOptions = {
+    limit: requestLimit,
+    verify: rawBodySaver,
+    extended: true,
+  };
 
   app.use(bodyParser.json(cloudEventsBodySavingOptions));
   app.use(bodyParser.json(defaultBodySavingOptions));
