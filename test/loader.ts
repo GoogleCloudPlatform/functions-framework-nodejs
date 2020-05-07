@@ -13,10 +13,11 @@
 // limitations under the License.
 
 import * as assert from 'assert';
+import * as express from 'express';
 import * as functions from '../src/functions';
 import * as loader from '../src/loader';
 
-describe('loading HTTP function', () => {
+describe('loading function', () => {
   interface TestData {
     name: string;
     codeLocation: string;
@@ -35,15 +36,3 @@ describe('loading HTTP function', () => {
       target: 'testEventFunction',
     },
   ];
-
-  testData.forEach(test => {
-    it(`should load ${test.name}`, () => {
-      const loadedFunction = loader.getUserFunction(
-        process.cwd() + test.codeLocation,
-        test.target
-      ) as functions.EventFunction;
-      const returned = loadedFunction({}, {});
-      assert.strictEqual(returned, 'PASS');
-    });
-  });
-});
