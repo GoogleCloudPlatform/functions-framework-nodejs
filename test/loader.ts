@@ -36,3 +36,15 @@ describe('loading function', () => {
       target: 'testEventFunction',
     },
   ];
+
+  testData.forEach(test => {
+    it(`should load ${test.name}`, () => {
+      const loadedFunction = loader.getUserFunction(
+        process.cwd() + test.codeLocation,
+        test.target
+      ) as functions.HttpFunction;
+      const returned = loadedFunction(express.request, express.response);
+      assert.strictEqual(returned, 'PASS');
+    });
+  });
+});

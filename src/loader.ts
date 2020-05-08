@@ -12,6 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// loader.ts
+/**
+ * This package contains the logic to load user's function.
+ * @packageDocumentation
+ */
+
+/**
+ * Import function signature type's definition.
+ */
 import { HandlerFunction } from './functions';
 
 /**
