@@ -13,9 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {
-  CloudEventsContext,
-} from './functions';
+import { CloudEventsContext } from './functions';
 
 /**
  * Checks whether the incoming request is a CloudEvents event in binary content
@@ -43,7 +41,9 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
  * @param req Express request object.
  * @return CloudEvents context.
  */
-export function getBinaryCloudEventContext(req: express.Request): CloudEventsContext {
+export function getBinaryCloudEventContext(
+  req: express.Request
+): CloudEventsContext {
   const context: CloudEventsContext = {};
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {

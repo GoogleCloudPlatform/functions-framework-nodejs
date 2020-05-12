@@ -130,7 +130,6 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
   };
 }
 
-
 /**
  * Wraps event function (or event function with callback) in HTTP function
  * signature.
