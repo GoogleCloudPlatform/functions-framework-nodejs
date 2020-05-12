@@ -37,7 +37,7 @@ describe('loading function', () => {
     },
   ];
 
-  testData.forEach(test => {
+  for (const test of testData) {
     it(`should load ${test.name}`, () => {
       const loadedFunction = loader.getUserFunction(
         process.cwd() + test.codeLocation,
@@ -46,5 +46,5 @@ describe('loading function', () => {
       const returned = loadedFunction(express.request, express.response);
       assert.strictEqual(returned, 'PASS');
     });
-  });
+  }
 });
