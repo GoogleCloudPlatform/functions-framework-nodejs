@@ -30,12 +30,9 @@
 import * as minimist from 'minimist';
 import { resolve } from 'path';
 
-import {
-  ErrorHandler,
-  SignatureType,
-  getServer,
-  getUserFunction,
-} from './invoker';
+import { getUserFunction } from './loader';
+
+import { ErrorHandler, SignatureType, getServer } from './invoker';
 
 // Supported command-line flags
 const FLAG = {

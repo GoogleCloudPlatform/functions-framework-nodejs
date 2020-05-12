@@ -29,89 +29,14 @@ import * as onFinished from 'on-finished';
 import { FUNCTION_STATUS_HEADER_FIELD } from './types';
 import { logAndSendError } from './logger';
 import { isBinaryCloudEvent } from './cloudevents';
-
-/**
- * The Cloud Functions context object for the event.
- *
- * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
- */
-export interface CloudFunctionsContext {
-  /**
-   * A unique ID for the event. For example: "70172329041928".
-   */
-  eventId?: string;
-  /**
-   * The date/time this event was created. For example: "2018-04-09T07:56:12.975Z"
-   * This will be formatted as ISO 8601.
-   */
-  timestamp?: string;
-  /**
-   * The type of the event. For example: "google.pubsub.topic.publish".
-   */
-  eventType?: string;
-  /**
-   * The resource that emitted the event.
-   */
-  resource?: string;
-}
-
-/**
- * The CloudEvents v0.2 context object for the event.
- *
- * @link https://github.com/cloudevents/spec/blob/v0.2/spec.md#context-attributes
- */
-export interface CloudEventsContext {
-  /**
-   * Type of occurrence which has happened.
-   */
-  type?: string;
-  /**
-   * The version of the CloudEvents specification which the event uses.
-   */
-  specversion?: string;
-  /**
-   * The event producer.
-   */
-  source?: string;
-  /**
-   * ID of the event.
-   */
-  id?: string;
-  /**
-   * Timestamp of when the event happened.
-   */
-  time?: string;
-  /**
-   * A link to the schema that the event data adheres to.
-   */
-  schemaurl?: string;
-  /**
-   * Content type of the event data.
-   */
-  contenttype?: string;
-
-  // tslint:disable-next-line:no-any CloudEvents extension attributes.
-  [key: string]: any;
-}
-
-export type Context = CloudFunctionsContext | CloudEventsContext;
-
-export interface HttpFunction {
-  // tslint:disable-next-line:no-any express interface.
-  (req: express.Request, res: express.Response): any;
-}
-export interface EventFunctionWithCallback {
-  // tslint:disable-next-line:no-any
-  (data: {}, context: Context, callback: Function): any;
-}
-export interface EventFunction {
-  // tslint:disable-next-line:no-any
-  (data: {}, context: Context): any;
-}
-export type HandlerFunction =
-  | HttpFunction
-  | EventFunction
-  | EventFunctionWithCallback;
+import {
+  HttpFunction,
+  EventFunction,
+  EventFunctionWithCallback,
+  HandlerFunction,
+  CloudFunctionsContext,
+  CloudEventsContext,
+} from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
 // Express leaves the Express namespace open to allow merging of new fields.
@@ -141,94 +66,8 @@ function isHttpFunction(
   return functionSignatureType === SignatureType.HTTP;
 }
 
-/**
- * Returns user's function from function file.
- * Returns null if function can't be retrieved.
- * @return User's function or null.
- */
-export function getUserFunction(
-  codeLocation: string,
-  functionTarget: string
-): HandlerFunction | null {
-  try {
-    const functionModulePath = getFunctionModulePath(codeLocation);
-    if (functionModulePath === null) {
-      console.error('Provided code is not a loadable module.');
-      return null;
-    }
-
-    const functionModule = require(functionModulePath);
-    let userFunction = functionTarget
-      .split('.')
-      .reduce((code, functionTargetPart) => {
-        if (typeof code === 'undefined') {
-          return undefined;
-        } else {
-          return code[functionTargetPart];
-        }
-      }, functionModule);
-
-    // TODO: do we want 'function' fallback?
-    if (typeof userFunction === 'undefined') {
-      if (functionModule.hasOwnProperty('function')) {
-        userFunction = functionModule['function'];
-      } else {
-        console.error(
-          `Function '${functionTarget}' is not defined in the provided ` +
-            'module.\nDid you specify the correct target function to execute?'
-        );
-        return null;
-      }
-    }
-
-    if (typeof userFunction !== 'function') {
-      console.error(
-        `'${functionTarget}' needs to be of type function. Got: ` +
-          `${typeof userFunction}`
-      );
-      return null;
-    }
-
-    return userFunction as HandlerFunction;
-  } catch (ex) {
-    let additionalHint: string;
-    // TODO: this should be done based on ex.code rather than string matching.
-    if (ex.stack && ex.stack.includes('Cannot find module')) {
-      additionalHint =
-        'Did you list all required modules in the package.json ' +
-        'dependencies?\n';
-    } else {
-      additionalHint = 'Is there a syntax error in your code?\n';
-    }
-    console.error(
-      `Provided module can't be loaded.\n${additionalHint}` +
-        `Detailed stack trace: ${ex.stack}`
-    );
-    return null;
-  }
-}
-
 // Response object for the most recent request.
 let latestRes: express.Response | null = null;
-
-/**
- * Returns resolved path to the module containing the user function.
- * Returns null if the module can not be identified.
- * @param codeLocation Directory with user's code.
- * @return Resolved path or null.
- */
-function getFunctionModulePath(codeLocation: string): string | null {
-  let path: string | null = null;
-  try {
-    path = require.resolve(codeLocation);
-  } catch (ex) {
-    try {
-      // TODO: Decide if we want to keep this fallback.
-      path = require.resolve(codeLocation + '/function.js');
-    } catch (ex) {}
-  }
-  return path;
-}
 
 /**
  * Sends back a response to the incoming request.
