@@ -28,14 +28,12 @@ import * as onFinished from 'on-finished';
 
 import { FUNCTION_STATUS_HEADER_FIELD } from './types';
 import { logAndSendError } from './logger';
-import { isBinaryCloudEvent } from './cloudevents';
+import { isBinaryCloudEvent, getBinaryCloudEventContext } from './cloudevents';
 import {
   HttpFunction,
   EventFunction,
   EventFunctionWithCallback,
   HandlerFunction,
-  CloudFunctionsContext,
-  CloudEventsContext,
 } from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
@@ -106,26 +104,6 @@ function sendResponse(result: any, err: Error | null, res: express.Response) {
   }
 }
 
-// Set limit to a value larger than 32MB, which is maximum limit of higher level
-// layers anyway.
-const requestLimit = '1024mb';
-
-/**
- * Retains a reference to the raw body buffer to allow access to the raw body
- * for things like request signature validation.  This is used as the "verify"
- * function in body-parser options.
- * @param req Express request object.
- * @param res Express response object.
- * @param buf Buffer to be saved.
- */
-function rawBodySaver(
-  req: express.Request,
-  res: express.Response,
-  buf: Buffer
-) {
-  req.rawBody = buf;
-}
-
 /**
  * Wraps the provided function into an Express handler function with additional
  * instrumentation logic.
@@ -150,24 +128,6 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
       });
     });
   };
-}
-
-/**
- * Returns a CloudEvents context from the given CloudEvents request. Context
- * attributes are retrieved from request headers.
- *
- * @param req Express request object.
- * @return CloudEvents context.
- */
-function getBinaryCloudEventContext(req: express.Request): CloudEventsContext {
-  const context: CloudEventsContext = {};
-  for (const name in req.headers) {
-    if (name.startsWith('ce-')) {
-      const attributeName = name.substr('ce-'.length);
-      context[attributeName] = req.header(name);
-    }
-  }
-  return context;
 }
 
 /**
@@ -327,6 +287,8 @@ export function getServer(
   // App to use for function executions.
   const app = express();
 
+  // Express middleware
+
   // Set request-specific values in the very first middleware.
   app.use('/*', (req, res, next) => {
     latestRes = res;
@@ -334,6 +296,25 @@ export function getServer(
     next();
   });
 
+  /**
+   * Retains a reference to the raw body buffer to allow access to the raw body
+   * for things like request signature validation.  This is used as the "verify"
+   * function in body-parser options.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @param buf Buffer to be saved.
+   */
+  function rawBodySaver(
+    req: express.Request,
+    res: express.Response,
+    buf: Buffer
+  ) {
+    req.rawBody = buf;
+  }
+
+  // Set limit to a value larger than 32MB, which is maximum limit of higher level
+  // layers anyway.
+  const requestLimit = '1024mb';
   const defaultBodySavingOptions = {
     limit: requestLimit,
     verify: rawBodySaver,
@@ -343,8 +324,6 @@ export function getServer(
     limit: requestLimit,
     verify: rawBodySaver,
   };
-
-  // The parser will process ALL content types so must come last.
   const rawBodySavingOptions = {
     limit: requestLimit,
     verify: rawBodySaver,
@@ -358,18 +337,16 @@ export function getServer(
     extended: true,
   };
 
+  // Apply middleware
   app.use(bodyParser.json(cloudEventsBodySavingOptions));
   app.use(bodyParser.json(defaultBodySavingOptions));
   app.use(bodyParser.text(defaultBodySavingOptions));
   app.use(bodyParser.urlencoded(urlEncodedOptions));
-
-  // MUST be last in the list of body parsers as subsequent parsers will be
-  // skipped when one is matched.
+  // The parser will process ALL content types so MUST come last.
+  // Subsequent parsers will be skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
-
-  registerFunctionRoutes(app, userFunction, functionSignatureType);
-
   app.enable('trust proxy'); // To respect X-Forwarded-For header.
 
+  registerFunctionRoutes(app, userFunction, functionSignatureType);
   return http.createServer(app);
 }
