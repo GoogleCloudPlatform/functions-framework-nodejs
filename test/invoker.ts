@@ -164,8 +164,6 @@ describe('CloudEvents request to event function', () => {
   const subject = 'test-subject';
   const id = 'test-1234-1234';
   const time = '2020-05-13T01:23:45Z';
-  const dataschema =
-    'https://github.com/cloudevents/spec/blob/master/spec.md#dataschema';
   const datacontenttype = 'application/json';
   const data = {
     some: 'payload',
@@ -182,7 +180,6 @@ describe('CloudEvents request to event function', () => {
         subject,
         id,
         time,
-        dataschema,
         datacontenttype,
         data,
       },
@@ -197,7 +194,6 @@ describe('CloudEvents request to event function', () => {
         'ce-subject': subject,
         'ce-id': id,
         'ce-time': time,
-        'ce-dataschema': dataschema,
         'ce-datacontenttype': datacontenttype,
       },
       body: data,
@@ -227,7 +223,6 @@ describe('CloudEvents request to event function', () => {
       assert.strictEqual(receivedContext!.subject, subject);
       assert.strictEqual(receivedContext!.id, id);
       assert.strictEqual(receivedContext!.time, time);
-      assert.strictEqual(receivedContext!.dataschema, dataschema);
       assert.strictEqual(receivedContext!.datacontenttype, datacontenttype);
     });
   });
