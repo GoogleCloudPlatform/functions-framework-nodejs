@@ -156,38 +156,51 @@ describe('CloudEvents request to event function', () => {
     headers: { [key: string]: string };
     body: {};
   }
+
+  const specversion = '1.0';
+  const type = 'com.google.cloud.storage';
+  const source =
+    'https://github.com/GoogleCloudPlatform/functions-framework-nodejs';
+  const subject = 'test-subject';
+  const id = 'test-1234-1234';
+  const time = '2020-05-13T01:23:45Z';
+  const dataschema =
+    'https://github.com/cloudevents/spec/blob/master/spec.md#dataschema';
+  const datacontenttype = 'application/json';
+  const data = {
+    some: 'payload',
+  };
+
   const testData: TestData[] = [
     {
-      name: 'CloudEvents v0.2 structured content mode',
+      name: 'CloudEvents v1.0 structured content mode',
       headers: { 'Content-Type': 'application/cloudevents+json' },
       body: {
-        type: 'testType',
-        specversion: 'testSpecversion',
-        source: 'testSource',
-        id: 'testId',
-        time: 'testTime',
-        schemaurl: 'testSchemaurl',
-        contenttype: 'testContenttype',
-        data: {
-          some: 'payload',
-        },
+        specversion,
+        type,
+        source,
+        subject,
+        id,
+        time,
+        dataschema,
+        datacontenttype,
+        data,
       },
     },
     {
-      name: 'CloudEvents v0.2 binary content mode',
+      name: 'CloudEvents v1.0 binary content mode',
       headers: {
         'Content-Type': 'application/json',
-        'ce-type': 'testType',
-        'ce-specversion': 'testSpecversion',
-        'ce-source': 'testSource',
-        'ce-id': 'testId',
-        'ce-time': 'testTime',
-        'ce-schemaurl': 'testSchemaurl',
-        'ce-contenttype': 'testContenttype',
+        'ce-specversion': specversion,
+        'ce-type': type,
+        'ce-source': source,
+        'ce-subject': subject,
+        'ce-id': id,
+        'ce-time': time,
+        'ce-dataschema': dataschema,
+        'ce-datacontenttype': datacontenttype,
       },
-      body: {
-        some: 'payload',
-      },
+      body: data,
     },
   ];
   testData.forEach(test => {
@@ -206,15 +219,16 @@ describe('CloudEvents request to event function', () => {
         .set(test.headers)
         .send(test.body)
         .expect(204);
-      assert.deepStrictEqual(receivedData, { some: 'payload' });
+      assert.deepStrictEqual(receivedData, data);
       assert.notStrictEqual(receivedContext, null);
-      assert.strictEqual(receivedContext!.type, 'testType');
-      assert.strictEqual(receivedContext!.specversion, 'testSpecversion');
-      assert.strictEqual(receivedContext!.source, 'testSource');
-      assert.strictEqual(receivedContext!.id, 'testId');
-      assert.strictEqual(receivedContext!.time, 'testTime');
-      assert.strictEqual(receivedContext!.schemaurl, 'testSchemaurl');
-      assert.strictEqual(receivedContext!.contenttype, 'testContenttype');
+      assert.strictEqual(receivedContext!.specversion, specversion);
+      assert.strictEqual(receivedContext!.type, type);
+      assert.strictEqual(receivedContext!.source, source);
+      assert.strictEqual(receivedContext!.subject, subject);
+      assert.strictEqual(receivedContext!.id, id);
+      assert.strictEqual(receivedContext!.time, time);
+      assert.strictEqual(receivedContext!.dataschema, dataschema);
+      assert.strictEqual(receivedContext!.datacontenttype, datacontenttype);
     });
   });
 });

@@ -57,9 +57,9 @@ export interface CloudFunctionsContext {
 }
 
 /**
- * The CloudEvents v0.2 context object for the event.
+ * The CloudEvents v1.0 context object for the event.
  *
- * @link https://github.com/cloudevents/spec/blob/v0.2/spec.md#context-attributes
+ * @link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes
  */
 export interface CloudEventsContext {
   /**
