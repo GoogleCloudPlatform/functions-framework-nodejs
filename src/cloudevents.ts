@@ -19,7 +19,7 @@ import { CloudEventsContext } from './functions';
  * Checks whether the incoming request is a CloudEvents event in binary content
  * mode. This is verified by checking the presence of required headers.
  *
- * @link https://github.com/cloudevents/spec/blob/master/http-transport-binding.md#31-binary-content-mode
+ * @link https://github.com/cloudevents/spec/blob/master/http-protocol-binding.md#3-http-message-mapping
  *
  * @param req Express request object.
  * @return True if the request is a CloudEvents event in binary content mode,
