@@ -12,7 +12,7 @@ In your `package.json`, specify `--signature-type=event"` for the `functions-fra
 ```sh
 {
   "scripts": {
-    "start": "functions-framework --target=helloWorld --signature-type=event"
+    "start": "functions-framework --target=helloPubSub --signature-type=event"
   }
 }
 ```
