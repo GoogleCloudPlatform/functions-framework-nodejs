@@ -259,7 +259,7 @@ export class ErrorHandler {
     });
 
     process.on('exit', code => {
-      logAndSendError(new Error(`Process exited with code ${code}`), latestRes);
+      console.log(`Process exited with code ${code}`);
     });
 
     ['SIGINT', 'SIGTERM'].forEach(signal => {
