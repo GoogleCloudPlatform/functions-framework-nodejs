@@ -258,7 +258,7 @@ export class ErrorHandler {
       logAndSendError(err, latestRes, killInstance);
     });
 
-    process.on('exit', code => {
+    process.on('SIGINT', code => {
       console.log(`Process exited with code ${code}`);
     });
 
