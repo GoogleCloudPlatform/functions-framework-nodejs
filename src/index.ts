@@ -72,7 +72,9 @@ const SIGNATURE_TYPE =
   ];
 if (SIGNATURE_TYPE === undefined) {
   console.error(
-    `Function signature type must be one of 'http', 'event', or 'cloudevent'.`
+    `Function signature type must be one of: ${Object.values(
+      SignatureType
+    ).join(', ')}.`
   );
   process.exit(1);
 }

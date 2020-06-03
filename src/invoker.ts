@@ -49,9 +49,9 @@ declare global {
 }
 
 export enum SignatureType {
-  HTTP,
-  EVENT,
-  CLOUDEVENT,
+  HTTP = 'http',
+  EVENT = 'event',
+  CLOUDEVENT = 'cloudevent',
 }
 
 /**
