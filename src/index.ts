@@ -71,7 +71,9 @@ const SIGNATURE_TYPE =
     SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof SignatureType
   ];
 if (SIGNATURE_TYPE === undefined) {
-  console.error(`Function signature type must be one of 'http' or 'event'.`);
+  console.error(
+    `Function signature type must be one of 'http', 'event', or 'cloudevent'.`
+  );
   process.exit(1);
 }
 

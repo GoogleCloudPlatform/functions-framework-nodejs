@@ -26,10 +26,20 @@ export interface EventFunctionWithCallback {
   // tslint:disable-next-line:no-any
   (data: {}, context: Context, callback: Function): any;
 }
+export interface CloudEventFunction {
+  // tslint:disable-next-line:no-any
+  (cloudevent: CloudEventsContext): any;
+}
+export interface CloudEventFunctionWithCallback {
+  // tslint:disable-next-line:no-any
+  (cloudevent: CloudEventsContext, callback: Function): any;
+}
 export type HandlerFunction =
   | HttpFunction
   | EventFunction
-  | EventFunctionWithCallback;
+  | EventFunctionWithCallback
+  | CloudEventFunction
+  | CloudEventFunctionWithCallback;
 
 /**
  * The Cloud Functions context object for the event.

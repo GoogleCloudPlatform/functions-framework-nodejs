@@ -33,6 +33,8 @@ import {
   HttpFunction,
   EventFunction,
   EventFunctionWithCallback,
+  CloudEventFunction,
+  CloudEventFunctionWithCallback,
   HandlerFunction,
 } from './functions';
 
@@ -49,6 +51,7 @@ declare global {
 export enum SignatureType {
   HTTP,
   EVENT,
+  CLOUDEVENT,
 }
 
 /**
@@ -62,6 +65,32 @@ function isHttpFunction(
   functionSignatureType: SignatureType
 ): fn is HttpFunction {
   return functionSignatureType === SignatureType.HTTP;
+}
+
+/**
+ * Checks whether the given user's function is an EVENT function.
+ * @param fn User's function.
+ * @param functionSignatureType Type of user's function signature.
+ * @return True if user's function is an EVENT function, false otherwise.
+ */
+function isEventFunction(
+  fn: HandlerFunction,
+  functionSignatureType: SignatureType
+): fn is EventFunction | EventFunctionWithCallback {
+  return functionSignatureType === SignatureType.EVENT;
+}
+
+/**
+ * Checks whether the given user's function is a CLOUDEVENT function.
+ * @param fn User's function.
+ * @param functionSignatureType Type of user's function signature.
+ * @return True if user's function is a CLOUDEVENT function, false otherwise.
+ */
+function isCloudEventFunction(
+  fn: HandlerFunction,
+  functionSignatureType: SignatureType
+): fn is CloudEventFunction | CloudEventFunctionWithCallback {
+  return functionSignatureType === SignatureType.CLOUDEVENT;
 }
 
 // Response object for the most recent request.
@@ -127,6 +156,57 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
         execute(req, res);
       });
     });
+  };
+}
+
+/**
+ * Wraps cloudevent function (or cloudevent function with callback) in HTTP function
+ * signature.
+ * @param userFunction User's function.
+ * @return HTTP function which wraps the provided event function.
+ */
+function wrapCloudEventFunction(
+  userFunction: CloudEventFunction | CloudEventFunctionWithCallback
+): HttpFunction {
+  return (req: express.Request, res: express.Response) => {
+    const callback = process.domain.bind(
+      // tslint:disable-next-line:no-any
+      (err: Error | null, result: any) => {
+        if (res.locals.functionExecutionFinished) {
+          console.log('Ignoring extra callback call');
+        } else {
+          res.locals.functionExecutionFinished = true;
+          if (err) {
+            console.error(err.stack);
+          }
+          sendResponse(result, err, res);
+        }
+      }
+    );
+    let cloudevent = req.body;
+    if (isBinaryCloudEvent(req)) {
+      cloudevent = getBinaryCloudEventContext(req);
+    }
+    // Callback style if user function has more than 2 arguments.
+    if (userFunction!.length > 2) {
+      const fn = userFunction as CloudEventFunctionWithCallback;
+      return fn(cloudevent, callback);
+    }
+
+    const fn = userFunction as CloudEventFunction;
+    Promise.resolve()
+      .then(() => {
+        const result = fn(cloudevent);
+        return result;
+      })
+      .then(
+        result => {
+          callback(null, result);
+        },
+        err => {
+          callback(err, undefined);
+        }
+      );
   };
 }
 
@@ -224,7 +304,12 @@ function registerFunctionRoutes(
     });
   } else {
     app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapEventFunction(userFunction);
+      const wrappedUserFunction = isEventFunction(
+        userFunction!,
+        functionSignatureType
+      )
+        ? wrapEventFunction(userFunction)
+        : wrapCloudEventFunction(userFunction);
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });

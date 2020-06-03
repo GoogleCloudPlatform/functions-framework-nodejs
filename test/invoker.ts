@@ -227,3 +227,78 @@ describe('CloudEvents request to event function', () => {
     });
   });
 });
+
+describe('CloudEvents request to cloudevent function', () => {
+  interface TestData {
+    name: string;
+    headers: { [key: string]: string };
+    body: {};
+  }
+
+  const specversion = '1.0';
+  const type = 'com.google.cloud.storage';
+  const source =
+    'https://github.com/GoogleCloudPlatform/functions-framework-nodejs';
+  const subject = 'test-subject';
+  const id = 'test-1234-1234';
+  const time = '2020-05-13T01:23:45Z';
+  const datacontenttype = 'application/json';
+  const data = {
+    some: 'payload',
+  };
+
+  const testData: TestData[] = [
+    {
+      name: 'CloudEvents v1.0 structured content mode',
+      headers: { 'Content-Type': 'application/cloudevents+json' },
+      body: {
+        specversion,
+        type,
+        source,
+        subject,
+        id,
+        time,
+        datacontenttype,
+        data,
+      },
+    },
+    {
+      name: 'CloudEvents v1.0 binary content mode',
+      headers: {
+        'Content-Type': 'application/json',
+        'ce-specversion': specversion,
+        'ce-type': type,
+        'ce-source': source,
+        'ce-subject': subject,
+        'ce-id': id,
+        'ce-time': time,
+        'ce-datacontenttype': datacontenttype,
+      },
+      body: data,
+    },
+  ];
+  testData.forEach(test => {
+    it(`should receive data and context from ${test.name}`, async () => {
+      let receivedCloudEvent: functions.CloudEventsContext | null = null;
+      const server = invoker.getServer(
+        (cloudevent: functions.CloudEventsContext) => {
+          receivedCloudEvent = cloudevent as functions.CloudEventsContext;
+        },
+        invoker.SignatureType.CLOUDEVENT
+      );
+      await supertest(server)
+        .post('/')
+        .set(test.headers)
+        .send(test.body)
+        .expect(204);
+      assert.notStrictEqual(receivedCloudEvent, null);
+      assert.strictEqual(receivedCloudEvent!.specversion, specversion);
+      assert.strictEqual(receivedCloudEvent!.type, type);
+      assert.strictEqual(receivedCloudEvent!.source, source);
+      assert.strictEqual(receivedCloudEvent!.subject, subject);
+      assert.strictEqual(receivedCloudEvent!.id, id);
+      assert.strictEqual(receivedCloudEvent!.time, time);
+      assert.strictEqual(receivedCloudEvent!.datacontenttype, datacontenttype);
+    });
+  });
+});
