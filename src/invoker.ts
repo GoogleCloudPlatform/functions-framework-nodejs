@@ -147,6 +147,7 @@ function wrapCloudEventFunction(
     let cloudevent = req.body;
     if (isBinaryCloudEvent(req)) {
       cloudevent = getBinaryCloudEventContext(req);
+      cloudevent.data = req.body;
     }
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {

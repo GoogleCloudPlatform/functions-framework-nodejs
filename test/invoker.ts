@@ -291,6 +291,7 @@ describe('CloudEvents request to cloudevent function', () => {
         .set(test.headers)
         .send(test.body)
         .expect(204);
+      assert.deepStrictEqual(receivedCloudEvent!.data, data);
       assert.notStrictEqual(receivedCloudEvent, null);
       assert.strictEqual(receivedCloudEvent!.specversion, specversion);
       assert.strictEqual(receivedCloudEvent!.type, type);
