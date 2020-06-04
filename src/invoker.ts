@@ -54,45 +54,6 @@ export enum SignatureType {
   CLOUDEVENT = 'cloudevent',
 }
 
-/**
- * Checks whether the given user's function is an HTTP function.
- * @param fn User's function.
- * @param functionSignatureType Type of user's function signature.
- * @return True if user's function is an HTTP function, false otherwise.
- */
-function isHttpFunction(
-  fn: HandlerFunction,
-  functionSignatureType: SignatureType
-): fn is HttpFunction {
-  return functionSignatureType === SignatureType.HTTP;
-}
-
-/**
- * Checks whether the given user's function is an EVENT function.
- * @param fn User's function.
- * @param functionSignatureType Type of user's function signature.
- * @return True if user's function is an EVENT function, false otherwise.
- */
-function isEventFunction(
-  fn: HandlerFunction,
-  functionSignatureType: SignatureType
-): fn is EventFunction | EventFunctionWithCallback {
-  return functionSignatureType === SignatureType.EVENT;
-}
-
-/**
- * Checks whether the given user's function is a CLOUDEVENT function.
- * @param fn User's function.
- * @param functionSignatureType Type of user's function signature.
- * @return True if user's function is a CLOUDEVENT function, false otherwise.
- */
-function isCloudEventFunction(
-  fn: HandlerFunction,
-  functionSignatureType: SignatureType
-): fn is CloudEventFunction | CloudEventFunctionWithCallback {
-  return functionSignatureType === SignatureType.CLOUDEVENT;
-}
-
 // Response object for the most recent request.
 let latestRes: express.Response | null = null;
 
@@ -286,7 +247,7 @@ function registerFunctionRoutes(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType
 ) {
-  if (isHttpFunction(userFunction!, functionSignatureType)) {
+  if (functionSignatureType === SignatureType.HTTP) {
     app.use('/favicon.ico|/robots.txt', (req, res, next) => {
       res.sendStatus(404);
     });
@@ -299,17 +260,22 @@ function registerFunctionRoutes(
     });
 
     app.all('/*', (req, res, next) => {
-      const handler = makeHttpHandler(userFunction);
+      const handler = makeHttpHandler(userFunction as HttpFunction);
+      handler(req, res, next);
+    });
+  } else if (functionSignatureType === SignatureType.EVENT) {
+    app.post('/*', (req, res, next) => {
+      const wrappedUserFunction = wrapEventFunction(userFunction as
+        | EventFunction
+        | EventFunctionWithCallback);
+      const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });
   } else {
     app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = isEventFunction(
-        userFunction!,
-        functionSignatureType
-      )
-        ? wrapEventFunction(userFunction)
-        : wrapCloudEventFunction(userFunction);
+      const wrappedUserFunction = wrapCloudEventFunction(userFunction as
+        | CloudEventFunction
+        | CloudEventFunctionWithCallback);
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });
