@@ -23,9 +23,13 @@
 //     node module to execute. If such a function is not defined,
 //     then falls back to 'function' name.
 //   - FUNCTION_SIGNATURE_TYPE - defines the type of the client function
-//     signature, 'http' for function signature with HTTP request and HTTP
-//     response arguments, or 'event' for function signature with arguments
-//     unmarshalled from an incoming request.
+//     signature:
+//     - 'http' for function signature with HTTP request and HTTP
+//     response arguments,
+//     - 'event' for function signature with arguments
+//     unmarshalled from an incoming request,
+//     - 'cloudevent' for function signature with arguments
+//     unmarshalled as CloudEvents from an incoming request.
 
 import * as minimist from 'minimist';
 import { resolve } from 'path';
@@ -71,7 +75,11 @@ const SIGNATURE_TYPE =
     SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof SignatureType
   ];
 if (SIGNATURE_TYPE === undefined) {
-  console.error(`Function signature type must be one of 'http' or 'event'.`);
+  console.error(
+    `Function signature type must be one of: ${Object.values(
+      SignatureType
+    ).join(', ')}.`
+  );
   process.exit(1);
 }
 

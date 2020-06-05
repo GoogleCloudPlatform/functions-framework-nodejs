@@ -33,6 +33,8 @@ import {
   HttpFunction,
   EventFunction,
   EventFunctionWithCallback,
+  CloudEventFunction,
+  CloudEventFunctionWithCallback,
   HandlerFunction,
 } from './functions';
 
@@ -47,21 +49,9 @@ declare global {
 }
 
 export enum SignatureType {
-  HTTP,
-  EVENT,
-}
-
-/**
- * Checks whether the given user's function is an HTTP function.
- * @param fn User's function.
- * @param functionSignatureType Type of user's function signature.
- * @return True if user's function is an HTTP function, false otherwise.
- */
-function isHttpFunction(
-  fn: HandlerFunction,
-  functionSignatureType: SignatureType
-): fn is HttpFunction {
-  return functionSignatureType === SignatureType.HTTP;
+  HTTP = 'http',
+  EVENT = 'event',
+  CLOUDEVENT = 'cloudevent',
 }
 
 // Response object for the most recent request.
@@ -127,6 +117,58 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
         execute(req, res);
       });
     });
+  };
+}
+
+/**
+ * Wraps cloudevent function (or cloudevent function with callback) in HTTP function
+ * signature.
+ * @param userFunction User's function.
+ * @return HTTP function which wraps the provided event function.
+ */
+function wrapCloudEventFunction(
+  userFunction: CloudEventFunction | CloudEventFunctionWithCallback
+): HttpFunction {
+  return (req: express.Request, res: express.Response) => {
+    const callback = process.domain.bind(
+      // tslint:disable-next-line:no-any
+      (err: Error | null, result: any) => {
+        if (res.locals.functionExecutionFinished) {
+          console.log('Ignoring extra callback call');
+        } else {
+          res.locals.functionExecutionFinished = true;
+          if (err) {
+            console.error(err.stack);
+          }
+          sendResponse(result, err, res);
+        }
+      }
+    );
+    let cloudevent = req.body;
+    if (isBinaryCloudEvent(req)) {
+      cloudevent = getBinaryCloudEventContext(req);
+      cloudevent.data = req.body;
+    }
+    // Callback style if user function has more than 2 arguments.
+    if (userFunction!.length > 2) {
+      const fn = userFunction as CloudEventFunctionWithCallback;
+      return fn(cloudevent, callback);
+    }
+
+    const fn = userFunction as CloudEventFunction;
+    Promise.resolve()
+      .then(() => {
+        const result = fn(cloudevent);
+        return result;
+      })
+      .then(
+        result => {
+          callback(null, result);
+        },
+        err => {
+          callback(err, undefined);
+        }
+      );
   };
 }
 
@@ -206,7 +248,7 @@ function registerFunctionRoutes(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType
 ) {
-  if (isHttpFunction(userFunction!, functionSignatureType)) {
+  if (functionSignatureType === SignatureType.HTTP) {
     app.use('/favicon.ico|/robots.txt', (req, res, next) => {
       res.sendStatus(404);
     });
@@ -219,12 +261,22 @@ function registerFunctionRoutes(
     });
 
     app.all('/*', (req, res, next) => {
-      const handler = makeHttpHandler(userFunction);
+      const handler = makeHttpHandler(userFunction as HttpFunction);
+      handler(req, res, next);
+    });
+  } else if (functionSignatureType === SignatureType.EVENT) {
+    app.post('/*', (req, res, next) => {
+      const wrappedUserFunction = wrapEventFunction(userFunction as
+        | EventFunction
+        | EventFunctionWithCallback);
+      const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });
   } else {
     app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapEventFunction(userFunction);
+      const wrappedUserFunction = wrapCloudEventFunction(userFunction as
+        | CloudEventFunction
+        | CloudEventFunctionWithCallback);
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });

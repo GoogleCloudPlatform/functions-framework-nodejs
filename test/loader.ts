@@ -28,12 +28,12 @@ describe('loading function', () => {
     {
       name: 'function without "main" in package.json',
       codeLocation: '/test/data/without_main',
-      target: 'testEventFunction',
+      target: 'testFunction',
     },
     {
       name: 'function with "main" in package.json',
       codeLocation: '/test/data/with_main',
-      target: 'testEventFunction',
+      target: 'testFunction',
     },
   ];
 
