@@ -150,6 +150,19 @@ describe('GCF event request to event function', () => {
   });
 });
 
+const TEST_CLOUD_EVENT = {
+  specversion: '1.0',
+  type: 'com.google.cloud.storage',
+  source: 'https://github.com/GoogleCloudPlatform/functions-framework-nodejs',
+  subject: 'test-subject',
+  id: 'test-1234-1234',
+  time: '2020-05-13T01:23:45Z',
+  datacontenttype: 'application/json',
+  data: {
+    some: 'payload',
+  },
+};
+
 describe('CloudEvents request to event function', () => {
   interface TestData {
     name: string;
@@ -157,46 +170,25 @@ describe('CloudEvents request to event function', () => {
     body: {};
   }
 
-  const specversion = '1.0';
-  const type = 'com.google.cloud.storage';
-  const source =
-    'https://github.com/GoogleCloudPlatform/functions-framework-nodejs';
-  const subject = 'test-subject';
-  const id = 'test-1234-1234';
-  const time = '2020-05-13T01:23:45Z';
-  const datacontenttype = 'application/json';
-  const data = {
-    some: 'payload',
-  };
-
   const testData: TestData[] = [
     {
       name: 'CloudEvents v1.0 structured content mode',
       headers: { 'Content-Type': 'application/cloudevents+json' },
-      body: {
-        specversion,
-        type,
-        source,
-        subject,
-        id,
-        time,
-        datacontenttype,
-        data,
-      },
+      body: TEST_CLOUD_EVENT,
     },
     {
       name: 'CloudEvents v1.0 binary content mode',
       headers: {
-        'Content-Type': 'application/json',
-        'ce-specversion': specversion,
-        'ce-type': type,
-        'ce-source': source,
-        'ce-subject': subject,
-        'ce-id': id,
-        'ce-time': time,
-        'ce-datacontenttype': datacontenttype,
+        'Content-Type': 'application/cloudevents+json',
+        'ce-specversion': TEST_CLOUD_EVENT.specversion,
+        'ce-type': TEST_CLOUD_EVENT.type,
+        'ce-source': TEST_CLOUD_EVENT.source,
+        'ce-subject': TEST_CLOUD_EVENT.subject,
+        'ce-id': TEST_CLOUD_EVENT.id,
+        'ce-time': TEST_CLOUD_EVENT.time,
+        'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
-      body: data,
+      body: TEST_CLOUD_EVENT.data,
     },
   ];
   testData.forEach(test => {
@@ -215,15 +207,21 @@ describe('CloudEvents request to event function', () => {
         .set(test.headers)
         .send(test.body)
         .expect(204);
-      assert.deepStrictEqual(receivedData, data);
+      assert.deepStrictEqual(receivedData, TEST_CLOUD_EVENT.data);
       assert.notStrictEqual(receivedContext, null);
-      assert.strictEqual(receivedContext!.specversion, specversion);
-      assert.strictEqual(receivedContext!.type, type);
-      assert.strictEqual(receivedContext!.source, source);
-      assert.strictEqual(receivedContext!.subject, subject);
-      assert.strictEqual(receivedContext!.id, id);
-      assert.strictEqual(receivedContext!.time, time);
-      assert.strictEqual(receivedContext!.datacontenttype, datacontenttype);
+      assert.strictEqual(
+        receivedContext!.specversion,
+        TEST_CLOUD_EVENT.specversion
+      );
+      assert.strictEqual(receivedContext!.type, TEST_CLOUD_EVENT.type);
+      assert.strictEqual(receivedContext!.source, TEST_CLOUD_EVENT.source);
+      assert.strictEqual(receivedContext!.subject, TEST_CLOUD_EVENT.subject);
+      assert.strictEqual(receivedContext!.id, TEST_CLOUD_EVENT.id);
+      assert.strictEqual(receivedContext!.time, TEST_CLOUD_EVENT.time);
+      assert.strictEqual(
+        receivedContext!.datacontenttype,
+        TEST_CLOUD_EVENT.datacontenttype
+      );
     });
   });
 });
@@ -235,46 +233,25 @@ describe('CloudEvents request to cloudevent function', () => {
     body: {};
   }
 
-  const specversion = '1.0';
-  const type = 'com.google.cloud.storage';
-  const source =
-    'https://github.com/GoogleCloudPlatform/functions-framework-nodejs';
-  const subject = 'test-subject';
-  const id = 'test-1234-1234';
-  const time = '2020-05-13T01:23:45Z';
-  const datacontenttype = 'application/json';
-  const data = {
-    some: 'payload',
-  };
-
   const testData: TestData[] = [
     {
       name: 'CloudEvents v1.0 structured content mode',
       headers: { 'Content-Type': 'application/cloudevents+json' },
-      body: {
-        specversion,
-        type,
-        source,
-        subject,
-        id,
-        time,
-        datacontenttype,
-        data,
-      },
+      body: TEST_CLOUD_EVENT,
     },
     {
       name: 'CloudEvents v1.0 binary content mode',
       headers: {
         'Content-Type': 'application/json',
-        'ce-specversion': specversion,
-        'ce-type': type,
-        'ce-source': source,
-        'ce-subject': subject,
-        'ce-id': id,
-        'ce-time': time,
-        'ce-datacontenttype': datacontenttype,
+        'ce-specversion': TEST_CLOUD_EVENT.specversion,
+        'ce-type': TEST_CLOUD_EVENT.type,
+        'ce-source': TEST_CLOUD_EVENT.source,
+        'ce-subject': TEST_CLOUD_EVENT.subject,
+        'ce-id': TEST_CLOUD_EVENT.id,
+        'ce-time': TEST_CLOUD_EVENT.time,
+        'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
-      body: data,
+      body: TEST_CLOUD_EVENT.data,
     },
   ];
   testData.forEach(test => {
@@ -291,15 +268,21 @@ describe('CloudEvents request to cloudevent function', () => {
         .set(test.headers)
         .send(test.body)
         .expect(204);
-      assert.deepStrictEqual(receivedCloudEvent!.data, data);
       assert.notStrictEqual(receivedCloudEvent, null);
-      assert.strictEqual(receivedCloudEvent!.specversion, specversion);
-      assert.strictEqual(receivedCloudEvent!.type, type);
-      assert.strictEqual(receivedCloudEvent!.source, source);
-      assert.strictEqual(receivedCloudEvent!.subject, subject);
-      assert.strictEqual(receivedCloudEvent!.id, id);
-      assert.strictEqual(receivedCloudEvent!.time, time);
-      assert.strictEqual(receivedCloudEvent!.datacontenttype, datacontenttype);
+      assert.strictEqual(
+        receivedCloudEvent!.specversion,
+        TEST_CLOUD_EVENT.specversion
+      );
+      assert.strictEqual(receivedCloudEvent!.type, TEST_CLOUD_EVENT.type);
+      assert.strictEqual(receivedCloudEvent!.source, TEST_CLOUD_EVENT.source);
+      assert.strictEqual(receivedCloudEvent!.subject, TEST_CLOUD_EVENT.subject);
+      assert.strictEqual(receivedCloudEvent!.id, TEST_CLOUD_EVENT.id);
+      assert.strictEqual(receivedCloudEvent!.time, TEST_CLOUD_EVENT.time);
+      assert.strictEqual(
+        receivedCloudEvent!.datacontenttype,
+        TEST_CLOUD_EVENT.datacontenttype
+      );
+      assert.deepStrictEqual(receivedCloudEvent!.data, TEST_CLOUD_EVENT.data);
     });
   });
 });
