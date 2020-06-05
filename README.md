@@ -6,16 +6,16 @@ Node.js functions -- brought to you by the Google Cloud Functions team.
 The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
 
-- [Google Cloud Functions](https://cloud.google.com/functions/)
-- Your local development machine
-- [Cloud Run and Cloud Run on GKE](https://cloud.google.com/run/)
-- [Knative](https://github.com/knative/)-based environments
+*   [Google Cloud Functions](https://cloud.google.com/functions/)
+*   Your local development machine
+*   [Cloud Run and Cloud Run on GKE](https://cloud.google.com/run/)
+*   [Knative](https://github.com/knative/)-based environments
 
 The framework allows you to go from:
 
 ```js
 exports.helloWorld = (req, res) => {
-  res.send("Hello, World");
+  res.send('Hello, World');
 };
 ```
 
@@ -53,7 +53,7 @@ Create an `index.js` file with the following contents:
 
 ```js
 exports.helloWorld = (req, res) => {
-  res.send("Hello, World");
+  res.send('Hello, World');
 };
 ```
 
@@ -71,7 +71,7 @@ Create an `index.js` file with the following contents:
 
 ```js
 exports.helloWorld = (req, res) => {
-  res.send("Hello, World");
+  res.send('Hello, World');
 };
 ```
 
@@ -159,7 +159,7 @@ For example:
   }
 ```
 
-# Enable Google Cloud Functions events
+# Enable Google Cloud Functions Events
 
 The Functions Framework can unmarshall incoming
 Google Cloud Functions [event](https://cloud.google.com/functions/docs/concepts/events-triggers#events) payloads to `data` and `context` objects.
@@ -200,9 +200,9 @@ exports.helloCloudEvents = (cloudevent) => {
 };
 ```
 
-To enable automatic unmarshalling, set the function signature type to `cloudevent`
-using a command-line flag or an environment variable. By default, the HTTP
-signature will be used and automatic event unmarshalling will be disabled.
+To enable CloudEvents, set the signature type to `cloudevent`. By default, the HTTP signature will be used and automatic event unmarshalling will be disabled.
+
+Learn how to use CloudEvents in this [guide](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/cloudevents.md).
 
 # Advanced Docs
 
