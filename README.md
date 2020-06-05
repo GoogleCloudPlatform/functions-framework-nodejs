@@ -202,7 +202,7 @@ exports.helloCloudEvents = (cloudevent) => {
 
 To enable CloudEvents, set the signature type to `cloudevent`. By default, the HTTP signature will be used and automatic event unmarshalling will be disabled.
 
-Learn how to use CloudEvents in this [guide](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/cloudevents.md).
+Learn how to use CloudEvents in this [guide](docs/cloudevents.md).
 
 # Advanced Docs
 
