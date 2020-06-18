@@ -29,7 +29,9 @@
     "build/src/*.d.ts"
   ],
   "bin": {
-    "functions-framework": "./build/src/index.js"
+    "functions-framework": "./build/src/index.js",
+    "functions-framework-nodejs": "./build/src/index.js"
+
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",
