@@ -109,7 +109,7 @@ async function main() {
     await topic.create();
   }
   const createSubscriptionResponse = await topic.createSubscription('my_subscription', {
-    pushEndpoint: 'https://localhost:8080',
+    pushEndpoint: 'http://localhost:8080',
   });
 }
 
