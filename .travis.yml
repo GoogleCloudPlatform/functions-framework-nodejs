@@ -13,4 +13,4 @@ before_script:
 script:
   - npm run test
   - npm run check
-  - cd test/conformance && ./run-conformance-tests.sh
+  - npm run test-conformance
