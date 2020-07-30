@@ -13,4 +13,3 @@ before_script:
 script:
   - npm run test
   - npm run check
-  - npm run test-conformance
