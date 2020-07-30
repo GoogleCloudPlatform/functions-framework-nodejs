@@ -3,13 +3,12 @@
 set -e
 
 echo "Install Functions Framework for Node.js"
-npm install
+cd ../.. && npm install && cd $OLDPWD
 
 echo ""
 echo "Install Functions Framework Conformance"
-rm -rf functions-framework-conformance
 git clone https://github.com/GoogleCloudPlatform/functions-framework-conformance.git
-cd ./functions-framework-conformance/client && go build && cd $OLDPWD
+cd functions-framework-conformance/client && go build && cd $OLDPWD
 
 run_test() {
   target=$1
@@ -17,9 +16,9 @@ run_test() {
   signature_type=${3:-"$type"}
 
   echo ""
-  echo "Running conformance test for $type function"
+  echo -e "Running conformance test for $type function"
   ./functions-framework-conformance/client/client \
-    -cmd="node build/src/index.js --target $target --signature-type $signature_type --source test/conformance" \
+    -cmd="node ../../build/src/index.js --target $target --signature-type $signature_type" \
     -type="$type" \
     -validate-mapping=false
 }
