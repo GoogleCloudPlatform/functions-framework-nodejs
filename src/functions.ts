@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {CloudEventV1Attributes} from 'cloudevents'
+import { CloudEventV1Attributes } from 'cloudevents';
 
 export interface HttpFunction {
   // tslint:disable-next-line:no-any express interface.

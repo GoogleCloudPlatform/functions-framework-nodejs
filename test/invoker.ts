@@ -189,6 +189,7 @@ describe('CloudEvents request to event function', () => {
         'ce-time': TEST_CLOUD_EVENT.time as string,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
+      // tslint:disable-next-line:no-any
       body: TEST_CLOUD_EVENT.data as any, // disable bug in interface for unknown type
     },
   ];
@@ -252,18 +253,16 @@ describe('CloudEvents request to cloudevent function', () => {
         'ce-time': TEST_CLOUD_EVENT.time as string,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
+      // tslint:disable-next-line:no-any
       body: TEST_CLOUD_EVENT.data as any, // disable bug in interface for unknown type,
     },
   ];
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedCloudEvent: CloudEventV1Attributes | null = null;
-      const server = invoker.getServer(
-        (cloudevent: functions.Context) => {
-          receivedCloudEvent = cloudevent as CloudEventV1Attributes;
-        },
-        invoker.SignatureType.CLOUDEVENT
-      );
+      const server = invoker.getServer((cloudevent: functions.Context) => {
+        receivedCloudEvent = cloudevent as CloudEventV1Attributes;
+      }, invoker.SignatureType.CLOUDEVENT);
       await supertest(server)
         .post('/')
         .set(test.headers)

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {CloudEvent, Receiver} from 'cloudevents'
+import { CloudEvent, Receiver } from 'cloudevents';
 
 /**
  * Returns a CloudEvent from the given CloudEvents HTTP request.
@@ -21,9 +21,7 @@ import {CloudEvent, Receiver} from 'cloudevents'
  * @param req Express request object.
  * @return The CloudEvent
  */
-export function getCloudEvent(
-  req: express.Request
-): CloudEvent {
+export function getCloudEvent(req: express.Request): CloudEvent {
   const headers = req.headers as { [key: string]: string };
   return Receiver.accept(headers, req.body);
 }

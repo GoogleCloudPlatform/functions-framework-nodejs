@@ -28,7 +28,7 @@ import * as onFinished from 'on-finished';
 
 import { FUNCTION_STATUS_HEADER_FIELD } from './types';
 import { logAndSendError } from './logger';
-import { getCloudEvent as getCloudEvent } from './cloudevents';
+import { getCloudEvent } from './cloudevents';
 import {
   HttpFunction,
   EventFunction,
@@ -193,7 +193,7 @@ function wrapEventFunction(
         }
       }
     );
-    let data = event.data;
+    const data = event.data;
     let context = event.context;
     if (context === undefined) {
       // Support legacy events with context properties represented as event
