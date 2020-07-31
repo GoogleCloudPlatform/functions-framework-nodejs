@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-exports.foo = (data, context) => {
-  // Message used for function load verification in test.
-  return 'Hello from foo';
-};
+// HTTP header field that is added to Worker response to signalize problems with
+// executing the client function.
+export const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';

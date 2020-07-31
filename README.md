@@ -1,4 +1,4 @@
-# Functions Framework for Node.js [![Build Status](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs) [![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework)
+# Functions Framework for Node.js [![Build Status](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/functions-framework-nodejs) [![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
 
 An open source FaaS (Function as a service) framework for writing portable
 Node.js functions -- brought to you by the Google Cloud Functions team.
@@ -29,13 +29,15 @@ curl http://my-url
 All without needing to worry about writing an HTTP server or complicated request
 handling logic.
 
+> Watch [this video](https://youtu.be/yMEcyAkTliU?t=912) to learn more about the Node Functions Framework.
+
 # Features
 
-*   Spin up a local development server for quick testing
-*   Invoke a function in response to a request
-*   Automatically unmarshal events conforming to the
-    [CloudEvents](https://cloudevents.io/) spec
-*   Portable between serverless platforms
+- Spin up a local development server for quick testing
+- Invoke a function in response to a request
+- Automatically unmarshal events conforming to the
+  [CloudEvents](https://cloudevents.io/) spec
+- Portable between serverless platforms
 
 # Installation
 
@@ -61,8 +63,7 @@ Run the following command:
 npx @google-cloud/functions-framework --target=helloWorld
 ```
 
-Open http://localhost:8080/ in your browser and see *Hello, World*.
-
+Open http://localhost:8080/ in your browser and see _Hello, World_.
 
 # Quickstart: Set up a new project
 
@@ -142,12 +143,12 @@ You can configure the Functions Framework using command-line flags or
 environment variables. If you specify both, the environment variable will be
 ignored.
 
-Command-line flag         | Environment variable      | Description
-------------------------- | ------------------------- | -----------
-`--port`                    | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`
-`--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`
-`--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event`
-`--source`         | `FUNCTION_SOURCE`         | The path to the directory of your function. Default: `cwd` (the current working directory)
+| Command-line flag  | Environment variable      | Description                                                                                                                                                                                                      |
+| ------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--port`           | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`                                                                                                                                  |
+| `--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`                                                                                                                     |
+| `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` or `cloudevent` |
+| `--source`         | `FUNCTION_SOURCE`         | The path to the directory of your function. Default: `cwd` (the current working directory)                                                                                                                       |
 
 You can set command-line flags in your `package.json` via the `start` script.
 For example:
@@ -158,12 +159,12 @@ For example:
   }
 ```
 
-# Enable CloudEvents
+# Enable Google Cloud Functions Events
 
 The Functions Framework can unmarshall incoming
-[CloudEvents](http://cloudevents.io) payloads to `data` and `context` objects.
+Google Cloud Functions [event](https://cloud.google.com/functions/docs/concepts/events-triggers#events) payloads to `data` and `context` objects.
 These will be passed as arguments to your function when it receives a request.
-Note that your function must use the event-style function signature:
+Note that your function must use the `event`-style function signature:
 
 ```js
 exports.helloEvents = (data, context) => {
@@ -179,6 +180,29 @@ signature will be used and automatic event unmarshalling will be disabled.
 For more details on this signature type, check out the Google Cloud Functions
 documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
+
+# Enable CloudEvents
+
+The Functions Framework can unmarshall incoming
+[CloudEvents](http://cloudevents.io) payloads to a `cloudevent` object.
+It will be passed as an argument to your function when it receives a request.
+Note that your function must use the `cloudevent`-style function signature:
+
+```js
+exports.helloCloudEvents = (cloudevent) => {
+  console.log(cloudevent.specversion);
+  console.log(cloudevent.type);
+  console.log(cloudevent.source);
+  console.log(cloudevent.subject);
+  console.log(cloudevent.id);
+  console.log(cloudevent.time);
+  console.log(cloudevent.datacontenttype);
+};
+```
+
+To enable CloudEvents, set the signature type to `cloudevent`. By default, the HTTP signature will be used and automatic event unmarshalling will be disabled.
+
+Learn how to use CloudEvents in this [guide](docs/cloudevents.md).
 
 # Advanced Docs
 

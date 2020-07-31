@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/functions-framework",
-  "version": "1.2.1",
+  "version": "1.6.0",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=10.0.0"
@@ -29,7 +29,9 @@
     "build/src/*.d.ts"
   ],
   "bin": {
-    "functions-framework": "./build/src/index.js"
+    "functions-framework": "./build/src/index.js",
+    "functions-framework-nodejs": "./build/src/index.js"
+
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",
