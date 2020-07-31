@@ -13,43 +13,17 @@
 // limitations under the License.
 
 import * as express from 'express';
-import { CloudEventsContext } from './functions';
+import {CloudEvent, Receiver} from 'cloudevents'
 
 /**
- * Checks whether the incoming request is a CloudEvents event in binary content
- * mode. This is verified by checking the presence of required headers.
- *
- * @link https://github.com/cloudevents/spec/blob/master/http-protocol-binding.md#3-http-message-mapping
+ * Returns a CloudEvent from the given CloudEvents HTTP request.
  *
  * @param req Express request object.
- * @return True if the request is a CloudEvents event in binary content mode,
- *     false otherwise.
+ * @return The CloudEvent
  */
-export function isBinaryCloudEvent(req: express.Request): boolean {
-  return !!(
-    req.header('ce-type') &&
-    req.header('ce-specversion') &&
-    req.header('ce-source') &&
-    req.header('ce-id')
-  );
-}
-
-/**
- * Returns a CloudEvents context from the given CloudEvents request. Context
- * attributes are retrieved from request headers.
- *
- * @param req Express request object.
- * @return CloudEvents context.
- */
-export function getBinaryCloudEventContext(
+export function getCloudEvent(
   req: express.Request
-): CloudEventsContext {
-  const context: CloudEventsContext = {};
-  for (const name in req.headers) {
-    if (name.startsWith('ce-')) {
-      const attributeName = name.substr('ce-'.length);
-      context[attributeName] = req.header(name);
-    }
-  }
-  return context;
+): CloudEvent {
+  const headers = req.headers as { [key: string]: string };
+  return Receiver.accept(headers, req.body);
 }

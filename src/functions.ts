@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
+import {CloudEventV1Attributes} from 'cloudevents'
 
 export interface HttpFunction {
   // tslint:disable-next-line:no-any express interface.
@@ -28,11 +29,11 @@ export interface EventFunctionWithCallback {
 }
 export interface CloudEventFunction {
   // tslint:disable-next-line:no-any
-  (cloudevent: CloudEventsContext): any;
+  (cloudevent: CloudEventV1Attributes): any;
 }
 export interface CloudEventFunctionWithCallback {
   // tslint:disable-next-line:no-any
-  (cloudevent: CloudEventsContext, callback: Function): any;
+  (cloudevent: CloudEventV1Attributes, callback: Function): any;
 }
 export type HandlerFunction =
   | HttpFunction
@@ -66,43 +67,4 @@ export interface CloudFunctionsContext {
   resource?: string;
 }
 
-/**
- * The CloudEvents v1.0 context object for the event.
- *
- * @link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes
- */
-export interface CloudEventsContext {
-  /**
-   * Type of occurrence which has happened.
-   */
-  type?: string;
-  /**
-   * The version of the CloudEvents specification which the event uses.
-   */
-  specversion?: string;
-  /**
-   * The event producer.
-   */
-  source?: string;
-  /**
-   * ID of the event.
-   */
-  id?: string;
-  /**
-   * Timestamp of when the event happened.
-   */
-  time?: string;
-  /**
-   * A link to the schema that the event data adheres to.
-   */
-  schemaurl?: string;
-  /**
-   * Content type of the event data.
-   */
-  contenttype?: string;
-
-  // tslint:disable-next-line:no-any CloudEvents extension attributes.
-  [key: string]: any;
-}
-
-export type Context = CloudFunctionsContext | CloudEventsContext;
+export type Context = CloudFunctionsContext | CloudEventV1Attributes;

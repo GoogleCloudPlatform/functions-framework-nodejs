@@ -17,6 +17,7 @@ import * as express from 'express';
 import * as functions from '../src/functions';
 import * as invoker from '../src/invoker';
 import * as supertest from 'supertest';
+import { CloudEventV1, CloudEventV1Attributes } from 'cloudevents';
 
 describe('request to HTTP function', () => {
   interface TestData {
@@ -150,7 +151,7 @@ describe('GCF event request to event function', () => {
   });
 });
 
-const TEST_CLOUD_EVENT = {
+const TEST_CLOUD_EVENT: CloudEventV1 = {
   specversion: '1.0',
   type: 'com.google.cloud.storage',
   source: 'https://github.com/GoogleCloudPlatform/functions-framework-nodejs',
@@ -166,7 +167,7 @@ const TEST_CLOUD_EVENT = {
 describe('CloudEvents request to event function', () => {
   interface TestData {
     name: string;
-    headers: { [key: string]: string };
+    headers: { [key: string]: string | undefined };
     body: {};
   }
 
@@ -185,20 +186,20 @@ describe('CloudEvents request to event function', () => {
         'ce-source': TEST_CLOUD_EVENT.source,
         'ce-subject': TEST_CLOUD_EVENT.subject,
         'ce-id': TEST_CLOUD_EVENT.id,
-        'ce-time': TEST_CLOUD_EVENT.time,
+        'ce-time': TEST_CLOUD_EVENT.time as string,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
-      body: TEST_CLOUD_EVENT.data,
+      body: TEST_CLOUD_EVENT.data as any, // disable bug in interface for unknown type
     },
   ];
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
-      let receivedContext: functions.CloudEventsContext | null = null;
+      let receivedContext: CloudEventV1Attributes | null = null;
       const server = invoker.getServer(
         (data: {}, context: functions.Context) => {
           receivedData = data;
-          receivedContext = context as functions.CloudEventsContext;
+          receivedContext = context as CloudEventV1Attributes;
         },
         invoker.SignatureType.EVENT
       );
@@ -229,7 +230,7 @@ describe('CloudEvents request to event function', () => {
 describe('CloudEvents request to cloudevent function', () => {
   interface TestData {
     name: string;
-    headers: { [key: string]: string };
+    headers: { [key: string]: string | undefined };
     body: {};
   }
 
@@ -248,18 +249,18 @@ describe('CloudEvents request to cloudevent function', () => {
         'ce-source': TEST_CLOUD_EVENT.source,
         'ce-subject': TEST_CLOUD_EVENT.subject,
         'ce-id': TEST_CLOUD_EVENT.id,
-        'ce-time': TEST_CLOUD_EVENT.time,
+        'ce-time': TEST_CLOUD_EVENT.time as string,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
-      body: TEST_CLOUD_EVENT.data,
+      body: TEST_CLOUD_EVENT.data as any, // disable bug in interface for unknown type,
     },
   ];
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
-      let receivedCloudEvent: functions.CloudEventsContext | null = null;
+      let receivedCloudEvent: CloudEventV1Attributes | null = null;
       const server = invoker.getServer(
-        (cloudevent: functions.CloudEventsContext) => {
-          receivedCloudEvent = cloudevent as functions.CloudEventsContext;
+        (cloudevent: functions.Context) => {
+          receivedCloudEvent = cloudevent as CloudEventV1Attributes;
         },
         invoker.SignatureType.CLOUDEVENT
       );

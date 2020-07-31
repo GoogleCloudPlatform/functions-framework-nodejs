@@ -10,6 +10,7 @@
   "types": "build/src/invoker.d.ts",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cloudevents": "^3.0.1",
     "express": "^4.16.4",
     "minimist": "^1.2.0",
     "on-finished": "^2.3.0"
@@ -31,7 +32,6 @@
   "bin": {
     "functions-framework": "./build/src/index.js",
     "functions-framework-nodejs": "./build/src/index.js"
-
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",

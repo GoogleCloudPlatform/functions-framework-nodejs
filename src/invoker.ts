@@ -28,7 +28,7 @@ import * as onFinished from 'on-finished';
 
 import { FUNCTION_STATUS_HEADER_FIELD } from './types';
 import { logAndSendError } from './logger';
-import { isBinaryCloudEvent, getBinaryCloudEventContext } from './cloudevents';
+import { getCloudEvent as getCloudEvent } from './cloudevents';
 import {
   HttpFunction,
   EventFunction,
@@ -144,11 +144,7 @@ function wrapCloudEventFunction(
         }
       }
     );
-    let cloudevent = req.body;
-    if (isBinaryCloudEvent(req)) {
-      cloudevent = getBinaryCloudEventContext(req);
-      cloudevent.data = req.body;
-    }
+    const cloudevent = getCloudEvent(req);
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {
       const fn = userFunction as CloudEventFunctionWithCallback;
@@ -199,15 +195,9 @@ function wrapEventFunction(
     );
     let data = event.data;
     let context = event.context;
-    if (isBinaryCloudEvent(req)) {
-      // Support CloudEvents in binary content mode, with data being the whole
-      // request body and context attributes retrieved from request headers.
-      data = event;
-      context = getBinaryCloudEventContext(req);
-    } else if (context === undefined) {
-      // Support legacy events and CloudEvents in structured content mode, with
-      // context properties represented as event top-level properties.
-      // Context is everything but data.
+    if (context === undefined) {
+      // Support legacy events with context properties represented as event
+      // top-level properties. Context is everything but data.
       context = event;
       // Clear the property before removing field so the data object
       // is not deleted.
