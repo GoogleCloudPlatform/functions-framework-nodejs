@@ -47,6 +47,6 @@
     "mocha": "6.1.4",
     "power-assert": "1.6.1",
     "supertest": "3.4.2",
-    "typescript": "3.5.1"
+    "typescript": "3.9.7"
   }
 }
