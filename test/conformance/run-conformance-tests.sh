@@ -7,7 +7,10 @@ cd ../.. && npm install && cd $OLDPWD
 
 echo ""
 echo "Install Functions Framework Conformance"
+rm -rf functions-framework-conformance
 git clone https://github.com/GoogleCloudPlatform/functions-framework-conformance.git
+# Lock a version of the conformance tool until the tool is stable.
+cd functions-framework-conformance && git checkout 53593adc9a4aa887450501b1de16f2d7c619ce42 && cd $OLDPWD
 cd functions-framework-conformance/client && go build && cd $OLDPWD
 
 run_test() {
