@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "mocha build/test",
+    "test-conformance": "cd test/conformance && ./run-conformance-tests.sh",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
@@ -31,7 +32,6 @@
   "bin": {
     "functions-framework": "./build/src/index.js",
     "functions-framework-nodejs": "./build/src/index.js"
-
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",
