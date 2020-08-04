@@ -46,7 +46,7 @@
     "gts": "1.0.0",
     "mocha": "8.1.0",
     "power-assert": "1.6.1",
-    "supertest": "3.4.2",
-    "typescript": "3.5.1"
+    "supertest": "4.0.2",
+    "typescript": "3.9.7"
   }
 }
