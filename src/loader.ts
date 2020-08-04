@@ -21,7 +21,7 @@
 /**
  * Import function signature type's definition.
  */
-import { HandlerFunction } from './functions';
+import {HandlerFunction} from './functions';
 
 /**
  * Returns user's function from function file.
@@ -39,6 +39,7 @@ export function getUserFunction(
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const functionModule = require(functionModulePath);
     let userFunction = functionTarget
       .split('.')
@@ -52,6 +53,7 @@ export function getUserFunction(
 
     // TODO: do we want 'function' fallback?
     if (typeof userFunction === 'undefined') {
+      // eslint-disable-next-line no-prototype-builtins
       if (functionModule.hasOwnProperty('function')) {
         userFunction = functionModule['function'];
       } else {
@@ -104,7 +106,9 @@ function getFunctionModulePath(codeLocation: string): string | null {
     try {
       // TODO: Decide if we want to keep this fallback.
       path = require.resolve(codeLocation + '/function.js');
-    } catch (ex) {}
+    } catch (ex) {
+      return path;
+    }
   }
   return path;
 }

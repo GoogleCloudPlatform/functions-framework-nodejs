@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
 
 export interface HttpFunction {
-  // tslint:disable-next-line:no-any express interface.
   (req: express.Request, res: express.Response): any;
 }
 export interface EventFunction {
-  // tslint:disable-next-line:no-any
   (data: {}, context: Context): any;
 }
 export interface EventFunctionWithCallback {
-  // tslint:disable-next-line:no-any
   (data: {}, context: Context, callback: Function): any;
 }
 export interface CloudEventFunction {
-  // tslint:disable-next-line:no-any
   (cloudevent: CloudEventsContext): any;
 }
 export interface CloudEventFunctionWithCallback {
-  // tslint:disable-next-line:no-any
   (cloudevent: CloudEventsContext, callback: Function): any;
 }
 export type HandlerFunction =
@@ -101,7 +97,7 @@ export interface CloudEventsContext {
    */
   contenttype?: string;
 
-  // tslint:disable-next-line:no-any CloudEvents extension attributes.
+  // CloudEvents extension attributes.
   [key: string]: any;
 }
 
