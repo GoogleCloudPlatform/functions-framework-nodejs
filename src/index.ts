@@ -32,11 +32,11 @@
 //     unmarshalled as CloudEvents from an incoming request.
 
 import * as minimist from 'minimist';
-import { resolve } from 'path';
+import {resolve} from 'path';
 
-import { getUserFunction } from './loader';
+import {getUserFunction} from './loader';
 
-import { ErrorHandler, SignatureType, getServer } from './invoker';
+import {ErrorHandler, SignatureType, getServer} from './invoker';
 
 // Supported command-line flags
 const FLAG = {
@@ -80,6 +80,7 @@ if (SIGNATURE_TYPE === undefined) {
       SignatureType
     ).join(', ')}.`
   );
+  // eslint-disable-next-line no-process-exit
   process.exit(1);
 }
 
@@ -91,12 +92,14 @@ if (process.argv[2] === '-h' || process.argv[2] === '--help') {
 Documentation:
   https://github.com/GoogleCloudPlatform/functions-framework-nodejs`
   );
+  // eslint-disable-next-line no-process-exit
   process.exit(0);
 }
 
 const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
 if (!USER_FUNCTION) {
   console.error('Could not load the function, shutting down.');
+  // eslint-disable-next-line no-process-exit
   process.exit(1);
 }
 

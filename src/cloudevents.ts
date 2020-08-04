@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import { CloudEventsContext } from './functions';
+import {CloudEventsContext} from './functions';
 
 /**
  * Checks whether the incoming request is a CloudEvents event in binary content

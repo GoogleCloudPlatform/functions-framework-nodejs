@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import { FUNCTION_STATUS_HEADER_FIELD } from './types';
+import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 
 /**
  * Logs an error message and sends back an error response to the incoming
@@ -23,7 +23,7 @@ import { FUNCTION_STATUS_HEADER_FIELD } from './types';
  * @param callback A function to be called synchronously.
  */
 export function logAndSendError(
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: Error | any,
   res: express.Response | null,
   callback?: Function

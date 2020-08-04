@@ -21,14 +21,15 @@
 //     functions with HTTP trigger).
 
 import * as bodyParser from 'body-parser';
+// eslint-disable-next-line node/no-deprecated-api
 import * as domain from 'domain';
 import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
 
-import { FUNCTION_STATUS_HEADER_FIELD } from './types';
-import { logAndSendError } from './logger';
-import { isBinaryCloudEvent, getBinaryCloudEventContext } from './cloudevents';
+import {FUNCTION_STATUS_HEADER_FIELD} from './types';
+import {logAndSendError} from './logger';
+import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
 import {
   HttpFunction,
   EventFunction,
@@ -41,6 +42,7 @@ import {
 // We optionally annotate the express Request with a rawBody field.
 // Express leaves the Express namespace open to allow merging of new fields.
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     export interface Request {
       rawBody?: Buffer;
@@ -63,7 +65,7 @@ let latestRes: express.Response | null = null;
  * @param err Error from function execution.
  * @param res Express response object.
  */
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sendResponse(result: any, err: Error | null, res: express.Response) {
   if (err) {
     res.set(FUNCTION_STATUS_HEADER_FIELD, 'error');
@@ -131,7 +133,7 @@ function wrapCloudEventFunction(
 ): HttpFunction {
   return (req: express.Request, res: express.Response) => {
     const callback = process.domain.bind(
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (err: Error | null, result: any) => {
         if (res.locals.functionExecutionFinished) {
           console.log('Ignoring extra callback call');
@@ -184,7 +186,7 @@ function wrapEventFunction(
   return (req: express.Request, res: express.Response) => {
     const event = req.body;
     const callback = process.domain.bind(
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (err: Error | null, result: any) => {
         if (res.locals.functionExecutionFinished) {
           console.log('Ignoring extra callback call');
@@ -251,6 +253,7 @@ function registerFunctionRoutes(
   if (functionSignatureType === SignatureType.HTTP) {
     app.use('/favicon.ico|/robots.txt', (req, res, next) => {
       res.sendStatus(404);
+      next();
     });
 
     app.use('/*', (req, res, next) => {
@@ -266,17 +269,17 @@ function registerFunctionRoutes(
     });
   } else if (functionSignatureType === SignatureType.EVENT) {
     app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapEventFunction(userFunction as
-        | EventFunction
-        | EventFunctionWithCallback);
+      const wrappedUserFunction = wrapEventFunction(
+        userFunction as EventFunction | EventFunctionWithCallback
+      );
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });
   } else {
     app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapCloudEventFunction(userFunction as
-        | CloudEventFunction
-        | CloudEventFunctionWithCallback);
+      const wrappedUserFunction = wrapCloudEventFunction(
+        userFunction as CloudEventFunction | CloudEventFunctionWithCallback
+      );
       const handler = makeHttpHandler(wrappedUserFunction);
       handler(req, res, next);
     });
@@ -318,6 +321,7 @@ export class ErrorHandler {
       process.on(signal as NodeJS.Signals, () => {
         console.log(`Received ${signal}`);
         this.server.close(() => {
+          // eslint-disable-next-line no-process-exit
           process.exit();
         });
       });
