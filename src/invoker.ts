@@ -314,13 +314,11 @@ export class ErrorHandler {
     });
 
     process.on('exit', code => {
-      if (code) {
-        sendCrashResponse({
-          err: new Error(`Process exited with code ${code}`),
-          res: latestRes,
-          silent: true,
-        });
-      }
+      sendCrashResponse({
+        err: new Error(`Process exited with code ${code}`),
+        res: latestRes,
+        silent: code === 0,
+      });
     });
 
     ['SIGINT', 'SIGTERM'].forEach(signal => {
