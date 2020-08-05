@@ -28,7 +28,7 @@ import * as http from 'http';
 import * as onFinished from 'on-finished';
 
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
-import {logAndSendError} from './logger';
+import {sendCrashResponse} from './logger';
 import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
 import {
   HttpFunction,
@@ -111,7 +111,7 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
         console.error(`Exception from a finished function: ${err}`);
       } else {
         res.locals.functionExecutionFinished = true;
-        logAndSendError(err, res);
+        sendCrashResponse({err, res});
       }
     });
     d.run(() => {
@@ -305,17 +305,21 @@ export class ErrorHandler {
   register() {
     process.on('uncaughtException', err => {
       console.error('Uncaught exception');
-      logAndSendError(err, latestRes, killInstance);
+      sendCrashResponse({err, res: latestRes, callback: killInstance});
     });
 
     process.on('unhandledRejection', err => {
       console.error('Unhandled rejection');
-      logAndSendError(err, latestRes, killInstance);
+      sendCrashResponse({err, res: latestRes, callback: killInstance});
     });
 
     process.on('exit', code => {
       if (code) {
-        logAndSendError(new Error(`Process exited with code ${code}`), latestRes);
+        sendCrashResponse({
+          err: new Error(`Process exited with code ${code}`),
+          res: latestRes,
+          silent: true,
+        });
       }
     });
 
