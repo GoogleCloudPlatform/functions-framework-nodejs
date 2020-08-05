@@ -22,13 +22,21 @@ import {FUNCTION_STATUS_HEADER_FIELD} from './types';
  * @param res Express response object.
  * @param callback A function to be called synchronously.
  */
-export function logAndSendError(
+export function sendCrashResponse({
+  err,
+  res,
+  callback,
+  silent = false,
+}: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  err: Error | any,
-  res: express.Response | null,
-  callback?: Function
-) {
-  console.error(err.stack || err);
+  err: Error | any;
+  res: express.Response | null;
+  callback?: Function;
+  silent?: boolean;
+}) {
+  if (!silent) {
+    console.error(err.stack || err);
+  }
 
   // If user function has already sent response headers, the response with
   // error message cannot be sent. This check is done inside the callback,
