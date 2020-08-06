@@ -4,6 +4,53 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## v1.6.1
+
+08-06-2020 11:52 PDT
+
+- chore(deps): use gts v2 ([#186](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/186))
+- chore(deps): update dependency @types/express to v4.17.7 ([#166](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/166))
+- chore(deps): update dependency @types/node to v11.15.20 ([#172](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/172))
+- chore(deps): update dependency @types/supertest to v2.0.10 ([#173](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/173))
+- chore(deps): update dependency mocha to v8 ([#178](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/178))
+- chore(deps): update dependency supertest to v4 ([#179](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/179))
+- chore(deps): automerge all but major updates ([#183](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/183))
+- chore(deps): update dependency typescript to v3.9.7 ([#176](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/176))
+- chore: make renovate not update as often ([#170](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/170))
+- chore(deps): bump lodash from 4.17.14 to 4.17.19 ([#156](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/156))
+- chore(deps): pin dependencies ([#163](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/163))
+- chore(deps): add renovate.json ([#65](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/65))
+
+### Implementation Changes
+- fix: do not send error when error code is fine ([#187](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/187))
+
+### New Features
+- fix: add functions-framework-nodejs executable ([#152](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/152))
+
+### Dependencies
+- chore(deps): use gts v2 ([#186](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/186))
+- chore(deps): update dependency @types/express to v4.17.7 ([#166](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/166))
+- chore(deps): update dependency @types/node to v11.15.20 ([#172](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/172))
+- chore(deps): update dependency @types/supertest to v2.0.10 ([#173](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/173))
+- chore(deps): update dependency mocha to v8 ([#178](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/178))
+- chore(deps): update dependency supertest to v4 ([#179](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/179))
+- chore(deps): automerge all but major updates ([#183](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/183))
+- chore(deps): update dependency typescript to v3.9.7 ([#176](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/176))
+- chore: make renovate not update as often ([#170](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/170))
+- chore(deps): bump lodash from 4.17.14 to 4.17.19 ([#156](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/156))
+- chore(deps): pin dependencies ([#163](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/163))
+- chore(deps): add renovate.json ([#65](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/65))
+
+### Documentation
+- docs: change badge to GitHub Actions ([#180](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/180))
+- Fix typo: https -> http ([#153](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/153))
+
+### Internal / Testing Changes
+- test: run CI workflows on pull_request ([#185](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/185))
+- test: lock the version of the conformance tool ([#181](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/181))
+- Add GitHub Actions workflows ([#169](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/169))
+- feat: add a script to run conformance tests ([#158](https://github.com/GoogleCloudPlatform/functions-framework-nod
+
 ## v1.6.0
 
 06-17-2020 14:53 PDT
