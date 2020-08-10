@@ -4,6 +4,23 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## v1.7.1
+
+08-10-2020 11:13 PDT
+
+### Implementation Changes
+- fix: Don't call function after 404 on /{robots.txt,favicon.ico} ([#193](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/193))
+
+### New Features
+
+### Dependencies
+- chore(deps): update dependency mocha to v8.1.1 ([#194](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/194))
+- chore: remove tslint.json ([#190](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/pull/190))
+
+### Documentation
+
+### Internal / Testing Changes
+
 ## v1.7.0
 
 08-06-2020 12:01 PDT
