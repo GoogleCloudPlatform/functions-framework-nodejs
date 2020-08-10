@@ -1,6 +1,6 @@
 # Typescript
 
-This guide shows you an example of how to develop a function in Typescript with
+This guide is an example of how to develop a function in Typescript with
 the Functions Framework.
 
 1. Use [gts](https://github.com/google/gts) to configure Typescript.
@@ -9,25 +9,24 @@ the Functions Framework.
     npx gts init
     ```
 
-2. Install the required package(s):
+2. Install the required packages:
 
     ```sh
     npm install @google-cloud/functions-framework
-    ```
-
-    In this example we are using an HTTP signature and require express
-    types:
-
-    ```sh
-    npm install @types/express -D
+    # an HTTP signature requires express types
+    npm install @types/express --save-dev
+    # https://www.npmjs.com/package/tsc-watch
+    npm install tsc-watch --save-dev
     ```
 
 3. Add a `start` script to `package.json`, passing in the `--source` flag to
-   point to the compiled code directory:
+   point to the compiled code directory (configured by `gts` in this example).
+   Also add a `watch` script to use for development:
 
     ```js
       "scripts": {
         "start": "functions-framework --source=build/src/ --target=helloWorld",
+        "watch": "tsc-watch --onSuccess 'npm start'",
         ...
       }
     ```
@@ -42,10 +41,11 @@ the Functions Framework.
     };
     ```
 
-5. Compile and start the built-in local development server:
+5. Start the built-in local development server:
 
     ```sh
-    $ npm run compile && npm start
+    $ npm run watch
+    [12:34:56 AM] Starting compilation in watch mode...
     ...
     Serving function...
     Function: helloWorld
