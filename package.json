@@ -44,7 +44,7 @@
     "@types/on-finished": "2.3.1",
     "@types/supertest": "2.0.10",
     "gts": "2.0.2",
-    "mocha": "8.1.0",
+    "mocha": "8.1.1",
     "power-assert": "1.6.1",
     "supertest": "4.0.2",
     "typescript": "3.9.7"
