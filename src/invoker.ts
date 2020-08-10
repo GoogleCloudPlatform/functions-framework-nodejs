@@ -123,8 +123,8 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
 }
 
 /**
- * Wraps cloudevent function (or cloudevent function with callback) in HTTP function
- * signature.
+ * Wraps cloudevent function (or cloudevent function with callback) in HTTP
+ * function signature.
  * @param userFunction User's function.
  * @return HTTP function which wraps the provided event function.
  */
@@ -251,9 +251,10 @@ function registerFunctionRoutes(
   functionSignatureType: SignatureType
 ) {
   if (functionSignatureType === SignatureType.HTTP) {
-    app.use('/favicon.ico|/robots.txt', (req, res, next) => {
-      res.sendStatus(404);
-      next();
+    app.use('/favicon.ico|/robots.txt', (req, res) => {
+      // Neither crawlers nor browsers attempting to pull the icon find the body
+      // contents particularly useful, so we send nothing in the response body.
+      res.status(404).send(null);
     });
 
     app.use('/*', (req, res, next) => {
@@ -372,8 +373,8 @@ export function getServer(
     req.rawBody = buf;
   }
 
-  // Set limit to a value larger than 32MB, which is maximum limit of higher level
-  // layers anyway.
+  // Set limit to a value larger than 32MB, which is maximum limit of higher
+  // level layers anyway.
   const requestLimit = '1024mb';
   const defaultBodySavingOptions = {
     limit: requestLimit,
