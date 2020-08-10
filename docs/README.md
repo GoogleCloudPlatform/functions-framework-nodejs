@@ -5,7 +5,7 @@ This directory contains advanced docs around the Functions Framework.
 - [Testing events and Pub/Sub](events.md)
 - [Debugging Functions](debugging.md)
 - [Running and Deploying Docker Containers](docker.md)
-- [Writing a function in Typescript](typescript.md)
+- [Writing a Function in Typescript](typescript.md)
 
 ## TODO Docs
 
