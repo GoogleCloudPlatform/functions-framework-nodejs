@@ -24,6 +24,7 @@ describe('request to HTTP function', () => {
     path: string;
     text: string;
     status: number;
+    callCount: number;
   }
 
   const testData: TestData[] = [
@@ -32,41 +33,48 @@ describe('request to HTTP function', () => {
       path: '/',
       text: 'HELLO',
       status: 200,
+      callCount: 1,
     },
     {
       name: 'simple path',
       path: '/foo',
       text: 'HELLO',
       status: 200,
+      callCount: 1,
     },
     {
       name: 'with favicon.ico',
       path: '/favicon.ico',
-      text: 'Not Found',
+      text: '',
       status: 404,
+      callCount: 0,
     },
     {
       name: 'with robots.txt',
       path: '/robots.txt',
-      text: 'Not Found',
+      text: '',
       status: 404,
+      callCount: 0,
     },
   ];
 
   testData.forEach(test => {
-    it(`should return transformed body: ${test.name}`, () => {
+    it(`should return transformed body: ${test.name}`, async () => {
+      var callCount = 0;
       const server = invoker.getServer(
         (req: express.Request, res: express.Response) => {
+          ++callCount;
           res.send(req.body.text.toUpperCase());
         },
         invoker.SignatureType.HTTP
       );
-      return supertest(server)
+      await supertest(server)
         .post(test.path)
         .send({ text: 'hello' })
         .set('Content-Type', 'application/json')
         .expect(test.text)
         .expect(test.status);
+      assert.strictEqual(callCount, test.callCount);
     });
   });
 });
