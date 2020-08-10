@@ -31,7 +31,7 @@ the Functions Framework.
       }
     ```
 
-4. Create a `src/index.ts` file with the following contents:
+4. Replace the contents of `src/index.ts` with:
 
     ```ts
     import type { HttpFunction } from '@google-cloud/functions-framework/build/src/functions';
@@ -41,11 +41,17 @@ the Functions Framework.
     };
     ```
 
-5. Start the built-in local development server:
+5. Start the built-in local development server in watch mode:
 
     ```sh
-    $ npm run watch
+    npm run watch
+    ```
+
+    This will continuously watch changes to your TypeScript project and recompile when changes are detected:
+
+    ```sh
     [12:34:56 AM] Starting compilation in watch mode...
+    [12:34:57 AM] Found 0 errors. Watching for file changes.
     ...
     Serving function...
     Function: helloWorld
