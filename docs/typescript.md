@@ -13,10 +13,7 @@ the Functions Framework.
 
     ```sh
     npm install @google-cloud/functions-framework
-    # an HTTP signature requires express types
-    npm install @types/express --save-dev
-    # https://www.npmjs.com/package/tsc-watch
-    npm install tsc-watch --save-dev
+    npm install @types/express concurrently nodemon --save-dev
     ```
 
 3. Add a `start` script to `package.json`, passing in the `--source` flag to
@@ -26,7 +23,7 @@ the Functions Framework.
     ```js
       "scripts": {
         "start": "functions-framework --source=build/src/ --target=helloWorld",
-        "watch": "tsc-watch --onSuccess 'npm start'",
+        "watch": "concurrently \"tsc -w\" \"nodemon --watch ./build/ --exec npm run start\"",
         ...
       }
     ```
