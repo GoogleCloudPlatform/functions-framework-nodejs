@@ -1,7 +1,7 @@
 # Functions Framework for Node.js [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FGoogleCloudPlatform%2Ffunctions-framework-nodejs%2Fbadge&style=flat)](https://actions-badge.atrox.dev/GoogleCloudPlatform/functions-framework-nodejs/goto) [![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
 
-An open source FaaS (Function as a service) framework for writing portable
-Node.js functions -- brought to you by the Google Cloud Functions team.
+An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
+for writing portable Node.js functions -- brought to you by the Google Cloud Functions team.
 
 The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
@@ -14,8 +14,13 @@ different environments, including:
 The framework allows you to go from:
 
 ```js
+/**
+ * Send "Hello, World!"
+ * @param req https://expressjs.com/en/api.html#req
+ * @param res https://expressjs.com/en/api.html#res
+ */
 exports.helloWorld = (req, res) => {
-  res.send('Hello, World');
+  res.send('Hello, World!');
 };
 ```
 
@@ -23,7 +28,7 @@ To:
 
 ```sh
 curl http://my-url
-# Output: Hello, World
+# Output: Hello, World!
 ```
 
 All without needing to worry about writing an HTTP server or complicated request
