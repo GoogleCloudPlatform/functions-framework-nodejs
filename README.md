@@ -36,7 +36,7 @@ handling logic.
 
 > Watch [this video](https://youtu.be/yMEcyAkTliU?t=912) to learn more about the Node Functions Framework.
 
-# Features
+## Features
 
 - Spin up a local development server for quick testing
 - Invoke a function in response to a request
@@ -44,7 +44,7 @@ handling logic.
   [CloudEvents](https://cloudevents.io/) spec
 - Portable between serverless platforms
 
-# Installation
+## Installation
 
 Add the Functions Framework to your `package.json` file using `npm`.
 
@@ -52,75 +52,105 @@ Add the Functions Framework to your `package.json` file using `npm`.
 npm install @google-cloud/functions-framework
 ```
 
-# Quickstart: Hello, World on your local machine
+## Quickstarts
 
-Create an `index.js` file with the following contents:
+### Quickstart: Hello, World on your local machine
 
-```js
-exports.helloWorld = (req, res) => {
-  res.send('Hello, World');
-};
-```
+1. Create an `index.js` file with the following contents:
 
-Run the following command:
+    ```js
+    exports.helloWorld = (req, res) => {
+      res.send('Hello, World');
+    };
+    ```
 
-```sh
-npx @google-cloud/functions-framework --target=helloWorld
-```
+1. Run the following command:
 
-Open http://localhost:8080/ in your browser and see _Hello, World_.
+    ```sh
+    npx @google-cloud/functions-framework --target=helloWorld
+    ```
 
-# Quickstart: Set up a new project
+1. Open http://localhost:8080/ in your browser and see _Hello, World_.
 
-Create an `index.js` file with the following contents:
+### Quickstart: Set up a new project
 
-```js
-exports.helloWorld = (req, res) => {
-  res.send('Hello, World');
-};
-```
+1. Create a `package.json` file using `npm init`:
 
-To run a function locally, first create a `package.json` file using `npm init`:
+    ```sh
+    npm init
+    ```
 
-```sh
-npm init
-```
+1. Create an `index.js` file with the following contents:
 
-Now install the Functions Framework:
+    ```js
+    exports.helloWorld = (req, res) => {
+      res.send('Hello, World');
+    };
+    ```
 
-```sh
-npm install @google-cloud/functions-framework
-```
+1. Now install the Functions Framework:
 
-Add a `start` script to `package.json`, with configuration passed via
+    ```sh
+    npm install @google-cloud/functions-framework
+    ```
+
+1. Add a `start` script to `package.json`, with configuration passed via
 command-line arguments:
 
-```js
-  "scripts": {
-    "start": "functions-framework --target=helloWorld"
-  }
-```
+    ```js
+      "scripts": {
+        "start": "functions-framework --target=helloWorld"
+      }
+    ```
 
-Use `npm start` to start the built-in local development server:
+1. Use `npm start` to start the built-in local development server:
 
-```sh
-npm start
-...
-Serving function...
-Function: helloWorld
-URL: http://localhost:8080/
-```
+    ```sh
+    npm start
+    ...
+    Serving function...
+    Function: helloWorld
+    URL: http://localhost:8080/
+    ```
 
-Send requests to this function using `curl` from another terminal window:
+1. Send requests to this function using `curl` from another terminal window:
 
-```sh
-curl localhost:8080
-# Output: Hello, World
-```
+    ```sh
+    curl localhost:8080
+    # Output: Hello, World
+    ```
 
-# Run your function on serverless platforms
+### Quickstart: Build a Deployable Container
 
-## Google Cloud Functions
+1. Install [Docker](https://store.docker.com/search?type=edition&offering=community) and the [`pack` tool](https://buildpacks.io/docs/install-pack/).
+
+1. Build a container from your function using the Functions [buildpacks](https://github.com/GoogleCloudPlatform/buildpacks):
+	
+    ```sh
+    pack build \
+      --builder gcr.io/buildpacks/builder:v1 \
+      --env GOOGLE_FUNCTION_SIGNATURE_TYPE=http \
+      --env GOOGLE_FUNCTION_TARGET=helloWorld \
+      my-first-function
+    ```
+
+1. Start the built container:
+    
+    ```sh
+    docker run --rm -p 8080:8080 my-first-function
+    # Output: Serving function...
+    ```
+
+1. Send requests to this function using `curl` from another terminal window:
+    
+    ```sh
+    curl localhost:8080
+    # Output: Hello, World!
+    ```
+
+## Run your function on serverless platforms
+
+### Google Cloud Functions
 
 The
 [Node.js 10 runtime on Google Cloud Functions](https://cloud.google.com/functions/docs/concepts/nodejs-10-runtime)
@@ -132,17 +162,17 @@ After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
-## Cloud Run/Cloud Run on GKE
+### Cloud Run/Cloud Run on GKE
 
 Once you've written your function, added the Functions Framework and updated your `start` script in `package.json`, all that's left is to create a container image. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) for Node.js to create a container image and deploy it to Cloud Run. You'll write a `Dockerfile` when you build your container. This `Dockerfile` allows you to specify exactly what goes into your container (including custom binaries, a specific operating system, and more).
 
 If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
 
-## Container environments based on Knative
+### Container environments based on Knative
 
 Cloud Run and Cloud Run on GKE both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
 
-# Configure the Functions Framework
+## Configure the Functions Framework
 
 You can configure the Functions Framework using command-line flags or
 environment variables. If you specify both, the environment variable will be
@@ -164,7 +194,7 @@ For example:
   }
 ```
 
-# Enable Google Cloud Functions Events
+## Enable Google Cloud Functions Events
 
 The Functions Framework can unmarshall incoming
 Google Cloud Functions [event](https://cloud.google.com/functions/docs/concepts/events-triggers#events) payloads to `data` and `context` objects.
@@ -186,7 +216,7 @@ For more details on this signature type, check out the Google Cloud Functions
 documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
 
-# Enable CloudEvents
+## Enable CloudEvents
 
 The Functions Framework can unmarshall incoming
 [CloudEvents](http://cloudevents.io) payloads to a `cloudevent` object.
@@ -209,11 +239,11 @@ To enable CloudEvents, set the signature type to `cloudevent`. By default, the H
 
 Learn how to use CloudEvents in this [guide](docs/cloudevents.md).
 
-# Advanced Docs
+## Advanced Docs
 
 More advanced guides and docs can be found in the [`docs/` folder](docs/).
 
-# Contributing
+## Contributing
 
 Contributions to this library are welcome and encouraged. See
 [CONTRIBUTING](CONTRIBUTING.md) for more information on how to get started.
