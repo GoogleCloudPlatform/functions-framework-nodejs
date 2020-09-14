@@ -15,7 +15,8 @@
 import * as assert from 'assert';
 import * as express from 'express';
 import * as functions from '../src/functions';
-import * as invoker from '../src/invoker';
+import {getServer} from '../src/server';
+import {SignatureType} from '../src/types';
 import * as supertest from 'supertest';
 
 describe('request to HTTP function', () => {
@@ -61,12 +62,12 @@ describe('request to HTTP function', () => {
   testData.forEach(test => {
     it(`should return transformed body: ${test.name}`, async () => {
       var callCount = 0;
-      const server = invoker.getServer(
+      const server = getServer(
         (req: express.Request, res: express.Response) => {
           ++callCount;
           res.send(req.body.text.toUpperCase());
         },
-        invoker.SignatureType.HTTP
+        SignatureType.HTTP
       );
       await supertest(server)
         .post(test.path)
@@ -136,12 +137,12 @@ describe('GCF event request to event function', () => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudFunctionsContext | null = null;
-      const server = invoker.getServer(
+      const server = getServer(
         (data: {}, context: functions.Context) => {
           receivedData = data;
           receivedContext = context as functions.CloudFunctionsContext;
         },
-        invoker.SignatureType.EVENT
+        SignatureType.EVENT
       );
       await supertest(server)
         .post('/')
@@ -203,12 +204,12 @@ describe('CloudEvents request to event function', () => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudEventsContext | null = null;
-      const server = invoker.getServer(
+      const server = getServer(
         (data: {}, context: functions.Context) => {
           receivedData = data;
           receivedContext = context as functions.CloudEventsContext;
         },
-        invoker.SignatureType.EVENT
+        SignatureType.EVENT
       );
       await supertest(server)
         .post('/')
@@ -265,11 +266,11 @@ describe('CloudEvents request to cloudevent function', () => {
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedCloudEvent: functions.CloudEventsContext | null = null;
-      const server = invoker.getServer(
+      const server = getServer(
         (cloudevent: functions.CloudEventsContext) => {
           receivedCloudEvent = cloudevent as functions.CloudEventsContext;
         },
-        invoker.SignatureType.CLOUDEVENT
+        SignatureType.CLOUDEVENT
       );
       await supertest(server)
         .post('/')

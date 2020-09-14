@@ -20,13 +20,10 @@
 //   - ANY (all methods) '/*' for executing functions (only for servers handling
 //     functions with HTTP trigger).
 
-import * as bodyParser from 'body-parser';
 // eslint-disable-next-line node/no-deprecated-api
 import * as domain from 'domain';
 import * as express from 'express';
 import * as http from 'http';
-import * as onFinished from 'on-finished';
-
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
 import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
@@ -36,7 +33,6 @@ import {
   EventFunctionWithCallback,
   CloudEventFunction,
   CloudEventFunctionWithCallback,
-  HandlerFunction,
 } from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
@@ -50,14 +46,14 @@ declare global {
   }
 }
 
-export enum SignatureType {
-  HTTP = 'http',
-  EVENT = 'event',
-  CLOUDEVENT = 'cloudevent',
-}
-
-// Response object for the most recent request.
+/**
+ * Response object for the most recent request.
+ * Used for sending errors to the user.
+ */
 let latestRes: express.Response | null = null;
+export const setLatestRes = (res: express.Response) => {
+  latestRes = res;
+};
 
 /**
  * Sends back a response to the incoming request.
@@ -102,7 +98,7 @@ function sendResponse(result: any, err: Error | null, res: express.Response) {
  * @param execute Runs user's function.
  * @return An Express handler function.
  */
-function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
+export function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
   return (req: express.Request, res: express.Response) => {
     const d = domain.create();
     // Catch unhandled errors originating from this request.
@@ -128,7 +124,7 @@ function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
  * @param userFunction User's function.
  * @return HTTP function which wraps the provided event function.
  */
-function wrapCloudEventFunction(
+export function wrapCloudEventFunction(
   userFunction: CloudEventFunction | CloudEventFunctionWithCallback
 ): HttpFunction {
   return (req: express.Request, res: express.Response) => {
@@ -180,7 +176,7 @@ function wrapCloudEventFunction(
  * @param userFunction User's function.
  * @return HTTP function which wraps the provided event function.
  */
-function wrapEventFunction(
+export function wrapEventFunction(
   userFunction: EventFunction | EventFunctionWithCallback
 ): HttpFunction {
   return (req: express.Request, res: express.Response) => {
@@ -239,54 +235,6 @@ function wrapEventFunction(
   };
 }
 
-/**
- * Registers handler functions for route paths.
- * @param app Express application object.
- * @param userFunction User's function.
- * @param functionSignatureType Type of user's function signature.
- */
-function registerFunctionRoutes(
-  app: express.Application,
-  userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
-) {
-  if (functionSignatureType === SignatureType.HTTP) {
-    app.use('/favicon.ico|/robots.txt', (req, res) => {
-      // Neither crawlers nor browsers attempting to pull the icon find the body
-      // contents particularly useful, so we send nothing in the response body.
-      res.status(404).send(null);
-    });
-
-    app.use('/*', (req, res, next) => {
-      onFinished(res, (err, res) => {
-        res.locals.functionExecutionFinished = true;
-      });
-      next();
-    });
-
-    app.all('/*', (req, res, next) => {
-      const handler = makeHttpHandler(userFunction as HttpFunction);
-      handler(req, res, next);
-    });
-  } else if (functionSignatureType === SignatureType.EVENT) {
-    app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapEventFunction(
-        userFunction as EventFunction | EventFunctionWithCallback
-      );
-      const handler = makeHttpHandler(wrappedUserFunction);
-      handler(req, res, next);
-    });
-  } else {
-    app.post('/*', (req, res, next) => {
-      const wrappedUserFunction = wrapCloudEventFunction(
-        userFunction as CloudEventFunction | CloudEventFunctionWithCallback
-      );
-      const handler = makeHttpHandler(wrappedUserFunction);
-      handler(req, res, next);
-    });
-  }
-}
-
 // Use an exit code which is unused by Node.js:
 // https://nodejs.org/api/process.html#process_exit_codes
 const killInstance = process.exit.bind(process, 16);
@@ -332,82 +280,4 @@ export class ErrorHandler {
       });
     });
   }
-}
-
-/**
- * Creates and configures an Express application and returns an HTTP server
- * which will run it.
- * @param userFunction User's function.
- * @param functionSignatureType Type of user's function signature.
- * @return HTTP server.
- */
-export function getServer(
-  userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
-): http.Server {
-  // App to use for function executions.
-  const app = express();
-
-  // Express middleware
-
-  // Set request-specific values in the very first middleware.
-  app.use('/*', (req, res, next) => {
-    latestRes = res;
-    res.locals.functionExecutionFinished = false;
-    next();
-  });
-
-  /**
-   * Retains a reference to the raw body buffer to allow access to the raw body
-   * for things like request signature validation.  This is used as the "verify"
-   * function in body-parser options.
-   * @param req Express request object.
-   * @param res Express response object.
-   * @param buf Buffer to be saved.
-   */
-  function rawBodySaver(
-    req: express.Request,
-    res: express.Response,
-    buf: Buffer
-  ) {
-    req.rawBody = buf;
-  }
-
-  // Set limit to a value larger than 32MB, which is maximum limit of higher
-  // level layers anyway.
-  const requestLimit = '1024mb';
-  const defaultBodySavingOptions = {
-    limit: requestLimit,
-    verify: rawBodySaver,
-  };
-  const cloudEventsBodySavingOptions = {
-    type: 'application/cloudevents+json',
-    limit: requestLimit,
-    verify: rawBodySaver,
-  };
-  const rawBodySavingOptions = {
-    limit: requestLimit,
-    verify: rawBodySaver,
-    type: '*/*',
-  };
-
-  // Use extended query string parsing for URL-encoded bodies.
-  const urlEncodedOptions = {
-    limit: requestLimit,
-    verify: rawBodySaver,
-    extended: true,
-  };
-
-  // Apply middleware
-  app.use(bodyParser.json(cloudEventsBodySavingOptions));
-  app.use(bodyParser.json(defaultBodySavingOptions));
-  app.use(bodyParser.text(defaultBodySavingOptions));
-  app.use(bodyParser.urlencoded(urlEncodedOptions));
-  // The parser will process ALL content types so MUST come last.
-  // Subsequent parsers will be skipped when one is matched.
-  app.use(bodyParser.raw(rawBodySavingOptions));
-  app.enable('trust proxy'); // To respect X-Forwarded-For header.
-
-  registerFunctionRoutes(app, userFunction, functionSignatureType);
-  return http.createServer(app);
 }

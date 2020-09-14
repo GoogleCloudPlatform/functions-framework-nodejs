@@ -15,3 +15,9 @@
 // HTTP header field that is added to Worker response to signalize problems with
 // executing the client function.
 export const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
+
+export enum SignatureType {
+  HTTP = 'http',
+  EVENT = 'event',
+  CLOUDEVENT = 'cloudevent',
+}
