@@ -33,10 +33,10 @@
 
 import * as minimist from 'minimist';
 import {resolve} from 'path';
-
 import {getUserFunction} from './loader';
-
-import {ErrorHandler, SignatureType, getServer} from './invoker';
+import {ErrorHandler} from './invoker';
+import {getServer} from './server';
+import {SignatureType} from './types';
 
 // Supported command-line flags
 const FLAG = {
