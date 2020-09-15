@@ -15,6 +15,7 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
+import * as helmet from 'helmet';
 import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
@@ -85,6 +86,7 @@ export function getServer(
   };
 
   // Apply middleware
+  app.use(helmet()); // Help secure app. https://npmjs.com/package/helmet
   app.use(bodyParser.json(cloudEventsBodySavingOptions));
   app.use(bodyParser.json(defaultBodySavingOptions));
   app.use(bodyParser.text(defaultBodySavingOptions));
