@@ -1,4 +1,4 @@
-name: Node.js Unit CI
+name: Node.js Lint CI
 on: [push, pull_request]
 jobs:
   build:
@@ -16,5 +16,5 @@ jobs:
       run: npm install
     - name: Build TypeScript project
       run: npm run build --if-present
-    - name: Test
-      run: npm test
+    - name: Lint
+      run: npm check
