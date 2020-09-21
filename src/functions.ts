@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Type Interfaces for the Node Functions Framework.
+// **If changing files, please change package.json!**
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
 
