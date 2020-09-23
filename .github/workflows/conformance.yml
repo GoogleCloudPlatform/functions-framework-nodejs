@@ -1,5 +1,9 @@
 name: Node.js Conformance CI
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
 jobs:
   build:
     runs-on: ubuntu-18.04
