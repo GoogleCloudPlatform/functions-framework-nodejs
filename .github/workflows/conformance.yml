@@ -18,7 +18,7 @@ jobs:
       with:
         go-version: '1.13'
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.1.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@master
       with:
         functionType: 'http'
         validateMapping: false
@@ -26,7 +26,7 @@ jobs:
         target: 'writeHttp'
         runtime: ${{ matrix.runtime }}
     - name: Run event conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.1.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@master
       with:
         functionType: 'legacyevent'
         validateMapping: false
@@ -34,7 +34,7 @@ jobs:
         target: 'writeLegacyEvent'
         runtime: ${{ matrix.runtime }}
     - name: Run cloudevent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.1.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@master
       with:
         functionType: 'cloudevent'
         validateMapping: false
