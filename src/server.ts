@@ -93,6 +93,9 @@ export function getServer(
   // Subsequent parsers will be skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
   app.enable('trust proxy'); // To respect X-Forwarded-For header.
+  // Disable Express 'x-powered-by' header:
+  // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
+  app.disable('x-powered-by');
 
   registerFunctionRoutes(app, userFunction, functionSignatureType);
   return http.createServer(app);
