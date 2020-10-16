@@ -111,6 +111,7 @@ SERVER.listen(PORT, () => {
   if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
     console.log('Serving function...');
     console.log(`Function: ${TARGET}`);
+    console.log(`Signature type: ${SIGNATURE_TYPE}`);
     console.log(`URL: http://localhost:${PORT}/`);
   }
 }).setTimeout(0); // Disable automatic timeout on incoming connections.
