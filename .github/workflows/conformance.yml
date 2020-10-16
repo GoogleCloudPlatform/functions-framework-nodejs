@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        runtime: ['nodejs10', 'nodejs12']
+        runtime: ['nodejs10', 'nodejs12', 'nodejs14']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
         source: 'test/conformance'
         target: 'writeHttp'
         runtime: ${{ matrix.runtime }}
-        # Remove when tag :latest is enabled.
+        # TODO: Remove when tag :latest is enabled.
         tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
     - name: Run event conformance tests
@@ -36,7 +36,7 @@ jobs:
         source: 'test/conformance'
         target: 'writeLegacyEvent'
         runtime: ${{ matrix.runtime }}
-        # Remove when tag :latest is enabled.
+        # TODO: Remove when tag :latest is enabled.
         tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
     - name: Run cloudevent conformance tests
@@ -47,6 +47,6 @@ jobs:
         source: 'test/conformance'
         target: 'writeCloudEvent'
         runtime: ${{ matrix.runtime }}
-        # Remove when tag :latest is enabled.
+        # TODO: Remove when tag :latest is enabled.
         tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
