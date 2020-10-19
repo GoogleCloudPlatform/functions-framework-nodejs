@@ -237,7 +237,7 @@ export function wrapEventFunction(
 
 // Use an exit code which is unused by Node.js:
 // https://nodejs.org/api/process.html#process_exit_codes
-const killInstance = process.exit.bind(process, 16);
+const killInstance = <T>(_err: T) => process.exit(16);
 
 /**
  * Enables registration of error handlers.
@@ -245,21 +245,21 @@ const killInstance = process.exit.bind(process, 16);
  * @constructor
  */
 export class ErrorHandler {
-  constructor(private readonly server: http.Server) {
-    this.server = server;
-  }
+  public onUncaughtExceptionCallback: (err: Error) => void = killInstance;
+  public onUnhandledRejectionCallback: (err: {} | null | undefined) => void = killInstance;
+
   /**
    * Registers handlers for uncaught exceptions and other unhandled errors.
    */
-  register() {
+  register(server: http.Server) {
     process.on('uncaughtException', err => {
       console.error('Uncaught exception');
-      sendCrashResponse({err, res: latestRes, callback: killInstance});
+      sendCrashResponse({err, res: latestRes, callback: () => this.onUncaughtExceptionCallback(err) });
     });
 
     process.on('unhandledRejection', err => {
       console.error('Unhandled rejection');
-      sendCrashResponse({err, res: latestRes, callback: killInstance});
+      sendCrashResponse({err, res: latestRes, callback: () => this.onUnhandledRejectionCallback(err) });
     });
 
     process.on('exit', code => {
@@ -273,7 +273,7 @@ export class ErrorHandler {
     ['SIGINT', 'SIGTERM'].forEach(signal => {
       process.on(signal as NodeJS.Signals, () => {
         console.log(`Received ${signal}`);
-        this.server.close(() => {
+        server.close(() => {
           // eslint-disable-next-line no-process-exit
           process.exit();
         });

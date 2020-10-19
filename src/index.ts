@@ -96,6 +96,9 @@ Documentation:
   process.exit(0);
 }
 
+// Must be initialized before the user function.
+export const ERROR_HANDLER = new ErrorHandler();
+
 const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
 if (!USER_FUNCTION) {
   console.error('Could not load the function, shutting down.');
@@ -104,10 +107,9 @@ if (!USER_FUNCTION) {
 }
 
 const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
-const ERROR_HANDLER = new ErrorHandler(SERVER);
 
 SERVER.listen(PORT, () => {
-  ERROR_HANDLER.register();
+  ERROR_HANDLER.register(SERVER);
   if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
     console.log('Serving function...');
     console.log(`Function: ${TARGET}`);
