@@ -147,8 +147,8 @@ export function wrapCloudEventFunction(
       cloudevent = getBinaryCloudEventContext(req);
       cloudevent.data = req.body;
     }
-    // Callback style if user function has more than 2 arguments.
-    if (userFunction!.length > 2) {
+    // Callback style if user function has more than 1 argument.
+    if (userFunction!.length > 1) {
       const fn = userFunction as CloudEventFunctionWithCallback;
       return fn(cloudevent, callback);
     }
