@@ -16,7 +16,6 @@
   },
   "scripts": {
     "test": "mocha build/test",
-    "test-conformance": "cd test/conformance && ./run-conformance-tests.sh",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
