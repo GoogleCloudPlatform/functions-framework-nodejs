@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: '1.13'
+    - name: Setup test data
+      run: "./test/conformance/set_up_conformance_tests.sh"
     - name: Run HTTP conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.1
       with:
@@ -25,8 +27,6 @@ jobs:
         source: 'test/conformance'
         target: 'writeHttp'
         runtime: ${{ matrix.runtime }}
-        # TODO: Remove when tag :latest is enabled.
-        tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
     - name: Run event conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.1
@@ -36,8 +36,6 @@ jobs:
         source: 'test/conformance'
         target: 'writeLegacyEvent'
         runtime: ${{ matrix.runtime }}
-        # TODO: Remove when tag :latest is enabled.
-        tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
     - name: Run cloudevent conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.1
@@ -47,6 +45,4 @@ jobs:
         source: 'test/conformance'
         target: 'writeCloudEvent'
         runtime: ${{ matrix.runtime }}
-        # TODO: Remove when tag :latest is enabled.
-        tag: '${{ matrix.runtime }}_20201005_20_RC00'
         startDelay: 10
