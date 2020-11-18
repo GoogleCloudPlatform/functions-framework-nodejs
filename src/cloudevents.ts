@@ -35,6 +35,18 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
 }
 
 /**
+ * Checks whether the incoming request is a CloudEvents event.
+ * This is verified by checking the 'content-type' header.
+ *
+ * @param req Express request object.
+ * @return True if the request is a CloudEvents event,
+ *     false otherwise.
+ */
+export function isCloudEvent(req: express.Request): boolean {
+  return req.header('content-type') === 'application/cloudevents+json';
+}
+
+/**
  * Returns a CloudEvents context from the given CloudEvents request. Context
  * attributes are retrieved from request headers.
  *

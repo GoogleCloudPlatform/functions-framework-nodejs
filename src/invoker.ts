@@ -27,12 +27,14 @@ import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
 import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
+import {getBackgroundEvent, getCloudEvent} from './events';
 import {
   HttpFunction,
   EventFunction,
   EventFunctionWithCallback,
   CloudEventFunction,
   CloudEventFunctionWithCallback,
+  CloudFunctionsContext,
 } from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
@@ -142,11 +144,8 @@ export function wrapCloudEventFunction(
         }
       }
     );
-    let cloudevent = req.body;
-    if (isBinaryCloudEvent(req)) {
-      cloudevent = getBinaryCloudEventContext(req);
-      cloudevent.data = req.body;
-    }
+
+    let cloudevent = getCloudEvent(req);
     // Callback style if user function has more than 1 argument.
     if (userFunction!.length > 1) {
       const fn = userFunction as CloudEventFunctionWithCallback;
@@ -180,7 +179,6 @@ export function wrapEventFunction(
   userFunction: EventFunction | EventFunctionWithCallback
 ): HttpFunction {
   return (req: express.Request, res: express.Response) => {
-    const event = req.body;
     const callback = process.domain.bind(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (err: Error | null, result: any) => {
@@ -195,23 +193,11 @@ export function wrapEventFunction(
         }
       }
     );
+
+    let event = getBackgroundEvent(req);
     let data = event.data;
-    let context = event.context;
-    if (isBinaryCloudEvent(req)) {
-      // Support CloudEvents in binary content mode, with data being the whole
-      // request body and context attributes retrieved from request headers.
-      data = event;
-      context = getBinaryCloudEventContext(req);
-    } else if (context === undefined) {
-      // Support legacy events and CloudEvents in structured content mode, with
-      // context properties represented as event top-level properties.
-      // Context is everything but data.
-      context = event;
-      // Clear the property before removing field so the data object
-      // is not deleted.
-      context.data = undefined;
-      delete context.data;
-    }
+    let context = event.context as CloudFunctionsContext;
+
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {
       const fn = userFunction as EventFunctionWithCallback;

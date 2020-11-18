@@ -41,6 +41,22 @@ export type HandlerFunction =
   | CloudEventFunctionWithCallback;
 
 /**
+ * The Cloud Functions background event object.
+ *
+ * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
+ */
+export interface BackgroundEvent {
+  /**
+   * The Cloud Functions context object for the event.
+   */
+  context?: CloudFunctionsContext;
+  /**
+   * The Cloud Functions data object for the event.
+   */
+  data?: any;
+}
+
+/**
  * The Cloud Functions context object for the event.
  *
  * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
