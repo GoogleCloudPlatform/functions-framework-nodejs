@@ -145,7 +145,13 @@ export function wrapCloudEventFunction(
       }
     );
 
-    let cloudevent = getCloudEvent(req);
+    let event = getCloudEvent(req);
+    if (event === null) {
+      sendResponse(undefined, new Error('Unable to get CloudEvent'), res);
+      return;
+    }
+    let cloudevent = event;
+
     // Callback style if user function has more than 1 argument.
     if (userFunction!.length > 1) {
       const fn = userFunction as CloudEventFunctionWithCallback;
@@ -195,6 +201,10 @@ export function wrapEventFunction(
     );
 
     let event = getBackgroundEvent(req);
+    if (event === null) {
+      sendResponse(undefined, new Error('Unable to get background event'), res);
+      return;
+    }
     let data = event.data;
     let context = event.context as CloudFunctionsContext;
 

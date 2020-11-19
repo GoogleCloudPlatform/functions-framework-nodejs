@@ -49,11 +49,11 @@ export interface BackgroundEvent {
   /**
    * The Cloud Functions context object for the event.
    */
-  context?: CloudFunctionsContext;
+  context: CloudFunctionsContext;
   /**
    * The Cloud Functions data object for the event.
    */
-  data?: any;
+  data: any;
 }
 
 /**
@@ -78,7 +78,27 @@ export interface CloudFunctionsContext {
   /**
    * The resource that emitted the event.
    */
-  resource?: string;
+  resource?: string | CloudFunctionsResource;
+}
+
+/**
+ * The Cloud Functions resource object for the event.
+ *
+ * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
+ */
+export interface CloudFunctionsResource {
+  /**
+   * A service for the event resource. For example: "pubsub.googleapis.com".
+   */
+  service?: string;
+  /**
+   * The name of the event resource. For example: "projects/sample-project/topics/gcf-test"
+   */
+  name?: string;
+  /**
+   * The type of the event resource. For example: "type.googleapis.com/google.pubsub.v1.PubsubMessage".
+   */
+  type?: string;
 }
 
 /**
