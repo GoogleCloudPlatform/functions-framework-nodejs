@@ -200,10 +200,6 @@ export function wrapEventFunction(
     );
 
     const event = getBackgroundEvent(req);
-    if (event === null) {
-      sendResponse(undefined, new Error('Unable to get background event'), res);
-      return;
-    }
     const data = event.data;
     const context = event.context as CloudFunctionsContext;
 

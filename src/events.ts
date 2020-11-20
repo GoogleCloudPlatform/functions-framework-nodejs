@@ -110,12 +110,11 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
   const data = event.data;
 
   // Determine CloudEvent type attribute.
-  let ceType: string;
   if (typeof context.eventType === 'undefined') {
     console.error('Unable to find background event type');
     return null;
   }
-  ceType = typeBackgroundToCloudEvent[context.eventType];
+  const ceType = typeBackgroundToCloudEvent[context.eventType];
 
   // Determine CloudEvent service attribute.
   if (typeof context.resource === 'undefined') {
@@ -128,8 +127,8 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
   let ceSource: string;
   if (typeof context.resource === 'string') {
     let service = '';
-    for (let bService in serviceBackgroundToCloudEvent) {
-      let ceService = serviceBackgroundToCloudEvent[bService];
+    for (const bService in serviceBackgroundToCloudEvent) {
+      const ceService = serviceBackgroundToCloudEvent[bService];
       if (context.eventType.startsWith(bService)) {
         service = ceService;
         break;
@@ -142,7 +141,7 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
     ceSource = `//${service}/${context.resource}`;
   } else {
     // Resource is structured data.
-    let resource = context.resource;
+    const resource: CloudFunctionsResource = context.resource;
     ceSource = `//${resource.service}/${resource.name}`;
   }
 
@@ -164,29 +163,28 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
  * @param req Express request object.
  * @return BackgroundEvent object or null.
  */
-export function getBackgroundEvent(
-  req: express.Request
-): BackgroundEvent | null {
-  let backgroundEvent: BackgroundEvent;
-
-  if (!isBinaryCloudEvent(req) && !isCloudEvent(req)) {
-    let event = req.body;
-    let data = event.data;
-    let context = event.context;
-    if (context === undefined) {
-      // Support legacy events in which context properties represented as event top-level properties.
-      // Context is everything but data.
-      context = event;
-      // Clear the property before removing field so the data object
-      // is not deleted.
-      context.data = undefined;
-    }
-    backgroundEvent = {
-      context: context,
-      data: data,
-    };
-    return backgroundEvent;
+export function getBackgroundEvent(req: express.Request): BackgroundEvent {
+  const event = req.body;
+  let data = event.data;
+  let context = event.context;
+  if (isBinaryCloudEvent(req)) {
+    // Support CloudEvents in binary content mode, with data being the whole
+    // request body and context attributes retrieved from request headers.
+    data = event;
+    context = getBinaryCloudEventContext(req);
+  } else if (context === undefined) {
+    // Support legacy events and CloudEvents in structured content mode, with
+    // context properties represented as event top-level properties.
+    // Context is everything but data.
+    context = event;
+    // Clear the property before removing field so the data object
+    // is not deleted.
+    context.data = undefined;
+    delete context.data;
   }
-
-return null;
+  const backgroundEvent: BackgroundEvent = {
+    data: data,
+    context: context as CloudFunctionsContext,
+  };
+  return backgroundEvent;
 }
