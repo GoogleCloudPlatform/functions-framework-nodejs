@@ -35,14 +35,16 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
 }
 
 /**
- * Checks whether the incoming request is a CloudEvents event.
- * This is verified by checking the 'content-type' header.
+ * Checks whether the incoming request is a CloudEvents event in structured content
+ * mode. This is verified by checking the 'content-type' header.
+ *
+ * @link https://github.com/cloudevents/spec/blob/master/http-protocol-binding.md#32-structured-content-mode
  *
  * @param req Express request object.
- * @return True if the request is a CloudEvents event,
+ * @return True if the request is a CloudEvents event in structured content mode,
  *     false otherwise.
  */
-export function isCloudEvent(req: express.Request): boolean {
+export function isStructuredCloudEvent(req: express.Request): boolean {
   return req.header('content-type') === 'application/cloudevents+json';
 }
 
