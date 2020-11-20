@@ -26,7 +26,6 @@ import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
 import {getBackgroundEvent, getCloudEvent} from './events';
 import {
   HttpFunction,
@@ -145,12 +144,12 @@ export function wrapCloudEventFunction(
       }
     );
 
-    let event = getCloudEvent(req);
+    const event = getCloudEvent(req);
     if (event === null) {
       sendResponse(undefined, new Error('Unable to get CloudEvent'), res);
       return;
     }
-    let cloudevent = event;
+    const cloudevent = event;
 
     // Callback style if user function has more than 1 argument.
     if (userFunction!.length > 1) {
@@ -200,13 +199,13 @@ export function wrapEventFunction(
       }
     );
 
-    let event = getBackgroundEvent(req);
+    const event = getBackgroundEvent(req);
     if (event === null) {
       sendResponse(undefined, new Error('Unable to get background event'), res);
       return;
     }
-    let data = event.data;
-    let context = event.context as CloudFunctionsContext;
+    const data = event.data;
+    const context = event.context as CloudFunctionsContext;
 
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {

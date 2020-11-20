@@ -32,7 +32,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.5
       with:
         functionType: 'legacyevent'
-        validateMapping: true
+        validateMapping: false
         source: 'test/conformance'
         target: 'writeLegacyEvent'
         runtime: ${{ matrix.runtime }}
