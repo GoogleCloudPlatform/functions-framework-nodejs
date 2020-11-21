@@ -1,5 +1,4 @@
 #!/bin/bash
 
-pushd test/conformance
-sed -i "s/functions-framework-nodejs/functions-framework-nodejs#${git rev-parse --short HEAD}/" package.json
-popd
+commit_sha="$(git rev-parse HEAD)"
+sed -i "s/functions-framework-nodejs/functions-framework-nodejs#$commit_sha/" package.json
