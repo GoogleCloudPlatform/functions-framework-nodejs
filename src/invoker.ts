@@ -26,7 +26,7 @@ import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {getBackgroundEvent, getCloudEvent} from './events';
+import {getBackgroundEvent, getCloudEvent} from './eventMapping';
 import {
   HttpFunction,
   EventFunction,
@@ -34,6 +34,7 @@ import {
   CloudEventFunction,
   CloudEventFunctionWithCallback,
   CloudFunctionsContext,
+  CloudEventsContext,
 } from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
@@ -144,12 +145,13 @@ export function wrapCloudEventFunction(
       }
     );
 
-    const event = getCloudEvent(req);
-    if (event === null) {
-      sendResponse(undefined, new Error('Unable to get CloudEvent'), res);
+    let cloudevent: CloudEventsContext = {};
+    try {
+      cloudevent = getCloudEvent(req);
+    } catch (e) {
+      sendResponse(undefined, new Error('Unable to parse CloudEvent from HTTP request'), res);
       return;
     }
-    const cloudevent = event;
 
     // Callback style if user function has more than 1 argument.
     if (userFunction!.length > 1) {

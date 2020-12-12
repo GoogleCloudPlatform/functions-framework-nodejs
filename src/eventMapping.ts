@@ -28,7 +28,7 @@ import {
 /**
  * Mapping between background event types and CloudEvent types.
  */
-const typeBackgroundToCloudEvent: Record<string, string> = {
+const BACKGROUND_TO_CLOUDEVENT_EVENT_TYPE_MAP: Record<string, string> = {
   'google.pubsub.topic.publish':
     'google.cloud.pubsub.topic.v1.messagePublished',
   'providers/cloud.pubsub/eventTypes/topic.publish':
@@ -67,11 +67,11 @@ const typeBackgroundToCloudEvent: Record<string, string> = {
 /**
  * Mapping between background event services and CloudEvent services.
  */
-const serviceBackgroundToCloudEvent: Record<string, string> = {
+const BACKGROUND_TO_CLOUDEVENT_SERVICE_MAP: Record<string, string> = {
   'providers/cloud.firestore/': 'firestore.googleapis.com',
-  'providers/google.firebase.analytics/': 'firebase.googleapis.com',
-  'providers/firebase.auth/': 'firebase.googleapis.com',
-  'providers/google.firebase.database/': 'firebase.googleapis.com',
+  'providers/google.firebase.analytics/': 'firebaseauth.googleapis.com',
+  'providers/firebase.auth/': 'firebaseauth.googleapis.com',
+  'providers/google.firebase.database/': 'firebasedatabase.googleapis.com',
   'providers/cloud.pubsub/': 'pubsub.googleapis.com',
   'providers/cloud.storage/': 'storage.googleapis.com',
   'google.pubsub': 'pubsub.googleapis.com',
@@ -79,16 +79,16 @@ const serviceBackgroundToCloudEvent: Record<string, string> = {
 };
 
 // Default CloudEvent spec version.
-const ceSpecversion = '1.0';
+const CE_SPEC_VERSION = '1.0';
 // Default CloudEvent content type.
-const ceContentType = 'application/json';
+const CE_CONTENT_TYPE = 'application/json';
 
 /**
  * Get CloudEvent from the request object.
  * @param req Express request object.
  * @return CloudEvent object or null.
  */
-export function getCloudEvent(req: express.Request): CloudEventsContext | null {
+export function getCloudEvent(req: express.Request): CloudEventsContext {
   let cloudevent: CloudEventsContext;
 
   // Handle a CloudEvent in binary content mode.
@@ -104,43 +104,45 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
     return cloudevent;
   }
 
-  console.log('Converting from background event to CloudEvent');
   const event = getBackgroundEvent(req);
-  if (event === null) {
-    console.error('Unable to extract background event');
-    return null;
+  if (!event) {
+    throw new Error('Unable to extract background event');
   }
 
   const context = event.context;
   const data = event.data;
 
+  cloudevent = {
+    contenttype: CE_CONTENT_TYPE,
+    id: context.eventId,
+    specversion: CE_SPEC_VERSION,
+    time: context.timestamp,
+    data: data,
+  };
+
   // Determine CloudEvent type attribute.
-  if (context.eventType === undefined) {
-    console.error('Unable to find background event type');
-    return null;
+  if (!context.eventType) {
+    throw new Error('Unable to find background event type');
   }
-  const ceType = typeBackgroundToCloudEvent[context.eventType];
+  const ceType = BACKGROUND_TO_CLOUDEVENT_EVENT_TYPE_MAP[context.eventType];
 
   // Determine CloudEvent service attribute.
-  if (context.resource === undefined) {
-    console.error('Unable to find background event resource');
-    return null;
+  if (!context.resource) {
+    throw new Error ('Unable to find background event resource');
   }
   let ceSource: string;
   if (typeof context.resource === 'string') {
     // Resource is a raw path.
     // We need to determine the background event service from its type.
     let service = '';
-    for (const bService in serviceBackgroundToCloudEvent) {
-      const ceService = serviceBackgroundToCloudEvent[bService];
+    for (const [bService, ceService] of Object.entries(BACKGROUND_TO_CLOUDEVENT_SERVICE_MAP)) {
       if (context.eventType.startsWith(bService)) {
         service = ceService;
         break;
       }
     }
-    if (service === '') {
-      console.error('Unable to find background event service');
-      return null;
+    if (!service) {
+      throw new Error('Unable to find background event service');
     }
     ceSource = `//${service}/${context.resource}`;
   } else {
@@ -148,16 +150,6 @@ export function getCloudEvent(req: express.Request): CloudEventsContext | null {
     const resource: CloudFunctionsResource = context.resource;
     ceSource = `//${resource.service}/${resource.name}`;
   }
-
-  cloudevent = {
-    contenttype: ceContentType,
-    id: context.eventId,
-    specversion: ceSpecversion,
-    time: context.timestamp,
-    data: data,
-    source: ceSource,
-    type: ceType,
-  };
 
   return cloudevent;
 }
@@ -176,7 +168,7 @@ export function getBackgroundEvent(req: express.Request): BackgroundEvent {
     // request body and context attributes retrieved from request headers.
     data = event;
     context = getBinaryCloudEventContext(req);
-  } else if (context === undefined) {
+  } else if (!context) {
     // Support legacy events and CloudEvents in structured content mode, with
     // context properties represented as event top-level properties.
     // Context is everything but data.
