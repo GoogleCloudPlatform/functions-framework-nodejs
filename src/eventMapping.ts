@@ -69,9 +69,9 @@ const BACKGROUND_TO_CLOUDEVENT_EVENT_TYPE_MAP: Record<string, string> = {
  */
 const BACKGROUND_TO_CLOUDEVENT_SERVICE_MAP: Record<string, string> = {
   'providers/cloud.firestore/': 'firestore.googleapis.com',
-  'providers/google.firebase.analytics/': 'firebaseauth.googleapis.com',
-  'providers/firebase.auth/': 'firebaseauth.googleapis.com',
-  'providers/google.firebase.database/': 'firebasedatabase.googleapis.com',
+  'providers/google.firebase.analytics/': 'firebase.googleapis.com',
+  'providers/firebase.auth/': 'firebase.googleapis.com',
+  'providers/google.firebase.database/': 'firebase.googleapis.com',
   'providers/cloud.pubsub/': 'pubsub.googleapis.com',
   'providers/cloud.storage/': 'storage.googleapis.com',
   'google.pubsub': 'pubsub.googleapis.com',
