@@ -149,7 +149,11 @@ export function wrapCloudEventFunction(
     try {
       cloudevent = getCloudEvent(req);
     } catch (e) {
-      sendResponse(undefined, new Error('Unable to parse CloudEvent from HTTP request'), res);
+      sendResponse(
+        undefined,
+        new Error('Unable to parse CloudEvent from HTTP request'),
+        res
+      );
       return;
     }
 
