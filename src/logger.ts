@@ -44,7 +44,10 @@ export function sendCrashResponse({
   // execution sends the response between the check and 'send' call below.
   if (res && !res.headersSent) {
     res.set(FUNCTION_STATUS_HEADER_FIELD, 'crash');
-    res.send(err.message || err);
+    const message = err.message || err;
+    const sanitizedMessage =
+      typeof message === 'number' ? String(message) : message;
+    res.send(sanitizedMessage);
   }
   if (callback) {
     callback();
