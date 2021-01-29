@@ -44,7 +44,7 @@ export function sendCrashResponse({
   // execution sends the response between the check and 'send' call below.
   if (res && !res.headersSent) {
     res.set(FUNCTION_STATUS_HEADER_FIELD, 'crash');
-    res.send(err.message || err);
+    res.send((err.message || err) + '');
   }
   if (callback) {
     callback();
