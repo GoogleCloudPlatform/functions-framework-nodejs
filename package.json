@@ -11,7 +11,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.5",
     "on-finished": "^2.3.0"
   },
   "scripts": {
