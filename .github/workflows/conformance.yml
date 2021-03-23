@@ -25,18 +25,18 @@ jobs:
         functionType: 'http'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'./build/src/index.js --signature-type http --source test/conformance --target writeHttp'"
+        cmd: "'npx @google-cloud/functions-framework --signature-type http --source test/conformance --target writeHttp'"
     - name: Run event conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'./build/src/index.js --signature-type event --source test/conformance --target writeLegacyEvent'"
+        cmd: "'npx @google-cloud/functions-framework --signature-type event --source test/conformance --target writeLegacyEvent'"
     - name: Run cloudevent conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'./build/src/index.js --signature-type cloudevent --source test/conformance --target writeCloudEvent'"
+        cmd: "'npx @google-cloud/functions-framework --signature-type cloudevent --source test/conformance --target writeCloudEvent'"
