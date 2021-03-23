@@ -39,7 +39,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'cloudevent'
-        validateMapping: false
+        validateMapping: true
         source: 'test/conformance'
         target: 'writeCloudEvent'
         runtime: ${{ matrix.runtime }}
