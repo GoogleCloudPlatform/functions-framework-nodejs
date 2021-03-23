@@ -97,6 +97,30 @@ export function getServer(
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
 
+  // Add request timing
+  const getDurationInMilliseconds = (start: [number, number]) => {
+    const NS_PER_SEC = 1e9;
+    const NS_TO_MS = 1e6;
+    const diff = process.hrtime(start);
+
+    return (diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS;
+  };
+
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl} [STARTED]`);
+    const start = process.hrtime();
+
+    res.on('finish', () => {
+      const durationInMilliseconds = getDurationInMilliseconds(start);
+      console.log(
+        `${req.method} ${
+          req.originalUrl
+        } [FINISHED] ${durationInMilliseconds.toLocaleString()} ms`
+      );
+    });
+    next();
+  });
+
   registerFunctionRoutes(app, userFunction, functionSignatureType);
   return http.createServer(app);
 }
