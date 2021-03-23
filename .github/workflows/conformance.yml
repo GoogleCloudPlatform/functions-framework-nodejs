@@ -23,6 +23,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'http'
+        useBuildpacks: false
         validateMapping: false
         cmd: npx @google-cloud/functions-framework --signature-type http
         source: 'test/conformance'
@@ -32,6 +33,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'legacyevent'
+        useBuildpacks: false
         validateMapping: false
         cmd: npx @google-cloud/functions-framework --signature-type event
         source: 'test/conformance'
@@ -41,6 +43,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'cloudevent'
+        useBuildpacks: false
         validateMapping: false
         cmd: npx @google-cloud/functions-framework --signature-type cloudevent
         source: 'test/conformance'
