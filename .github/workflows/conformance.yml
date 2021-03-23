@@ -25,7 +25,7 @@ jobs:
         functionType: 'http'
         useBuildpacks: false
         validateMapping: false
-        cmd: npx @google-cloud/functions-framework --signature-type http
+        cmd: ./build/src/index.js --signature-type http
         source: 'test/conformance'
         target: 'writeHttp'
         startDelay: 10
@@ -35,7 +35,7 @@ jobs:
         functionType: 'legacyevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: npx @google-cloud/functions-framework --signature-type event
+        cmd: ./build/src/index.js --signature-type event
         source: 'test/conformance'
         target: 'writeLegacyEvent'
         startDelay: 10
@@ -45,7 +45,7 @@ jobs:
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: npx @google-cloud/functions-framework --signature-type cloudevent
+        cmd: ./build/src/index.js --signature-type cloudevent
         source: 'test/conformance'
         target: 'writeCloudEvent'
         startDelay: 10
