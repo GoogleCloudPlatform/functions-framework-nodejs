@@ -1,8 +1,6 @@
 name: Node.js Conformance CI
 on:
   push:
-    branches:
-    - master
   pull_request:
 jobs:
   build:
