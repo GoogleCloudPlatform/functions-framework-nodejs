@@ -3,7 +3,7 @@ const fileName = "function_output.json";
 
 function writeHttp(req, res) {
   writeJson(req.body);
-  res.end(200);
+  res.send('All good.');
 }
 
 function writeCloudEvent(cloudevent) {
