@@ -3,25 +3,16 @@ const fileName = "function_output.json";
 
 function writeHttp(req, res) {
   writeJson(req.body);
-  res.end(200);
+  res.status(200).send();
 }
 
 function writeCloudEvent(cloudevent) {
-  cloudevent.datacontenttype = "application/json"
+  // cloudevent.datacontenttype = "application/json"
   writeJson(cloudevent);
 }
 
 function writeLegacyEvent(data, context) {
-  content = {
-    data: data,
-    context: {
-      eventId: context.eventId,
-      timestamp: context.timestamp,
-      eventType: context.eventType,
-      resource: context.resource,
-    },
-  };
-  writeJson(content);
+  writeJson({ data, context });
 }
 
 function writeJson(content) {

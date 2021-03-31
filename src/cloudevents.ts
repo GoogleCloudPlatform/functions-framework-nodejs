@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {CloudEventsContext} from './functions';
+import {CloudEventsContext, CloudFunctionsContext} from './functions';
 
 /**
  * Checks whether the incoming request is a CloudEvents event in binary content
@@ -35,6 +35,36 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
 }
 
 /**
+ * Converts a request to a structured CloudEvent object. Handles:
+ * - Binary CloudEvents (CloudEvent with "ce-" HTTP headers)
+ * - Structured CloudEvents (CloudEvent with event in req.body, no-op)
+ * @param req Express request object.
+ * @returns A structured CloudEvent object.
+ */
+export function convertRequestToStructuredCE(req: express.Request): CloudEventsContext {
+  if (isBinaryCloudEvent(req)) {
+    // Binary event.
+    // Create an object with the CloudEvent properties.
+    const ce: CloudEventsContext = {
+      specversion: req.header('specversion'),
+      type: req.header('type'),
+      source: req.header('source'),
+      subject: req.header('subject'),
+      id: req.header('id'),
+      time: req.header('time'),
+      datacontenttype: req.header('datacontenttype'),
+      data: req.body,
+    };
+    // Remove undefined keys from CE object
+    Object.keys(ce).forEach((key: string) => ce[key] === undefined ? delete ce[key] : {});
+    return ce;
+  } else {
+    // Structured event. Just return the event, which is stored in the HTTP body.
+    return req.body;
+  }
+}
+
+/**
  * Returns a CloudEvents context from the given CloudEvents request. Context
  * attributes are retrieved from request headers.
  *
@@ -52,4 +82,33 @@ export function getBinaryCloudEventContext(
     }
   }
   return context;
+}
+
+/**
+ * Downcasts a CloudEvent to a legacy event.
+ * @param req The express request.
+ * @returns The legacy event.
+ */
+export function convertCloudEventToLegacyEvent(
+  req: express.Request
+): {data: {}, context: CloudFunctionsContext} {
+  const data = {};
+  const context = {};
+
+  return {
+    data,
+    context,
+  };
+}
+
+/**
+ * Upcasts a legacy event to a CloudEvent.
+ * @param req The express request.
+ * @returns The CloudEvent.
+ */
+ export function convertLegacyEventToCloudEvent(
+  req: express.Request
+): CloudEventsContext {
+  return {
+  };
 }

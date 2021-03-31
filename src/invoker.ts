@@ -26,7 +26,7 @@ import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
+import {isBinaryCloudEvent, getBinaryCloudEventContext, convertCloudEventToLegacyEvent} from './cloudevents';
 import {
   HttpFunction,
   EventFunction,
@@ -171,10 +171,11 @@ export function wrapCloudEventFunction(
 }
 
 /**
- * Wraps event function (or event function with callback) in HTTP function
- * signature.
- * @param userFunction User's function.
- * @return HTTP function which wraps the provided event function.
+ * Wraps function with a "event" / "(data, context, [callback]) =>"" signature in HTTP function.
+ * @param userFunction The user's event function.
+ * @example (data, context) =>
+ * @example (data, context, callback) =>
+ * @return {HttpFunction} HTTP function which wraps the provided event function.
  */
 export function wrapEventFunction(
   userFunction: EventFunction | EventFunctionWithCallback
@@ -200,8 +201,9 @@ export function wrapEventFunction(
     if (isBinaryCloudEvent(req)) {
       // Support CloudEvents in binary content mode, with data being the whole
       // request body and context attributes retrieved from request headers.
-      data = event;
-      context = getBinaryCloudEventContext(req);
+      const legacyEvent = convertCloudEventToLegacyEvent(req);
+      data = legacyEvent.data;
+      context = legacyEvent.context;
     } else if (context === undefined) {
       // Support legacy events and CloudEvents in structured content mode, with
       // context properties represented as event top-level properties.
@@ -212,12 +214,14 @@ export function wrapEventFunction(
       context.data = undefined;
       delete context.data;
     }
+
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {
       const fn = userFunction as EventFunctionWithCallback;
       return fn(data, context, callback);
     }
 
+    // Call the user's event function
     const fn = userFunction as EventFunction;
     Promise.resolve()
       .then(() => {

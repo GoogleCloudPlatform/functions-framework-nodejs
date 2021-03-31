@@ -1,5 +1,10 @@
 {
   "dependencies": {
-    "@google-cloud/functions-framework": "github:GoogleCloudPlatform/functions-framework-nodejs"
+    "@google-cloud/functions-framework": "file:../../"
+  },
+  "scripts": {
+    "start": "functions-framework --target=writeHttp",
+    "startE": "functions-framework --signature-type=event --target=writeLegacyEvent",
+    "startCE": "functions-framework --signature-type=event --target=writeCloudEvent"
   }
 }
