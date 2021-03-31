@@ -272,10 +272,13 @@ export class ErrorHandler {
 
     ['SIGINT', 'SIGTERM'].forEach(signal => {
       process.on(signal as NodeJS.Signals, () => {
-        console.log(`Received ${signal}`);
-        this.server.close(() => {
-          // eslint-disable-next-line no-process-exit
-          process.exit();
+        sendCrashResponse({
+          err: new Error(`Received ${signal}`),
+          res: latestRes,
+          silent: true,
+          callback: () => {
+            process.exit();
+          }
         });
       });
     });
