@@ -277,8 +277,9 @@ export class ErrorHandler {
           res: latestRes,
           silent: true,
           callback: () => {
+            // eslint-disable-next-line no-process-exit
             process.exit();
-          }
+          },
         });
       });
     });
