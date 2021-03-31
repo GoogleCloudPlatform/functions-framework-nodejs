@@ -43,44 +43,24 @@ export function getServer(
     next();
   });
 
-  /**
-   * Retains a reference to the raw body buffer to allow access to the raw body
-   * for things like request signature validation.  This is used as the "verify"
-   * function in body-parser options.
-   * @param req Express request object.
-   * @param res Express response object.
-   * @param buf Buffer to be saved.
-   */
-  function rawBodySaver(
-    req: express.Request,
-    res: express.Response,
-    buf: Buffer
-  ) {
-    req.rawBody = buf;
-  }
-
   // Set limit to a value larger than 32MB, which is maximum limit of higher
   // level layers anyway.
   const requestLimit = '1024mb';
   const defaultBodySavingOptions = {
     limit: requestLimit,
-    verify: rawBodySaver,
   };
   const cloudEventsBodySavingOptions = {
     type: 'application/cloudevents+json',
     limit: requestLimit,
-    verify: rawBodySaver,
   };
   const rawBodySavingOptions = {
     limit: requestLimit,
-    verify: rawBodySaver,
     type: '*/*',
   };
 
   // Use extended query string parsing for URL-encoded bodies.
   const urlEncodedOptions = {
     limit: requestLimit,
-    verify: rawBodySaver,
     extended: true,
   };
 

@@ -35,17 +35,6 @@ import {
   CloudEventFunctionWithCallback,
 } from './functions';
 
-// We optionally annotate the express Request with a rawBody field.
-// Express leaves the Express namespace open to allow merging of new fields.
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    export interface Request {
-      rawBody?: Buffer;
-    }
-  }
-}
-
 /**
  * Response object for the most recent request.
  * Used for sending errors to the user.
