@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "mocha build/test",
+    "test-individual": "mocha build/test -g 'should get a binary CE'",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",

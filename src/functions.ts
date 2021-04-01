@@ -41,6 +41,14 @@ export type HandlerFunction =
   | CloudEventFunctionWithCallback;
 
 /**
+ * A legacy event.
+ */
+export interface LegacyEvent {
+  data: {};
+  context: CloudFunctionsContext;
+}
+
+/**
  * The Cloud Functions context object for the event.
  *
  * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
@@ -99,6 +107,10 @@ export interface CloudEventsContext {
    * Content type of the event data.
    */
   contenttype?: string;
+  /**
+   * The event data.
+   */
+   data?: Record<string, unknown | string | number | boolean> | string | number | boolean | null | unknown;
 
   // CloudEvents extension attributes.
   [key: string]: any;

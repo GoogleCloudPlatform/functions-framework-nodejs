@@ -17,7 +17,10 @@ import * as express from 'express';
 import * as functions from '../src/functions';
 import * as loader from '../src/loader';
 
-describe('loading function', () => {
+/**
+ * Tests loading the user's function.
+ */
+describe('Function loader', () => {
   interface TestData {
     name: string;
     codeLocation: string;

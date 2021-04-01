@@ -26,11 +26,13 @@ import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {isBinaryCloudEvent, getBinaryCloudEventContext, convertCloudEventToLegacyEvent} from './cloudevents';
+import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
+import {convertCloudEventToLegacyEvent} from './eventConverter';
 import {
   HttpFunction,
   EventFunction,
   EventFunctionWithCallback,
+  CloudFunctionsContext,
   CloudEventFunction,
   CloudEventFunctionWithCallback,
 } from './functions';
@@ -181,7 +183,37 @@ export function wrapEventFunction(
   userFunction: EventFunction | EventFunctionWithCallback
 ): HttpFunction {
   return (req: express.Request, res: express.Response) => {
-    const event = req.body;
+    // Setup our (data, context) types
+    let data = req.body.data;
+    let context: CloudFunctionsContext = req.body.context;
+
+    // If CloudEvent, convert to legacy event.
+    if (isBinaryCloudEvent(req)) {
+      const legacyEvent = convertCloudEventToLegacyEvent(req);
+      data = legacyEvent.data;
+      context = legacyEvent.context;
+    } else {
+      // If a really legacy event, convert it to a normal event.
+      // See the tests for more details.
+      if (!context) {
+        // Support legacy events and CloudEvents in structured content mode, with
+        // context properties represented as event top-level properties.
+        // Context is everything but data.
+        const modifiedContext = req.body;
+
+        // Clear the property before removing field so the data object
+        // is not deleted.
+        modifiedContext.data = undefined;
+        delete modifiedContext.data;
+        context = modifiedContext;
+      } else {
+        // Set data and context normally
+        data = req.body.data;
+        context = req.body.context;
+      }
+    }
+
+    // Setup function callback
     const callback = process.domain.bind(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (err: Error | null, result: any) => {
@@ -196,24 +228,6 @@ export function wrapEventFunction(
         }
       }
     );
-    let data = event.data;
-    let context = event.context;
-    if (isBinaryCloudEvent(req)) {
-      // Support CloudEvents in binary content mode, with data being the whole
-      // request body and context attributes retrieved from request headers.
-      const legacyEvent = convertCloudEventToLegacyEvent(req);
-      data = legacyEvent.data;
-      context = legacyEvent.context;
-    } else if (context === undefined) {
-      // Support legacy events and CloudEvents in structured content mode, with
-      // context properties represented as event top-level properties.
-      // Context is everything but data.
-      context = event;
-      // Clear the property before removing field so the data object
-      // is not deleted.
-      context.data = undefined;
-      delete context.data;
-    }
 
     // Callback style if user function has more than 2 arguments.
     if (userFunction!.length > 2) {
