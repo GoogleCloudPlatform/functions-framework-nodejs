@@ -41,6 +41,7 @@ describe('Function loader', () => {
   ];
 
   for (const test of testData) {
+    // Loads the user's function given a code location and target name.
     it(`should load ${test.name}`, () => {
       const loadedFunction = loader.getUserFunction(
         process.cwd() + test.codeLocation,

@@ -20,18 +20,21 @@ import {SignatureType} from '../src/types';
 import * as supertest from 'supertest';
 import {
   TEST_CLOUDEVENT_STRUCTURED,
+  TEST_CLOUDEVENT_STRUCTURED_INVALID,
   TEST_CLOUDEVENT_BINARY_FULL,
   TEST_CLOUDEVENT_BINARY_INVALID,
   TEST_CLOUDEVENT_BINARY_PARTIAL,
-} from './data/testData';
+  TestHTTPRequest,
+} from './data/testHTTPData';
 import {
   isBinaryCloudEvent,
+  isStructuredCloudEvent,
   convertRequestToStructuredCE,
-  getBinaryCloudEventContext,
+  getStructuredCloudEventContext,
 } from '../src/cloudevents';
 
 describe('CloudEvents: Utility methods', () => {
-  // A full CloudEvent request
+  // A full binary CloudEvent request
   const fullBinaryCloudEventRequest: express.Request = {
     headers: TEST_CLOUDEVENT_BINARY_FULL.headers,
     header: (name: string) => {
@@ -40,17 +43,50 @@ describe('CloudEvents: Utility methods', () => {
     body: TEST_CLOUDEVENT_BINARY_FULL.body,
   } as express.Request;
 
-  it('should correctly eval if a CloudEvent is "binary"', async () => {
-    // Request that is a full CloudEvent
-    assert.strictEqual(isBinaryCloudEvent(fullBinaryCloudEventRequest), true);
+  // An incomplete binary CloudEvent requst
+  const incompleteBinaryCloudEventRequest: express.Request = {
+    headers: TEST_CLOUDEVENT_BINARY_INVALID.headers,
+    header: (name: string) => {
+      return TEST_CLOUDEVENT_BINARY_INVALID.headers[name];
+    },
+    body: TEST_CLOUDEVENT_BINARY_INVALID.body,
+  } as express.Request;
 
-    // Request with missing fields
-    const req2: express.Request = {
-      header: (name: string) => {
-        return TEST_CLOUDEVENT_BINARY_INVALID.headers[name];
-      },
-    } as express.Request;
-    assert.strictEqual(isBinaryCloudEvent(req2 as express.Request), false);
+  // A full structured CloudEvent request
+  const fullStructuredCloudEventRequest: express.Request = {
+    headers: TEST_CLOUDEVENT_STRUCTURED.headers,
+    header: (name: string) => {
+      return TEST_CLOUDEVENT_STRUCTURED.headers[name];
+    },
+    body: TEST_CLOUDEVENT_STRUCTURED.body,
+  } as express.Request;
+
+  // An incomplete structured CloudEvent request
+  const incompleteStructuredCloudEventRequest: express.Request = {
+    headers: TEST_CLOUDEVENT_STRUCTURED_INVALID.headers,
+    header: (name: string) => {
+      return TEST_CLOUDEVENT_STRUCTURED_INVALID.headers[name];
+    },
+    body: TEST_CLOUDEVENT_STRUCTURED_INVALID.body,
+  } as express.Request;
+
+  it('should correctly eval if a CloudEvent is "binary"', async () => {
+    assert.strictEqual(isBinaryCloudEvent(fullBinaryCloudEventRequest), true);
+    assert.strictEqual(
+      isBinaryCloudEvent(incompleteBinaryCloudEventRequest),
+      false
+    );
+  });
+
+  it('should correctly eval if a CloudEvent is "structured"', async () => {
+    assert.strictEqual(
+      isStructuredCloudEvent(fullStructuredCloudEventRequest),
+      true
+    );
+    assert.strictEqual(
+      isStructuredCloudEvent(incompleteStructuredCloudEventRequest),
+      false
+    );
   });
 
   it('should convert requests to a structured CE', async () => {
@@ -63,17 +99,18 @@ describe('CloudEvents: Utility methods', () => {
 
   it('should get a binary CE from a request', async () => {
     // Request that is a full CloudEvent
-    const convertedBinaryCE = getBinaryCloudEventContext(fullBinaryCloudEventRequest);
+    const convertedBinaryCE = getStructuredCloudEventContext(
+      fullBinaryCloudEventRequest
+    );
     const structuredCE = TEST_CLOUDEVENT_STRUCTURED.body;
     assert.deepStrictEqual(convertedBinaryCE, structuredCE);
   });
 });
 
 describe('Invoker: CE -> CE', () => {
-  interface TestData {
+  // Test data
+  interface TestData extends TestHTTPRequest {
     name: string;
-    headers: {[key: string]: string};
-    body: {};
     isPartialCE: boolean;
   }
 
@@ -104,7 +141,7 @@ describe('Invoker: CE -> CE', () => {
       },
       body: TEST_CLOUDEVENT_BINARY_PARTIAL.body,
       isPartialCE: true,
-    }
+    },
   ];
   testData.forEach(test => {
     it(`should receive cloudevent from ${test.name}`, async () => {

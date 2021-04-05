@@ -13,11 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {
-  LegacyEvent,
-  CloudEventsContext,
-  CloudFunctionsContext,
-} from './functions';
+import {CloudEventsContext} from './functions';
 
 /**
  * Checks whether the incoming request is a CloudEvents event in binary content
@@ -36,6 +32,34 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
     req.header('ce-source') &&
     req.header('ce-id')
   );
+}
+
+/**
+ * Checks whether the incoming request is a CloudEvents event in structured content
+ * mode. This is verified by checking the presence of required body fields.
+ *
+ * @link https://github.com/cloudevents/spec/blob/master/http-protocol-binding.md#3-http-message-mapping
+ *
+ * @param req Express request object.
+ * @return True if the request is a CloudEvents event in structured content mode,
+ *     false otherwise.
+ */
+export function isStructuredCloudEvent(req: express.Request): boolean {
+  return !!(
+    req.body.specversion &&
+    req.body.type &&
+    req.body.source &&
+    req.body.id
+  );
+}
+
+/**
+ * Returns true if the request is a CloudEvent.
+ * @param req Express request object.
+ * @returns True if the request is a CloudEvent.
+ */
+export function isCloudEvent(req: express.Request): boolean {
+  return isBinaryCloudEvent(req) || isStructuredCloudEvent(req);
 }
 
 /**
@@ -68,23 +92,8 @@ export function convertRequestToStructuredCE(
     return ce;
   } else {
     // Structured event. Just return the event, which is stored in the HTTP body.
-    console.log("req.body");
-    console.log(req.body);
     return req.body;
   }
-}
-
-/**
- * Converts an incoming request to a legacy event.
- * @param req
- * @returns {LegacyEvent} A legacy style event.
- */
-export function convertRequestToLegacyEvent(req: express.Request): LegacyEvent {
-  // TODO
-  return {
-    data: {},
-    context: {},
-  };
 }
 
 /**
@@ -94,16 +103,20 @@ export function convertRequestToLegacyEvent(req: express.Request): LegacyEvent {
  * @param req Express request object.
  * @return CloudEvents context.
  */
-export function getBinaryCloudEventContext(
+export function getStructuredCloudEventContext(
   req: express.Request
 ): CloudEventsContext {
   const context: CloudEventsContext = {};
-  for (const name in req.headers) {
-    if (name.startsWith('ce-')) {
-      const attributeName = name.substr('ce-'.length);
-      context[attributeName] = req.header(name);
+  if (isStructuredCloudEvent(req)) {
+    return req.body;
+  } else {
+    for (const name in req.headers) {
+      if (name.startsWith('ce-')) {
+        const attributeName = name.substr('ce-'.length);
+        context[attributeName] = req.header(name);
+      }
     }
+    context.data = req.body;
+    return context;
   }
-  context.data = req.body;
-  return context;
 }

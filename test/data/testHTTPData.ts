@@ -35,6 +35,21 @@ export const TEST_CLOUDEVENT_STRUCTURED: TestHTTPRequest = {
 };
 
 /**
+ * A test CloudEvent in structured mode that is invalid
+ */
+export const TEST_CLOUDEVENT_STRUCTURED_INVALID: TestHTTPRequest = {
+  headers: {},
+  body: {
+    specversion: '1.0',
+    time: '2020-05-13T01:23:45Z',
+    datacontenttype: 'application/json',
+    data: {
+      some: PAYLOAD,
+    },
+  },
+};
+
+/**
  * A test CloudEvent in binary mode with all fields.
  */
 export const TEST_CLOUDEVENT_BINARY_FULL: TestHTTPRequest = {
@@ -56,7 +71,7 @@ export const TEST_CLOUDEVENT_BINARY_FULL: TestHTTPRequest = {
 /**
  * A test CloudEvent in binary mode with partial fields.
  */
- export const TEST_CLOUDEVENT_BINARY_PARTIAL: TestHTTPRequest = {
+export const TEST_CLOUDEVENT_BINARY_PARTIAL: TestHTTPRequest = {
   headers: {
     ['ce-specversion']: '1.0',
     ['ce-type']: 'com.google.cloud.storage',

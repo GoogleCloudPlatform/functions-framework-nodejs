@@ -7,7 +7,7 @@ import * as supertest from 'supertest';
 /**
  * Tests HTTP requests to the Functions Framework
  */
-describe('Invoker: HTTP requests', () => {
+describe('Invoker: HTTP', () => {
   interface TestData {
     name: string;
     path: string;

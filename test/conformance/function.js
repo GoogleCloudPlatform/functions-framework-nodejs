@@ -16,7 +16,7 @@ function writeLegacyEvent(data, context) {
 }
 
 function writeJson(content) {
-  json = JSON.stringify(content);
+  const json = JSON.stringify(content);
   fs.writeFileSync(fileName, json);
 }
 

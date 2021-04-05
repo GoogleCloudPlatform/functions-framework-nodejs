@@ -17,7 +17,7 @@ import * as functions from '../src/functions';
 import {getServer} from '../src/server';
 import {SignatureType} from '../src/types';
 import * as supertest from 'supertest';
-import {TestEventData} from './data/testData';
+import {TestEventData} from './data/testHTTPData';
 
 describe('Invoker: Legacy Event -> Legacy Event', () => {
   // Different HTTP inputs that expect to have the same output.

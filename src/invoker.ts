@@ -26,7 +26,7 @@ import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
+import {isCloudEvent, getStructuredCloudEventContext} from './cloudevents';
 import {convertCloudEventToLegacyEvent} from './eventConverter';
 import {
   HttpFunction,
@@ -145,9 +145,8 @@ export function wrapCloudEventFunction(
       }
     );
     let cloudevent = req.body;
-    if (isBinaryCloudEvent(req)) {
-      cloudevent = getBinaryCloudEventContext(req);
-      cloudevent.data = req.body;
+    if (isCloudEvent(req)) {
+      cloudevent = getStructuredCloudEventContext(req);
     }
     // Callback style if user function has more than 1 argument.
     if (userFunction!.length > 1) {
@@ -188,8 +187,8 @@ export function wrapEventFunction(
     let context: CloudFunctionsContext = req.body.context;
 
     // If CloudEvent, convert to legacy event.
-    if (isBinaryCloudEvent(req)) {
-      const legacyEvent = convertCloudEventToLegacyEvent(req);
+    if (isCloudEvent(req)) {
+      const legacyEvent = convertCloudEventToLegacyEvent(req.headers, req.body);
       data = legacyEvent.data;
       context = legacyEvent.context;
     } else {
