@@ -21,6 +21,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'http'
+        useBuildpacks: false
         validateMapping: false
         source: 'test/conformance'
         target: 'writeHttp'
@@ -30,6 +31,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'legacyevent'
+        useBuildpacks: false
         validateMapping: false
         source: 'test/conformance'
         target: 'writeLegacyEvent'
@@ -39,6 +41,7 @@ jobs:
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.8
       with:
         functionType: 'cloudevent'
+        useBuildpacks: false
         validateMapping: true
         source: 'test/conformance'
         target: 'writeCloudEvent'
