@@ -44,9 +44,14 @@ export type HandlerFunction =
  * A legacy event.
  */
 export interface LegacyEvent {
-  data: {};
+  data: object;
   context: CloudFunctionsContext;
 }
+
+interface Data {
+  data: object;
+}
+export type LegacyCloudFunctionsContext = CloudFunctionsContext | Data;
 
 /**
  * The Cloud Functions context object for the event.

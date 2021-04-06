@@ -15,6 +15,78 @@
 // Note: the test data in this file should contain the same data.
 const PAYLOAD = 'test payload';
 
+// https://github.com/GoogleCloudPlatform/functions-framework-conformance/blob/master/events/generate/data/storage-cloudevent-input.json
+export const TEST_CLOUDEVENT_STORAGE_INPUT: TestHTTPRequest = {
+  headers: {
+    'Content-Type': 'application/cloudevents+json',
+  },
+  body: {
+    specversion: '1.0',
+    type: 'google.cloud.storage.object.v1.finalized',
+    source: '//storage.googleapis.com/projects/_/buckets/some-bucket',
+    subject: 'objects/folder/Test.cs',
+    id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+    time: '2020-09-29T11:32:00.000Z',
+    datacontenttype: 'application/json',
+    data: {
+      bucket: 'some-bucket',
+      contentType: 'text/plain',
+      crc32c: 'rTVTeQ==',
+      etag: 'CNHZkbuF/ugCEAE=',
+      generation: '1587627537231057',
+      id: 'some-bucket/folder/Test.cs/1587627537231057',
+      kind: 'storage#object',
+      md5Hash: 'kF8MuJ5+CTJxvyhHS1xzRg==',
+      mediaLink:
+        'https://www.googleapis.com/download/storage/v1/b/some-bucket/o/folder%2FTest.cs?generation=1587627537231057\u0026alt=media',
+      metageneration: '1',
+      name: 'folder/Test.cs',
+      selfLink:
+        'https://www.googleapis.com/storage/v1/b/some-bucket/o/folder/Test.cs',
+      size: '352',
+      storageClass: 'MULTI_REGIONAL',
+      timeCreated: '2020-04-23T07:38:57.230Z',
+      timeStorageClassUpdated: '2020-04-23T07:38:57.230Z',
+      updated: '2020-04-23T07:38:57.230Z',
+    },
+  },
+};
+
+// // https://github.com/GoogleCloudPlatform/functions-framework-conformance/blob/master/events/generate/data/storage-cloudevent-output.json
+export const TEST_CLOUDEVENT_STORAGE_OUTPUT = {
+  context: {
+    eventId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+    timestamp: '2020-09-29T11:32:00.000Z',
+    eventType: 'google.storage.object.finalize',
+    resource: {
+      service: 'storage.googleapis.com',
+      name: 'projects/_/buckets/some-bucket/objects/folder/Test.cs',
+      type: 'storage#object',
+    },
+  },
+  data: {
+    bucket: 'some-bucket',
+    contentType: 'text/plain',
+    crc32c: 'rTVTeQ==',
+    etag: 'CNHZkbuF/ugCEAE=',
+    generation: '1587627537231057',
+    id: 'some-bucket/folder/Test.cs/1587627537231057',
+    kind: 'storage#object',
+    md5Hash: 'kF8MuJ5+CTJxvyhHS1xzRg==',
+    mediaLink:
+      'https://www.googleapis.com/download/storage/v1/b/some-bucket/o/folder%2FTest.cs?generation=1587627537231057\u0026alt=media',
+    metageneration: '1',
+    name: 'folder/Test.cs',
+    selfLink:
+      'https://www.googleapis.com/storage/v1/b/some-bucket/o/folder/Test.cs',
+    size: '352',
+    storageClass: 'MULTI_REGIONAL',
+    timeCreated: '2020-04-23T07:38:57.230Z',
+    timeStorageClassUpdated: '2020-04-23T07:38:57.230Z',
+    updated: '2020-04-23T07:38:57.230Z',
+  },
+};
+
 /**
  * A test CloudEvent in structured mode.
  */

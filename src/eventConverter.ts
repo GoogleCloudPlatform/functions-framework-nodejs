@@ -80,11 +80,16 @@ const BACKGROUND_SERVICE_PREFIX_TO_CE_SERVICE = {
 // event resource string into CloudEvent resource and subject strings. Each regex
 // must have exactly two capture groups: the first for the resource and the second
 // for the subject.
+/* eslint-disable  @typescript-eslint/no-unused-vars */
 const CE_SERVICE_TO_RESOURCE_RE = {
-  [CE_SERVICE.FIREBASE]: new RegExp("^(projects/[^/]+)/(events/[^/]+)$"),
-  [CE_SERVICE.FIREBASE_DB]: new RegExp("^(projects/_/instances/[^/]+)/(refs/.+)$"),
-  [CE_SERVICE.FIRESTORE]: new RegExp("^(projects/[^/]+/databases/\\(default\\))/(documents/.+)$"),
-  [CE_SERVICE.STORAGE]: new RegExp("^(projects/_/buckets/[^/]+)/(objects/.+)$"),
+  [CE_SERVICE.FIREBASE]: new RegExp('^(projects/[^/]+)/(events/[^/]+)$'),
+  [CE_SERVICE.FIREBASE_DB]: new RegExp(
+    '^(projects/_/instances/[^/]+)/(refs/.+)$'
+  ),
+  [CE_SERVICE.FIRESTORE]: new RegExp(
+    '^(projects/[^/]+/databases/\\(default\\))/(documents/.+)$'
+  ),
+  [CE_SERVICE.STORAGE]: new RegExp('^(projects/_/buckets/[^/]+)/(objects/.+)$'),
 };
 
 // Maps Firebase Auth fields to CE fields
@@ -111,6 +116,7 @@ export function convertCloudEventToLegacyEvent(
     },
     data: {},
   };
+  // TODO
   console.log(headers);
   console.log(body);
   return legacyEvent;
@@ -122,8 +128,9 @@ export function convertCloudEventToLegacyEvent(
  * @returns The CloudEvent.
  */
 export function convertLegacyEventToCloudEvent(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headers: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any
 ): CloudEventsContext {
   const context = body?.context || '';
