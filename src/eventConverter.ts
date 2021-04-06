@@ -117,8 +117,8 @@ export function convertCloudEventToLegacyEvent(
     data: {},
   };
   // TODO
-  console.log(headers);
-  console.log(body);
+  // console.log(headers);
+  // console.log(body);
   return legacyEvent;
 }
 
