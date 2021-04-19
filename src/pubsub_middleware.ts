@@ -18,39 +18,50 @@ const PUBSUB_MESSAGE_TYPE =
   'type.googleapis.com/google.pubsub.v1.PubsubMessage';
 const PUBSUB_SERVICE = 'pubsub.googleapis.com';
 
+/**
+ * The request body of an HTTP request received directly from a Pub/Sub subscription.
+ *
+ * @link https://cloud.google.com/pubsub/docs/push?hl=en#receiving_messages
+ */
 interface RawPubSubBody {
+  /**
+   * The name of the subscription for which this request was made. Format is:
+   * projects/{project}/subscriptions/{sub}.
+   */
   subscription: string;
+  /**
+   * A message that is published by publishers and consumed by subscribers. The message must
+   * contain either a non-empty data field or at least one attribute.
+   *
+   * @link https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage
+   */
   message: {
+    /**
+     * Attributes for this message. If this field is empty, the message must contain non-empty
+     * data.
+     */
+    attributes?: {[key: string]: string};
+    /**
+     * The message data field. If this field is empty, the message must contain at least one
+     * attribute.
+     */
     data: string;
+    /**
+     * ID of this message, assigned by the server when the message is published. Guaranteed to be
+     * unique within the topic.
+     */
     messageId: string;
-    attributes: {[key: string]: string};
+    /**
+     * If non-empty, identifies related messages for which publish order should be respected. This
+     * field is not set by the Pub/Sub emulator.
+     */
+    orderingKey?: string;
+    /**
+     * The time at which the message was published, formatted as timestamp in RFC3339 UTC "Zulu"
+     * format. This field is not set by the Pub/Sub emulator.
+     */
+    publishTime?: string;
   };
-}
-
-interface PubSubEventBody {
-  context: {
-    eventId: string;
-    timestamp: string;
-    eventType: typeof PUBSUB_EVENT_TYPE;
-    resource: {
-      service: typeof PUBSUB_SERVICE;
-      type: typeof PUBSUB_MESSAGE_TYPE;
-      name: string | null;
-    };
-  };
-  data: {
-    '@type': typeof PUBSUB_MESSAGE_TYPE;
-    data: string;
-    attributes: {[key: string]: string};
-  };
-}
-
-interface RawPubSubRequest extends Request {
-  body: RawPubSubBody;
-}
-
-interface MarshalledPubSubRequest extends Request {
-  body: PubSubEventBody;
 }
 
 /**
@@ -58,13 +69,15 @@ interface MarshalledPubSubRequest extends Request {
  * @param request a Request object to typecheck
  * @returns true if this Request is a RawPubSubRequest
  */
-const isRawPubSubRequest = (request: Request): request is RawPubSubRequest => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isRawPubSubRequestBody = (body: any): body is RawPubSubBody => {
   return !!(
-    request.body &&
-    request.body.subscription &&
-    request.body.message &&
-    request.body.message.data &&
-    request.body.message.messageId
+    body &&
+    !body.context &&
+    body.subscription &&
+    body.message &&
+    body.message.data &&
+    body.message.messageId
   );
 };
 
@@ -74,7 +87,7 @@ const isRawPubSubRequest = (request: Request): request is RawPubSubRequest => {
  * @returns the Pub/Sub topic name if the path matches the expected format,
  * null otherwise
  */
-const extractTopic = (path: string): string | null => {
+const extractPubSubTopic = (path: string): string | null => {
   const parsedTopic = path.match(/projects\/[^/?]+\/topics\/[^/?]+/);
   if (parsedTopic) {
     return parsedTopic[0];
@@ -89,24 +102,25 @@ const extractTopic = (path: string): string | null => {
 
 /**
  * Marshal the body of an HTTP request from a Pub/Sub subscription
- * @param req an unmarshalled http request from a Pub/Sub push subscription
+ * @param body an unmarshalled http request body from a Pub/Sub push subscription
+ * @param path the HTTP request path
  * @returns the marshalled request body expected by wrapEventFunction
  */
-const marshalPubSubRequestBody = (req: RawPubSubRequest): PubSubEventBody => ({
+const marshalPubSubRequestBody = (body: RawPubSubBody, path: string) => ({
   context: {
-    eventId: req.body.message.messageId,
-    timestamp: new Date().toISOString(),
+    eventId: body.message.messageId,
+    timestamp: body.message.publishTime || new Date().toISOString(),
     eventType: PUBSUB_EVENT_TYPE,
     resource: {
       service: PUBSUB_SERVICE,
       type: PUBSUB_MESSAGE_TYPE,
-      name: extractTopic(req.path),
+      name: extractPubSubTopic(path),
     },
   },
   data: {
     '@type': PUBSUB_MESSAGE_TYPE,
-    data: req.body.message.data,
-    attributes: req.body.message.attributes,
+    data: body.message.data,
+    attributes: body.message.attributes || {},
   },
 });
 
@@ -122,10 +136,9 @@ export const legacyPubSubEventMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  if (isRawPubSubRequest(req)) {
-    ((req as unknown) as MarshalledPubSubRequest).body = marshalPubSubRequestBody(
-      req
-    );
+  const {body, path} = req;
+  if (isRawPubSubRequestBody(body)) {
+    req.body = marshalPubSubRequestBody(body, path);
   }
   next();
 };

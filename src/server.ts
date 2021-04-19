@@ -19,7 +19,7 @@ import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {registerFunctionRoutes} from './router';
-import {legacyPubSubEventMiddleware} from './middleware';
+import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 
 /**
  * Creates and configures an Express application and returns an HTTP server

@@ -14,7 +14,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Response, Request} from 'express';
-import {legacyPubSubEventMiddleware} from '../src/middleware';
+import {legacyPubSubEventMiddleware} from '../src/pubsub_middleware';
 
 const PUB_SUB_TOPIC = 'projects/FOO/topics/BAR_TOPIC';
 const RAW_PUBSUB_BODY = {
