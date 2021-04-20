@@ -14,7 +14,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Response, Request} from 'express';
-import {legacyPubSubEventMiddleware} from '../src/pubsub_middleware';
+import {legacyPubSubEventMiddleware, MarshalledPubSubBody} from '../src/pubsub_middleware';
 
 const PUB_SUB_TOPIC = 'projects/FOO/topics/BAR_TOPIC';
 const RAW_PUBSUB_BODY = {
@@ -28,7 +28,7 @@ const RAW_PUBSUB_BODY = {
   }
 };
 
-const marshalledPubSubBody = (topic: string | null) => ({
+const marshalledPubSubBody = (topic: string | null): MarshalledPubSubBody => ({
   data: {
     '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
     data: 'eyJmb28iOiJiYXIifQ==',

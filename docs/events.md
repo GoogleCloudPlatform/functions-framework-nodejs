@@ -86,8 +86,8 @@ In the shell that is running the Functions Framework, you'll see the message log
 Another way to test your cloud function Pub/Sub endpoint is to use the [Pub/Sub Emulator](https://cloud.google.com/pubsub/docs/emulator). This allows you to use the Pub/Sub notification from another service to trigger your cloud function.
 
 The high level approach is to:
-1. Start the Pub/Sub Emulator
-2. Use the Pub/Sub client library to create a subscription and set the `pushEndpoint` to `http://localhost:8080`.
+1. [Start the Pub/Sub Emulator](https://cloud.google.com/pubsub/docs/emulator#start)
+2. Use the Pub/Sub client library to create a subscription and set the `pushEndpoint` to `http://localhost:8080/[TOPIC NAME]`.
 
 After setup, all notifications to the subscription topic will be pushed to your cloud function.
 
@@ -109,7 +109,7 @@ async function main() {
     await topic.create();
   }
   const createSubscriptionResponse = await topic.createSubscription('my_subscription', {
-    pushEndpoint: 'http://localhost:8080',
+    pushEndpoint: 'http://localhost:8080/projects/myproject/topics/my-topic',
   });
 }
 

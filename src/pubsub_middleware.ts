@@ -23,7 +23,7 @@ const PUBSUB_SERVICE = 'pubsub.googleapis.com';
  *
  * @link https://cloud.google.com/pubsub/docs/push?hl=en#receiving_messages
  */
-interface RawPubSubBody {
+export interface RawPubSubBody {
   /**
    * The name of the subscription for which this request was made. Format is:
    * projects/{project}/subscriptions/{sub}.
@@ -42,7 +42,7 @@ interface RawPubSubBody {
      */
     attributes?: {[key: string]: string};
     /**
-     * The message data field. If this field is empty, the message must contain at least one
+     * Base64 encoded message data. If this field is empty, the message must contain at least one
      * attribute.
      */
     data: string;
@@ -61,6 +61,28 @@ interface RawPubSubBody {
      * format. This field is not set by the Pub/Sub emulator.
      */
     publishTime?: string;
+  };
+}
+
+/**
+ * The request body schema that is expected by the downstream by the function loader for Pub/Sub
+ * event functions.
+ */
+export interface MarshalledPubSubBody {
+  context: {
+    eventId: string;
+    timestamp: string;
+    eventType: typeof PUBSUB_EVENT_TYPE;
+    resource: {
+      service: typeof PUBSUB_SERVICE;
+      type: typeof PUBSUB_MESSAGE_TYPE;
+      name: string | null;
+    };
+  };
+  data: {
+    '@type': typeof PUBSUB_MESSAGE_TYPE;
+    data: string;
+    attributes: {[key: string]: string};
   };
 }
 
@@ -106,7 +128,10 @@ const extractPubSubTopic = (path: string): string | null => {
  * @param path the HTTP request path
  * @returns the marshalled request body expected by wrapEventFunction
  */
-const marshalPubSubRequestBody = (body: RawPubSubBody, path: string) => ({
+const marshalPubSubRequestBody = (
+  body: RawPubSubBody,
+  path: string
+): MarshalledPubSubBody => ({
   context: {
     eventId: body.message.messageId,
     timestamp: body.message.publishTime || new Date().toISOString(),
