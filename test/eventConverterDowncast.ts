@@ -12,33 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// import * as assert from 'assert';
-// import {getServer} from '../src/server';
-// import {SignatureType} from '../src/types';
-// import * as supertest from 'supertest';
-// import {Context, LegacyEvent} from '../src/functions';
-// import {convertCloudEventToLegacyEvent} from '../src/eventConverter';
-// import {
-//   TEST_CLOUDEVENT_BINARY_FULL,
-//   TEST_CLOUDEVENT_STRUCTURED,
-// } from './data/testHTTPData';
+import * as assert from 'assert';
+import {convertLegacyEventToCloudEvent} from '../src/eventConverter';
+import {
+  PUBSUB_LEGACY_EVENT_1,
+  PUBSUB_LEGACY_EVENT_2,
+  FIREBASE_AUTH_LEGACY,
+  FIREBASE_AUTH_CLOUDEVENT,
+  PUBSUB_CLOUDEVENT,
+} from './data/eventData';
 
 describe('EventConverter: CE -> Legacy', () => {
-  it('should downcast events', async () => {
+  it.skip('should downcast events', async () => {
     // Legacy Pub/Sub
-    // it('should upcast Pub/Sub events', async () => {
-    //   const ce1 = convertLegacyEventToCloudEvent({}, PUBSUB_LEGACY_EVENT_1);
-    //   assert.deepStrictEqual(ce1, PUBSUB_CLOUDEVENT);
-    // });
-    // // Very legacy Pub/Sub
-    // it('should upcast legacy Pub/Sub events', async () => {
-    //   const ce2 = convertLegacyEventToCloudEvent({}, PUBSUB_LEGACY_EVENT_2);
-    //   assert.deepStrictEqual(ce2, PUBSUB_CLOUDEVENT);
-    // });
-    // // Legacy Firebase Auth events
-    // it('should upcast Firebase Auth events', async () => {
-    //   const ce1 = convertLegacyEventToCloudEvent({}, FIREBASE_AUTH_LEGACY);
-    //   assert.deepStrictEqual(ce1, FIREBASE_AUTH_CLOUDEVENT);
-    // });
+    it('should upcast Pub/Sub events', async () => {
+      const ce1 = convertLegacyEventToCloudEvent({}, PUBSUB_LEGACY_EVENT_1);
+      assert.deepStrictEqual(ce1, PUBSUB_CLOUDEVENT);
+    });
+    // Very legacy Pub/Sub
+    it('should upcast legacy Pub/Sub events', async () => {
+      const ce2 = convertLegacyEventToCloudEvent({}, PUBSUB_LEGACY_EVENT_2);
+      assert.deepStrictEqual(ce2, PUBSUB_CLOUDEVENT);
+    });
+    // Legacy Firebase Auth events
+    it('should upcast Firebase Auth events', async () => {
+      const ce1 = convertLegacyEventToCloudEvent({}, FIREBASE_AUTH_LEGACY);
+      assert.deepStrictEqual(ce1, FIREBASE_AUTH_CLOUDEVENT);
+    });
   });
 });
