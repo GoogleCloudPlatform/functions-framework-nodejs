@@ -14,7 +14,10 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Response, Request} from 'express';
-import {legacyPubSubEventMiddleware, MarshalledPubSubBody} from '../src/pubsub_middleware';
+import {
+  legacyPubSubEventMiddleware,
+  MarshalledPubSubBody,
+} from '../src/pubsub_middleware';
 
 const PUB_SUB_TOPIC = 'projects/FOO/topics/BAR_TOPIC';
 const RAW_PUBSUB_BODY = {
@@ -23,9 +26,9 @@ const RAW_PUBSUB_BODY = {
     data: 'eyJmb28iOiJiYXIifQ==',
     messageId: '1',
     attributes: {
-      test: '123'
-    }
-  }
+      test: '123',
+    },
+  },
 };
 
 const marshalledPubSubBody = (topic: string | null): MarshalledPubSubBody => ({
@@ -33,8 +36,8 @@ const marshalledPubSubBody = (topic: string | null): MarshalledPubSubBody => ({
     '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
     data: 'eyJmb28iOiJiYXIifQ==',
     attributes: {
-      test: '123'
-    }
+      test: '123',
+    },
   },
   context: {
     eventId: '1',
@@ -42,10 +45,10 @@ const marshalledPubSubBody = (topic: string | null): MarshalledPubSubBody => ({
     resource: {
       name: topic,
       service: 'pubsub.googleapis.com',
-      type: 'type.googleapis.com/google.pubsub.v1.PubsubMessage'
+      type: 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
     },
     timestamp: new Date().toISOString(),
-  }
+  },
 });
 
 describe('legacyPubSubEventMiddleware', () => {
@@ -69,19 +72,19 @@ describe('legacyPubSubEventMiddleware', () => {
       name: 'raw pub/sub request',
       path: `/${PUB_SUB_TOPIC}?pubsub_trigger=true`,
       body: RAW_PUBSUB_BODY,
-      expectedBody: () => marshalledPubSubBody(PUB_SUB_TOPIC)
+      expectedBody: () => marshalledPubSubBody(PUB_SUB_TOPIC),
     },
     {
       name: 'raw pub/sub request without topic in URL path',
       path: '/myfunction',
       body: RAW_PUBSUB_BODY,
-      expectedBody: () => marshalledPubSubBody(null)
+      expectedBody: () => marshalledPubSubBody(null),
     },
     {
       name: 'non-pub/sub request',
       path: `/${PUB_SUB_TOPIC}?pubsub_trigger=true`,
-      body: {foo: "bar"},
-      expectedBody: () => ({foo: "bar"})
+      body: {foo: 'bar'},
+      expectedBody: () => ({foo: 'bar'}),
     },
   ];
 
@@ -90,7 +93,7 @@ describe('legacyPubSubEventMiddleware', () => {
       const clock = sinon.useFakeTimers();
       const next = sinon.spy();
       const request = {
-        path: test.path, 
+        path: test.path,
         body: test.body,
       };
       legacyPubSubEventMiddleware(request as Request, {} as Response, next);
