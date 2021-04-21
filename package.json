@@ -16,7 +16,6 @@
   },
   "scripts": {
     "test": "mocha build/test",
-    "test-individual": "mocha build/test -g 'loading function'",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
