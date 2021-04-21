@@ -16,10 +16,12 @@
   },
   "scripts": {
     "test": "mocha build/test",
+    "test-individual": "mocha build/test -g 'loading function'",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
+    "watch": "npm run compile -- --watch",
     "prepare": "npm run compile",
     "pretest": "npm run compile"
   },
