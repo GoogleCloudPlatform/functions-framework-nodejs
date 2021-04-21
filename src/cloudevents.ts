@@ -47,7 +47,7 @@ export function getBinaryCloudEventContext(
   const context: CloudEventsContext = {};
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {
-      const attributeName = name.substr('ce-'.length);
+      const attributeName = name.substr('ce-'.length) as keyof CloudEventsContext;
       context[attributeName] = req.header(name);
     }
   }
