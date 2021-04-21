@@ -20,6 +20,7 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
+    "watch": "npm run compile -- --watch",
     "prepare": "npm run compile",
     "pretest": "npm run compile"
   },

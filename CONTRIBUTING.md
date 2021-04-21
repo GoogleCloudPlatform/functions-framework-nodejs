@@ -22,6 +22,16 @@ use GitHub pull requests for this purpose. Consult
 [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
 information on using pull requests.
 
+## Testing
+
+All pull requests should have an associated test to ensure foward compatibility.
+
+To run an individual test, you can run a command such as the following:
+
+```
+npm run test -- -g 'loading function'
+```
+
 ## Community Guidelines
 
 This project follows [Google's Open Source Community
