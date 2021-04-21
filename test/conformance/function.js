@@ -1,5 +1,5 @@
-const fs = require("fs");
-const fileName = "function_output.json";
+const fs = require('fs');
+const fileName = 'function_output.json';
 
 function writeHttp(req, res) {
   writeJson(req.body);
@@ -7,12 +7,12 @@ function writeHttp(req, res) {
 }
 
 function writeCloudEvent(cloudevent) {
-  cloudevent.datacontenttype = "application/json"
+  cloudevent.datacontenttype = 'application/json';
   writeJson(cloudevent);
 }
 
 function writeLegacyEvent(data, context) {
-  content = {
+  const content = {
     data: data,
     context: {
       eventId: context.eventId,
@@ -25,7 +25,7 @@ function writeLegacyEvent(data, context) {
 }
 
 function writeJson(content) {
-  json = JSON.stringify(content);
+  const json = JSON.stringify(content);
   fs.writeFileSync(fileName, json);
 }
 

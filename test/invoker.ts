@@ -61,7 +61,7 @@ describe('request to HTTP function', () => {
 
   testData.forEach(test => {
     it(`should return transformed body: ${test.name}`, async () => {
-      var callCount = 0;
+      let callCount = 0;
       const server = getServer(
         (req: express.Request, res: express.Response) => {
           ++callCount;
@@ -71,7 +71,7 @@ describe('request to HTTP function', () => {
       );
       await supertest(server)
         .post(test.path)
-        .send({ text: 'hello' })
+        .send({text: 'hello'})
         .set('Content-Type', 'application/json')
         .expect(test.text)
         .expect(test.status);
@@ -96,7 +96,7 @@ describe('GCF event request to event function', () => {
           eventType: 'testEventType',
           resource: 'testResource',
         },
-        data: { some: 'payload' },
+        data: {some: 'payload'},
       },
       expectedResource: 'testResource',
     },
@@ -107,7 +107,7 @@ describe('GCF event request to event function', () => {
         timestamp: 'testTimestamp',
         eventType: 'testEventType',
         resource: 'testResource',
-        data: { some: 'payload' },
+        data: {some: 'payload'},
       },
       expectedResource: 'testResource',
     },
@@ -124,7 +124,7 @@ describe('GCF event request to event function', () => {
             type: 'testType',
           },
         },
-        data: { some: 'payload' },
+        data: {some: 'payload'},
       },
       expectedResource: {
         service: 'testService',
@@ -137,19 +137,16 @@ describe('GCF event request to event function', () => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudFunctionsContext | null = null;
-      const server = getServer(
-        (data: {}, context: functions.Context) => {
-          receivedData = data;
-          receivedContext = context as functions.CloudFunctionsContext;
-        },
-        SignatureType.EVENT
-      );
+      const server = getServer((data: {}, context: functions.Context) => {
+        receivedData = data;
+        receivedContext = context as functions.CloudFunctionsContext;
+      }, SignatureType.EVENT);
       await supertest(server)
         .post('/')
         .send(test.body)
         .set('Content-Type', 'application/json')
         .expect(204);
-      assert.deepStrictEqual(receivedData, { some: 'payload' });
+      assert.deepStrictEqual(receivedData, {some: 'payload'});
       assert.notStrictEqual(receivedContext, null);
       assert.strictEqual(receivedContext!.eventId, 'testEventId');
       assert.strictEqual(receivedContext!.timestamp, 'testTimestamp');
@@ -175,14 +172,14 @@ const TEST_CLOUD_EVENT = {
 describe('CloudEvents request to event function', () => {
   interface TestData {
     name: string;
-    headers: { [key: string]: string };
+    headers: {[key: string]: string};
     body: {};
   }
 
   const testData: TestData[] = [
     {
       name: 'CloudEvents v1.0 structured content mode',
-      headers: { 'Content-Type': 'application/cloudevents+json' },
+      headers: {'Content-Type': 'application/cloudevents+json'},
       body: TEST_CLOUD_EVENT,
     },
     {
@@ -204,13 +201,10 @@ describe('CloudEvents request to event function', () => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudEventsContext | null = null;
-      const server = getServer(
-        (data: {}, context: functions.Context) => {
-          receivedData = data;
-          receivedContext = context as functions.CloudEventsContext;
-        },
-        SignatureType.EVENT
-      );
+      const server = getServer((data: {}, context: functions.Context) => {
+        receivedData = data;
+        receivedContext = context as functions.CloudEventsContext;
+      }, SignatureType.EVENT);
       await supertest(server)
         .post('/')
         .set(test.headers)
@@ -238,14 +232,14 @@ describe('CloudEvents request to event function', () => {
 describe('CloudEvents request to cloudevent function', () => {
   interface TestData {
     name: string;
-    headers: { [key: string]: string };
+    headers: {[key: string]: string};
     body: {};
   }
 
   const testData: TestData[] = [
     {
       name: 'CloudEvents v1.0 structured content mode',
-      headers: { 'Content-Type': 'application/cloudevents+json' },
+      headers: {'Content-Type': 'application/cloudevents+json'},
       body: TEST_CLOUD_EVENT,
     },
     {
@@ -266,12 +260,9 @@ describe('CloudEvents request to cloudevent function', () => {
   testData.forEach(test => {
     it(`should receive data and context from ${test.name}`, async () => {
       let receivedCloudEvent: functions.CloudEventsContext | null = null;
-      const server = getServer(
-        (cloudevent: functions.CloudEventsContext) => {
-          receivedCloudEvent = cloudevent as functions.CloudEventsContext;
-        },
-        SignatureType.CLOUDEVENT
-      );
+      const server = getServer((cloudevent: functions.CloudEventsContext) => {
+        receivedCloudEvent = cloudevent as functions.CloudEventsContext;
+      }, SignatureType.CLOUDEVENT);
       await supertest(server)
         .post('/')
         .set(test.headers)
