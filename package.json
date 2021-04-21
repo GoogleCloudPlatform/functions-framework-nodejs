@@ -16,11 +16,9 @@
   },
   "scripts": {
     "test": "mocha build/test",
-    "test-individual": "mocha build/test -g 'Legacy -> CE'",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
-    "watch": "tsc -p . -w",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile"
