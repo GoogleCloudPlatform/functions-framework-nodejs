@@ -41,6 +41,19 @@ export type HandlerFunction =
   | CloudEventFunctionWithCallback;
 
 /**
+ * A legacy event.
+ */
+export interface LegacyEvent {
+  data: object;
+  context: CloudFunctionsContext;
+}
+
+interface Data {
+  data: object;
+}
+export type LegacyCloudFunctionsContext = CloudFunctionsContext | Data;
+
+/**
  * The Cloud Functions context object for the event.
  *
  * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
@@ -62,7 +75,7 @@ export interface CloudFunctionsContext {
   /**
    * The resource that emitted the event.
    */
-  resource?: string;
+  resource?: string | object;
 }
 
 /**
@@ -92,16 +105,27 @@ export interface CloudEventsContext {
    */
   time?: string;
   /**
+   * Describes the subject of the event in the context of the event producer.
+   */
+  subject?: string;
+  /**
    * A link to the schema that the event data adheres to.
    */
-  schemaurl?: string;
+  dataschema?: string;
   /**
    * Content type of the event data.
    */
-  contenttype?: string;
-
-  // CloudEvents extension attributes.
-  [key: string]: any;
+  datacontenttype?: string;
+  /**
+   * The event data.
+   */
+  data?:
+    | Record<string, unknown | string | number | boolean>
+    | string
+    | number
+    | boolean
+    | null
+    | unknown;
 }
 
 export type Context = CloudFunctionsContext | CloudEventsContext;
