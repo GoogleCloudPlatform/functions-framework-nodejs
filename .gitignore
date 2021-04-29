@@ -8,3 +8,6 @@ npm-debug.log
 .DS_Store
 yarn.lock
 yarn-error.log
+function_output.json
+serverlog_stderr.txt
+serverlog_stdout.txt

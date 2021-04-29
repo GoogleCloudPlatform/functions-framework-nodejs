@@ -1,5 +1,5 @@
 name: Node.js Conformance CI
-on:
+on: 
   push:
     branches:
     - master
@@ -13,36 +13,44 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: Setup Go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.13'
-    - name: Setup test data
-      run: "./test/conformance/set_up_conformance_tests.sh"
+        go-version: '1.15'
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build Functions Framework
+      run: npm ci
+
+    - name: Build test project
+      working-directory: ./test/conformance
+      run: npm install
+
     - name: Run HTTP conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
       with:
         functionType: 'http'
+        useBuildpacks: false
         validateMapping: false
-        source: 'test/conformance'
-        target: 'writeHttp'
-        runtime: ${{ matrix.runtime }}
-        startDelay: 10
+        cmd: "'npm start --prefix test/conformance -- --target=writeHttp --signature-type=http'"
+
     - name: Run event conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
       with:
         functionType: 'legacyevent'
+        useBuildpacks: false
         validateMapping: false
-        source: 'test/conformance'
-        target: 'writeLegacyEvent'
-        runtime: ${{ matrix.runtime }}
-        startDelay: 10
+        cmd: "'npm start --prefix test/conformance -- --target=writeLegacyEvent --signature-type=event'"
+
     - name: Run cloudevent conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
       with:
         functionType: 'cloudevent'
+        useBuildpacks: false
         validateMapping: false
-        source: 'test/conformance'
-        target: 'writeCloudEvent'
-        runtime: ${{ matrix.runtime }}
-        startDelay: 10
+        cmd: "'npm start --prefix test/conformance -- --target=writeCloudEvent --signature-type=cloudevent'"
