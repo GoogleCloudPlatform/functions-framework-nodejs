@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "@google-cloud/functions-framework": "github:GoogleCloudPlatform/functions-framework-nodejs"
+    "@google-cloud/functions-framework": "file:../../"
+  },
+  "scripts": {
+    "start": "functions-framework"
   }
 }
