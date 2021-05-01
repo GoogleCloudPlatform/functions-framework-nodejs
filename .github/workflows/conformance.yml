@@ -32,25 +32,28 @@ jobs:
       run: npm install
 
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.10
       with:
         functionType: 'http'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'npm start --prefix test/conformance -- --target=writeHttp --signature-type=http'"
+        workingDirectory: 'test/conformance'
+        cmd: "'npm start -- --target=writeHttp --signature-type=http'"
 
     - name: Run event conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.10
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'npm start --prefix test/conformance -- --target=writeLegacyEvent --signature-type=event'"
+        workingDirectory: 'test/conformance'
+        cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
 
     - name: Run cloudevent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.10
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: false
-        cmd: "'npm start --prefix test/conformance -- --target=writeCloudEvent --signature-type=cloudevent'"
+        workingDirectory: 'test/conformance'
+        cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
