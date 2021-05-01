@@ -1,5 +1,5 @@
 const fs = require('fs');
-const fileName = '../../function_output.json';
+const fileName = 'function_output.json';
 
 function writeHttp(req, res) {
   writeJson(req.body);
