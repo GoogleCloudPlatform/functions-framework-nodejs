@@ -15,7 +15,7 @@
     "on-finished": "^2.3.0"
   },
   "scripts": {
-    "test": "mocha build/test",
+    "test": "mocha build/test --recursive",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
