@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from '../cloudevents';
+import * as cloudevents from '../cloudevents';
 
-const CE_TO_BACKGROUND_TYPE = new Map(
+export const CE_TO_BACKGROUND_TYPE = new Map(
   Object.entries({
     'google.cloud.pubsub.topic.v1.messagePublished':
       'google.pubsub.topic.publish',
@@ -49,11 +49,6 @@ const CE_TO_BACKGROUND_TYPE = new Map(
   })
 );
 
-// CloudEvent service names.
-const FIREBASE_AUTH_CE_SERVICE = 'firebaseauth.googleapis.com';
-const PUBSUB_CE_SERVICE = 'pubsub.googleapis.com';
-const STORAGE_CE_SERVICE = 'storage.googleapis.com';
-
 const PUBSUB_MESSAGE_TYPE =
   'type.googleapis.com/google.pubsub.v1.PubsubMessage';
 
@@ -63,17 +58,12 @@ const PUBSUB_MESSAGE_TYPE =
 const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
 
 /**
- * Costom exception class to represent errors durring event converion.
- */
-export class EventConversionError extends Error {}
-
-/**
  * Is the given request a known CloudEvent that can be converted to a legacy event.
  * @param request express request object
  * @returns true if the request can be converted
  */
 const isConvertableCloudEvent = (request: Request): boolean => {
-  if (isBinaryCloudEvent(request)) {
+  if (cloudevents.isBinaryCloudEvent(request)) {
     const ceType = request.header('ce-type');
     return CE_TO_BACKGROUND_TYPE.has(ceType!);
   }
@@ -90,7 +80,7 @@ export const parseSource = (
 ): {service: string; name: string} => {
   const match = source.match(CE_SOURCE_REGEX);
   if (!match) {
-    throw new EventConversionError(
+    throw new cloudevents.EventConversionError(
       `Failed to convert CloudEvent with invalid source: "${source}"`
     );
   }
@@ -108,7 +98,7 @@ export const parseSource = (
 const marshallConvertableCloudEvent = (
   req: Request
 ): {context: object; data: object} => {
-  const ceContext = getBinaryCloudEventContext(req);
+  const ceContext = cloudevents.getBinaryCloudEventContext(req);
   const {service, name} = parseSource(ceContext.source!);
   const subject = ceContext.subject!;
   let data = req.body;
@@ -117,7 +107,7 @@ const marshallConvertableCloudEvent = (
   let resource: string | {[key: string]: string} = `${name}/${subject}`;
 
   switch (service) {
-    case PUBSUB_CE_SERVICE:
+    case cloudevents.PUBSUB_CE_SERVICE:
       // PubSub resource format
       resource = {
         service: service,
@@ -129,7 +119,7 @@ const marshallConvertableCloudEvent = (
         data = data.message;
       }
       break;
-    case FIREBASE_AUTH_CE_SERVICE:
+    case cloudevents.FIREBASE_AUTH_CE_SERVICE:
       // FirebaseAuth resource format
       resource = name;
       if ('metadata' in data) {
@@ -144,7 +134,7 @@ const marshallConvertableCloudEvent = (
         }
       }
       break;
-    case STORAGE_CE_SERVICE:
+    case cloudevents.STORAGE_CE_SERVICE:
       // CloudStorage resource format
       resource = {
         name: `${name}/${subject}`,
@@ -180,11 +170,11 @@ export const ceToLegacyEventMiddleware = (
   if (isConvertableCloudEvent(req)) {
     // This is a CloudEvent that can be converted a known legacy event.
     req.body = marshallConvertableCloudEvent(req);
-  } else if (isBinaryCloudEvent(req)) {
+  } else if (cloudevents.isBinaryCloudEvent(req)) {
     // Support CloudEvents in binary content mode, with data being the whole
     // request body and context attributes retrieved from request headers.
     req.body = {
-      context: getBinaryCloudEventContext(req),
+      context: cloudevents.getBinaryCloudEventContext(req),
       data: req.body,
     };
   }

@@ -54,6 +54,6 @@ jobs:
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
-        validateMapping: false
+        validateMapping: true
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
