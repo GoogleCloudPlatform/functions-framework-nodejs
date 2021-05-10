@@ -45,7 +45,7 @@ jobs:
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
-        validateMapping: false
+        validateMapping: true
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
 
