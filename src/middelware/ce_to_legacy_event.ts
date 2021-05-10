@@ -116,38 +116,42 @@ const marshallConvertableCloudEvent = (
   // The default resource is a string made up of the source name and subject.
   let resource: string | {[key: string]: string} = `${name}/${subject}`;
 
-  if (service === PUBSUB_CE_SERVICE) {
-    // PubSub resource format
-    resource = {
-      service: service,
-      name: name,
-      type: PUBSUB_MESSAGE_TYPE,
-    };
-    // If the data payload has a "message", it needs to be flattened
-    if ('message' in data) {
-      data = data['message'];
-    }
-  } else if (service === FIREBASE_AUTH_CE_SERVICE) {
-    // FirebaseAuth resource format
-    resource = name;
-    if ('metadata' in data) {
-      // Some metadata are not consistent between cloudevents and legacy events
-      const metadata: object = data['metadata'];
-      data['metadata'] = {};
-      // eslint-disable-next-line prefer-const
-      for (let [k, v] of Object.entries(metadata)) {
-        k = k === 'createTime' ? 'createdAt' : k;
-        k = k === 'lastSignInTime' ? 'lastSignedInAt' : k;
-        data['metadata'][k] = v;
+  switch (service) {
+    case PUBSUB_CE_SERVICE:
+      // PubSub resource format
+      resource = {
+        service: service,
+        name: name,
+        type: PUBSUB_MESSAGE_TYPE,
+      };
+      // If the data payload has a "message", it needs to be flattened
+      if ('message' in data) {
+        data = data.message;
       }
-    }
-  } else if (service === STORAGE_CE_SERVICE) {
-    // CloudStorage resource format
-    resource = {
-      name: `${name}/${subject}`,
-      service: service,
-      type: data['kind'],
-    };
+      break;
+    case FIREBASE_AUTH_CE_SERVICE:
+      // FirebaseAuth resource format
+      resource = name;
+      if ('metadata' in data) {
+        // Some metadata are not consistent between cloudevents and legacy events
+        const metadata: object = data.metadata;
+        data.metadata = {};
+        // eslint-disable-next-line prefer-const
+        for (let [k, v] of Object.entries(metadata)) {
+          k = k === 'createTime' ? 'createdAt' : k;
+          k = k === 'lastSignInTime' ? 'lastSignedInAt' : k;
+          data.metadata[k] = v;
+        }
+      }
+      break;
+    case STORAGE_CE_SERVICE:
+      // CloudStorage resource format
+      resource = {
+        name: `${name}/${subject}`,
+        service: service,
+        type: data.kind,
+      };
+      break;
   }
 
   return {
@@ -155,9 +159,9 @@ const marshallConvertableCloudEvent = (
       eventId: ceContext.id!,
       timestamp: ceContext.time!,
       eventType: CE_TO_BACKGROUND_TYPE.get(ceContext.type!),
-      resource: resource,
+      resource,
     },
-    data: data,
+    data,
   };
 };
 
@@ -168,7 +172,7 @@ const marshallConvertableCloudEvent = (
  * @param res express response object
  * @param next function used to pass control to the next middle middleware function in the stack
  */
-export const ceToLegacyEvent = (
+export const ceToLegacyEventMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction

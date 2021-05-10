@@ -20,7 +20,7 @@ import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {registerFunctionRoutes} from './router';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
-import {ceToLegacyEvent} from './middelware';
+import {ceToLegacyEventMiddleware} from './middelware/ce_to_legacy_event';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -104,7 +104,7 @@ export function getServer(
     // needs to be marshalled into the structure that wrapEventFunction expects. This unblocks local
     // development with the Pub/Sub emulator
     app.use(legacyPubSubEventMiddleware);
-    app.use(ceToLegacyEvent);
+    app.use(ceToLegacyEventMiddleware);
   }
 
   registerFunctionRoutes(app, userFunction, functionSignatureType);

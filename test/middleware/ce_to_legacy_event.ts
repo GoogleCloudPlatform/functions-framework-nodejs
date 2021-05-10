@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import {Response, Request} from 'express';
 
 import {
-  ceToLegacyEvent,
+  ceToLegacyEventMiddleware,
   parseSource,
   EventConversionError,
 } from '../../src/middelware/ce_to_legacy_event';
@@ -54,7 +54,7 @@ describe('parseSource', () => {
   });
 });
 
-describe('ceToLegacyEvent', () => {
+describe('ceToLegacyEventMiddleware', () => {
   const testData = [
     {
       name: 'Non-CE-Request is not altered',
@@ -174,7 +174,7 @@ describe('ceToLegacyEvent', () => {
         headers: test.headers as object,
         header: (key: string) => (test.headers as {[key: string]: string})[key],
       };
-      ceToLegacyEvent(request as Request, {} as Response, next);
+      ceToLegacyEventMiddleware(request as Request, {} as Response, next);
       assert.deepStrictEqual(request.body, test.expectedBody);
       assert.strictEqual(next.called, true);
     });
