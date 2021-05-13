@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
-import * as cloudevents from '../cloudevents';
+import {
+  CE_SERVICE,
+  isBinaryCloudEvent,
+  getBinaryCloudEventContext,
+  EventConversionError,
+} from '../cloudevents';
 
 export const CE_TO_BACKGROUND_TYPE = new Map(
   Object.entries({
@@ -63,7 +68,7 @@ const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
  * @returns true if the request can be converted
  */
 const isConvertableCloudEvent = (request: Request): boolean => {
-  if (cloudevents.isBinaryCloudEvent(request)) {
+  if (isBinaryCloudEvent(request)) {
     const ceType = request.header('ce-type');
     return CE_TO_BACKGROUND_TYPE.has(ceType!);
   }
@@ -80,7 +85,7 @@ export const parseSource = (
 ): {service: string; name: string} => {
   const match = source.match(CE_SOURCE_REGEX);
   if (!match) {
-    throw new cloudevents.EventConversionError(
+    throw new EventConversionError(
       `Failed to convert CloudEvent with invalid source: "${source}"`
     );
   }
@@ -98,7 +103,7 @@ export const parseSource = (
 const marshallConvertableCloudEvent = (
   req: Request
 ): {context: object; data: object} => {
-  const ceContext = cloudevents.getBinaryCloudEventContext(req);
+  const ceContext = getBinaryCloudEventContext(req);
   const {service, name} = parseSource(ceContext.source!);
   const subject = ceContext.subject!;
   let data = req.body;
@@ -107,7 +112,7 @@ const marshallConvertableCloudEvent = (
   let resource: string | {[key: string]: string} = `${name}/${subject}`;
 
   switch (service) {
-    case cloudevents.PUBSUB_CE_SERVICE:
+    case CE_SERVICE.PUBSUB:
       // PubSub resource format
       resource = {
         service: service,
@@ -119,7 +124,7 @@ const marshallConvertableCloudEvent = (
         data = data.message;
       }
       break;
-    case cloudevents.FIREBASE_AUTH_CE_SERVICE:
+    case CE_SERVICE.FIREBASE_AUTH:
       // FirebaseAuth resource format
       resource = name;
       if ('metadata' in data) {
@@ -134,7 +139,7 @@ const marshallConvertableCloudEvent = (
         }
       }
       break;
-    case cloudevents.STORAGE_CE_SERVICE:
+    case CE_SERVICE.STORAGE:
       // CloudStorage resource format
       resource = {
         name: `${name}/${subject}`,
@@ -170,11 +175,11 @@ export const ceToLegacyEventMiddleware = (
   if (isConvertableCloudEvent(req)) {
     // This is a CloudEvent that can be converted a known legacy event.
     req.body = marshallConvertableCloudEvent(req);
-  } else if (cloudevents.isBinaryCloudEvent(req)) {
+  } else if (isBinaryCloudEvent(req)) {
     // Support CloudEvents in binary content mode, with data being the whole
     // request body and context attributes retrieved from request headers.
     req.body = {
-      context: cloudevents.getBinaryCloudEventContext(req),
+      context: getBinaryCloudEventContext(req),
       data: req.body,
     };
   }

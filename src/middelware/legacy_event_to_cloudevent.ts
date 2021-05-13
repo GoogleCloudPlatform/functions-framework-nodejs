@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
-import * as cloudevents from '../cloudevents';
+import {
+  CE_SERVICE,
+  EventConversionError,
+  isBinaryCloudEvent,
+} from '../cloudevents';
 import {CE_TO_BACKGROUND_TYPE} from './ce_to_legacy_event';
 import {CloudFunctionsContext, LegacyEvent} from '../functions';
 
@@ -31,14 +35,14 @@ BACKGROUND_TO_CE_TYPE.set(
 // Maps background event services to their equivalent CloudEvent services.
 const SERVICE_BACKGROUND_TO_CE = new Map(
   Object.entries({
-    'providers/cloud.firestore/': cloudevents.FIRESTORE_CE_SERVICE,
-    'providers/google.firebase.analytics/': cloudevents.FIREBASE_CE_SERVICE,
-    'providers/firebase.auth/': cloudevents.FIREBASE_AUTH_CE_SERVICE,
-    'providers/google.firebase.database/': cloudevents.FIREBASE_DB_CE_SERVICE,
-    'providers/cloud.pubsub/': cloudevents.PUBSUB_CE_SERVICE,
-    'providers/cloud.storage/': cloudevents.STORAGE_CE_SERVICE,
-    'google.pubsub': cloudevents.PUBSUB_CE_SERVICE,
-    'google.storage': cloudevents.STORAGE_CE_SERVICE,
+    'providers/cloud.firestore/': CE_SERVICE.FIRESTORE,
+    'providers/google.firebase.analytics/': CE_SERVICE.FIREBASE,
+    'providers/firebase.auth/': CE_SERVICE.FIREBASE_AUTH,
+    'providers/google.firebase.database/': CE_SERVICE.FIREBASE_DB,
+    'providers/cloud.pubsub/': CE_SERVICE.PUBSUB,
+    'providers/cloud.storage/': CE_SERVICE.STORAGE,
+    'google.pubsub': CE_SERVICE.PUBSUB,
+    'google.storage': CE_SERVICE.STORAGE,
   })
 );
 
@@ -49,19 +53,13 @@ const SERVICE_BACKGROUND_TO_CE = new Map(
  * for the subject.
  */
 const CE_SERVICE_TO_RESOURCE_RE = new Map([
-  [cloudevents.FIREBASE_CE_SERVICE, /^(projects\/[^/]+)\/(events\/[^/]+)$/],
+  [CE_SERVICE.FIREBASE, /^(projects\/[^/]+)\/(events\/[^/]+)$/],
+  [CE_SERVICE.FIREBASE_DB, /^(projects\/[^/]\/instances\/[^/]+)\/(refs\/.+)$/],
   [
-    cloudevents.FIREBASE_DB_CE_SERVICE,
-    /^(projects\/[^/]\/instances\/[^/]+)\/(refs\/.+)$/,
-  ],
-  [
-    cloudevents.FIRESTORE_CE_SERVICE,
+    CE_SERVICE.FIRESTORE,
     /^(projects\/[^/]+\/databases\/\(default\))\/(documents\/.+)$/,
   ],
-  [
-    cloudevents.STORAGE_CE_SERVICE,
-    /^(projects\/[^/]\/buckets\/[^/]+)\/(objects\/.+)$/,
-  ],
+  [CE_SERVICE.STORAGE, /^(projects\/[^/]\/buckets\/[^/]+)\/(objects\/.+)$/],
 ]);
 
 /**
@@ -73,7 +71,7 @@ const isConvertableLegacyEvent = (req: Request): boolean => {
   const {body} = req;
   const context = 'context' in body ? body.context : body;
   return (
-    !cloudevents.isBinaryCloudEvent(req) &&
+    !isBinaryCloudEvent(req) &&
     'data' in body &&
     'eventType' in context &&
     'resource' in context &&
@@ -129,7 +127,7 @@ export const splitResource = (
   }
 
   if (!service) {
-    throw new cloudevents.EventConversionError(
+    throw new EventConversionError(
       `Unable to find equivalent CloudEvent service for ${context.eventType}.`
     );
   }
@@ -141,7 +139,7 @@ export const splitResource = (
       resource = match[1];
       subject = match[2];
     } else {
-      throw new cloudevents.EventConversionError(
+      throw new EventConversionError(
         `Resource string did not match expected format: ${resource}.`
       );
     }
@@ -170,19 +168,19 @@ export const legacyEventToCloudEventMiddleware = (
     let {context, data} = getLegacyEvent(req);
     const newType = BACKGROUND_TO_CE_TYPE.get(context.eventType ?? '');
     if (!newType) {
-      throw new cloudevents.EventConversionError(
+      throw new EventConversionError(
         `Unable to find equivalent CloudEvent type for ${context.eventType}`
       );
     }
     // eslint-disable-next-line prefer-const
     let {service, resource, subject} = splitResource(context);
 
-    if (service === cloudevents.PUBSUB_CE_SERVICE) {
+    if (service === CE_SERVICE.PUBSUB) {
       // PubSub data is nested under the "message" key.
       data = {message: data};
     }
 
-    if (service === cloudevents.FIREBASE_AUTH_CE_SERVICE) {
+    if (service === CE_SERVICE.FIREBASE_AUTH) {
       if ('metadata' in data) {
         // Some metadata are not consistent between cloudevents and legacy events
         const metadata: object = data.metadata;

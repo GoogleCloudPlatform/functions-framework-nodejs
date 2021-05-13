@@ -21,12 +21,14 @@ import {CloudEventsContext} from './functions';
 export class EventConversionError extends Error {}
 
 // CloudEvent service names.
-export const FIREBASE_AUTH_CE_SERVICE = 'firebaseauth.googleapis.com';
-export const FIREBASE_CE_SERVICE = 'firebase.googleapis.com';
-export const FIREBASE_DB_CE_SERVICE = 'firebasedatabase.googleapis.com';
-export const FIRESTORE_CE_SERVICE = 'firestore.googleapis.com';
-export const PUBSUB_CE_SERVICE = 'pubsub.googleapis.com';
-export const STORAGE_CE_SERVICE = 'storage.googleapis.com';
+export const CE_SERVICE = {
+  FIREBASE_AUTH: 'firebaseauth.googleapis.com',
+  FIREBASE_DB: 'firebasedatabase.googleapis.com',
+  FIREBASE: 'firebase.googleapis.com',
+  FIRESTORE: 'firestore.googleapis.com',
+  PUBSUB: 'pubsub.googleapis.com',
+  STORAGE: 'storage.googleapis.com',
+};
 
 /**
  * Checks whether the incoming request is a CloudEvents event in binary content
