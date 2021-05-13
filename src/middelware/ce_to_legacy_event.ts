@@ -19,40 +19,38 @@ import {
   EventConversionError,
 } from '../cloudevents';
 
-export const CE_TO_BACKGROUND_TYPE = new Map(
-  Object.entries({
-    'google.cloud.pubsub.topic.v1.messagePublished':
-      'google.pubsub.topic.publish',
-    'google.cloud.storage.object.v1.finalized':
-      'google.storage.object.finalize',
-    'google.cloud.storage.object.v1.deleted': 'google.storage.object.delete',
-    'google.cloud.storage.object.v1.archived': 'google.storage.object.archive',
-    'google.cloud.storage.object.v1.metadataUpdated':
-      'google.storage.object.metadataUpdate',
-    'google.cloud.firestore.document.v1.written':
-      'providers/cloud.firestore/eventTypes/document.write',
-    'google.cloud.firestore.document.v1.created':
-      'providers/cloud.firestore/eventTypes/document.create',
-    'google.cloud.firestore.document.v1.updated':
-      'providers/cloud.firestore/eventTypes/document.update',
-    'google.cloud.firestore.document.v1.deleted':
-      'providers/cloud.firestore/eventTypes/document.delete',
-    'google.firebase.auth.user.v1.created':
-      'providers/firebase.auth/eventTypes/user.create',
-    'google.firebase.auth.user.v1.deleted':
-      'providers/firebase.auth/eventTypes/user.delete',
-    'google.firebase.analytics.log.v1.written':
-      'providers/google.firebase.analytics/eventTypes/event.log',
-    'google.firebase.database.document.v1.created':
-      'providers/google.firebase.database/eventTypes/ref.create',
-    'google.firebase.database.document.v1.written':
-      'providers/google.firebase.database/eventTypes/ref.write',
-    'google.firebase.database.document.v1.updated':
-      'providers/google.firebase.database/eventTypes/ref.update',
-    'google.firebase.database.document.v1.deleted':
-      'providers/google.firebase.database/eventTypes/ref.delete',
-  })
-);
+// Maps CloudEvent types to the equivalent GCF Event type
+export const CE_TO_BACKGROUND_TYPE: {[k: string]: string} = {
+  'google.cloud.pubsub.topic.v1.messagePublished':
+    'google.pubsub.topic.publish',
+  'google.cloud.storage.object.v1.finalized': 'google.storage.object.finalize',
+  'google.cloud.storage.object.v1.deleted': 'google.storage.object.delete',
+  'google.cloud.storage.object.v1.archived': 'google.storage.object.archive',
+  'google.cloud.storage.object.v1.metadataUpdated':
+    'google.storage.object.metadataUpdate',
+  'google.cloud.firestore.document.v1.written':
+    'providers/cloud.firestore/eventTypes/document.write',
+  'google.cloud.firestore.document.v1.created':
+    'providers/cloud.firestore/eventTypes/document.create',
+  'google.cloud.firestore.document.v1.updated':
+    'providers/cloud.firestore/eventTypes/document.update',
+  'google.cloud.firestore.document.v1.deleted':
+    'providers/cloud.firestore/eventTypes/document.delete',
+  'google.firebase.auth.user.v1.created':
+    'providers/firebase.auth/eventTypes/user.create',
+  'google.firebase.auth.user.v1.deleted':
+    'providers/firebase.auth/eventTypes/user.delete',
+  'google.firebase.analytics.log.v1.written':
+    'providers/google.firebase.analytics/eventTypes/event.log',
+  'google.firebase.database.document.v1.created':
+    'providers/google.firebase.database/eventTypes/ref.create',
+  'google.firebase.database.document.v1.written':
+    'providers/google.firebase.database/eventTypes/ref.write',
+  'google.firebase.database.document.v1.updated':
+    'providers/google.firebase.database/eventTypes/ref.update',
+  'google.firebase.database.document.v1.deleted':
+    'providers/google.firebase.database/eventTypes/ref.delete',
+};
 
 const PUBSUB_MESSAGE_TYPE =
   'type.googleapis.com/google.pubsub.v1.PubsubMessage';
@@ -70,7 +68,7 @@ const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
 const isConvertableCloudEvent = (request: Request): boolean => {
   if (isBinaryCloudEvent(request)) {
     const ceType = request.header('ce-type');
-    return CE_TO_BACKGROUND_TYPE.has(ceType!);
+    return !!ceType && ceType in CE_TO_BACKGROUND_TYPE;
   }
   return false;
 };
@@ -153,7 +151,7 @@ const marshallConvertableCloudEvent = (
     context: {
       eventId: ceContext.id!,
       timestamp: ceContext.time!,
-      eventType: CE_TO_BACKGROUND_TYPE.get(ceContext.type!),
+      eventType: CE_TO_BACKGROUND_TYPE[ceContext.type!],
       resource,
     },
     data,

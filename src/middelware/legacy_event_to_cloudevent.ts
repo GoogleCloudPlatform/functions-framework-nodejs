@@ -20,31 +20,29 @@ import {
 import {CE_TO_BACKGROUND_TYPE} from './ce_to_legacy_event';
 import {CloudFunctionsContext, LegacyEvent} from '../functions';
 
-const BACKGROUND_TO_CE_TYPE = new Map<string, string>(
-  [...CE_TO_BACKGROUND_TYPE].map(x => [x[1], x[0]])
-);
-BACKGROUND_TO_CE_TYPE.set(
-  'providers/cloud.storage/eventTypes/object.change',
-  'google.cloud.storage.object.v1.finalized'
-);
-BACKGROUND_TO_CE_TYPE.set(
-  'providers/cloud.pubsub/eventTypes/topic.publish',
-  'google.cloud.pubsub.topic.v1.messagePublished'
+// Maps GCF Event types to the equivalent CloudEventType
+const BACKGROUND_TO_CE_TYPE: {[key: string]: string} = Object.assign(
+  {
+    'providers/cloud.storage/eventTypes/object.change':
+      'google.cloud.storage.object.v1.finalized',
+    'providers/cloud.pubsub/eventTypes/topic.publish':
+      'google.cloud.pubsub.topic.v1.messagePublished',
+  },
+  // include the inverse of CE_TO_BACKGROUND_TYPE
+  ...Object.entries(CE_TO_BACKGROUND_TYPE).map(([a, b]) => ({[b]: a}))
 );
 
 // Maps background event services to their equivalent CloudEvent services.
-const SERVICE_BACKGROUND_TO_CE = new Map(
-  Object.entries({
-    'providers/cloud.firestore/': CE_SERVICE.FIRESTORE,
-    'providers/google.firebase.analytics/': CE_SERVICE.FIREBASE,
-    'providers/firebase.auth/': CE_SERVICE.FIREBASE_AUTH,
-    'providers/google.firebase.database/': CE_SERVICE.FIREBASE_DB,
-    'providers/cloud.pubsub/': CE_SERVICE.PUBSUB,
-    'providers/cloud.storage/': CE_SERVICE.STORAGE,
-    'google.pubsub': CE_SERVICE.PUBSUB,
-    'google.storage': CE_SERVICE.STORAGE,
-  })
-);
+const SERVICE_BACKGROUND_TO_CE = {
+  'providers/cloud.firestore/': CE_SERVICE.FIRESTORE,
+  'providers/google.firebase.analytics/': CE_SERVICE.FIREBASE,
+  'providers/firebase.auth/': CE_SERVICE.FIREBASE_AUTH,
+  'providers/google.firebase.database/': CE_SERVICE.FIREBASE_DB,
+  'providers/cloud.pubsub/': CE_SERVICE.PUBSUB,
+  'providers/cloud.storage/': CE_SERVICE.STORAGE,
+  'google.pubsub': CE_SERVICE.PUBSUB,
+  'google.storage': CE_SERVICE.STORAGE,
+};
 
 /**
  * Maps CloudEvent service strings to regular expressions used to split a background
@@ -75,7 +73,7 @@ const isConvertableLegacyEvent = (req: Request): boolean => {
     'data' in body &&
     'eventType' in context &&
     'resource' in context &&
-    BACKGROUND_TO_CE_TYPE.has(context.eventType)
+    context.eventType in BACKGROUND_TO_CE_TYPE
   );
 };
 
@@ -124,7 +122,9 @@ export const splitResource = (
   }
 
   if (!service) {
-    for (const [backgroundService, ceService] of SERVICE_BACKGROUND_TO_CE) {
+    for (const [backgroundService, ceService] of Object.entries(
+      SERVICE_BACKGROUND_TO_CE
+    )) {
       if (context.eventType?.startsWith(backgroundService)) {
         service = ceService;
       }
@@ -171,7 +171,7 @@ export const legacyEventToCloudEventMiddleware = (
   if (isConvertableLegacyEvent(req)) {
     // eslint-disable-next-line prefer-const
     let {context, data} = getLegacyEvent(req);
-    const newType = BACKGROUND_TO_CE_TYPE.get(context.eventType ?? '');
+    const newType = BACKGROUND_TO_CE_TYPE[context.eventType ?? ''];
     if (!newType) {
       throw new EventConversionError(
         `Unable to find equivalent CloudEvent type for ${context.eventType}`
