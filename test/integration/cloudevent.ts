@@ -14,7 +14,6 @@
 
 import * as assert from 'assert';
 import * as functions from '../../src/functions';
-import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import {SignatureType} from '../../src/types';
 import * as supertest from 'supertest';
@@ -33,25 +32,11 @@ const TEST_CLOUD_EVENT = {
 };
 
 describe('CloudEvent Function', () => {
-  let clock: sinon.SinonFakeTimers;
-
-  beforeEach(() => {
-    clock = sinon.useFakeTimers();
-    // Prevent log spew from the PubSub emulator request.
-    sinon.stub(console, 'warn');
-  });
-
-  afterEach(() => {
-    clock.restore();
-    (console.warn as sinon.SinonSpy).restore();
-  });
-
   const testData = [
     {
       name: 'CloudEvents v1.0 structured content request',
       headers: {'Content-Type': 'application/cloudevents+json'},
       body: TEST_CLOUD_EVENT,
-      expectedCloudEvent: TEST_CLOUD_EVENT,
     },
     {
       name: 'CloudEvents v1.0 binary content request',
@@ -66,150 +51,10 @@ describe('CloudEvent Function', () => {
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
       body: TEST_CLOUD_EVENT.data,
-      expectedCloudEvent: TEST_CLOUD_EVENT,
-    },
-    {
-      name: 'PubSub GCF event request',
-      headers: {},
-      body: {
-        context: {
-          eventId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-          timestamp: '2020-09-29T11:32:00.000Z',
-          eventType: 'google.pubsub.topic.publish',
-          resource: {
-            service: 'pubsub.googleapis.com',
-            name: 'projects/sample-project/topics/gcf-test',
-            type: 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-          },
-        },
-        data: {
-          '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-          data: 'AQIDBA==',
-        },
-      },
-      expectedCloudEvent: {
-        specversion: '1.0',
-        type: 'google.cloud.pubsub.topic.v1.messagePublished',
-        source:
-          '//pubsub.googleapis.com/projects/sample-project/topics/gcf-test',
-        id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        time: '2020-09-29T11:32:00.000Z',
-        datacontenttype: 'application/json',
-        data: {
-          message: {
-            '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-            data: 'AQIDBA==',
-          },
-        },
-      },
-    },
-    {
-      name: 'Legacy PubSub GCF event request',
-      headers: {},
-      body: {
-        eventId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        timestamp: '2020-09-29T11:32:00.000Z',
-        eventType: 'providers/cloud.pubsub/eventTypes/topic.publish',
-        resource: 'projects/sample-project/topics/gcf-test',
-        data: {
-          '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-          attributes: {
-            attribute1: 'value1',
-          },
-          data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-        },
-      },
-      expectedCloudEvent: {
-        specversion: '1.0',
-        type: 'google.cloud.pubsub.topic.v1.messagePublished',
-        source:
-          '//pubsub.googleapis.com/projects/sample-project/topics/gcf-test',
-        id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        time: '2020-09-29T11:32:00.000Z',
-        datacontenttype: 'application/json',
-        data: {
-          message: {
-            '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-            attributes: {
-              attribute1: 'value1',
-            },
-            data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-          },
-        },
-      },
-    },
-    {
-      name: 'PubSub emulator request',
-      headers: {},
-      body: {
-        subscription: 'projects/FOO/subscriptions/BAR_SUB',
-        message: {
-          data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-          messageId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-          attributes: {
-            attribute1: 'value1',
-          },
-        },
-      },
-      expectedCloudEvent: {
-        specversion: '1.0',
-        type: 'google.cloud.pubsub.topic.v1.messagePublished',
-        source: '//pubsub.googleapis.com/',
-        id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        time: '1970-01-01T00:00:00.000Z',
-        datacontenttype: 'application/json',
-        data: {
-          message: {
-            '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-            attributes: {
-              attribute1: 'value1',
-            },
-            data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-          },
-        },
-      },
-    },
-    {
-      name: 'Firebase Database GCF event request',
-      headers: {},
-      body: {
-        eventType: 'providers/google.firebase.database/eventTypes/ref.write',
-        params: {
-          child: 'xyz',
-        },
-        auth: {
-          admin: true,
-        },
-        data: {
-          data: null,
-          delta: {
-            grandchild: 'other',
-          },
-        },
-        resource: 'projects/_/instances/my-project-id/refs/gcf-test/xyz',
-        timestamp: '2020-09-29T11:32:00.000Z',
-        eventId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-      },
-      expectedCloudEvent: {
-        specversion: '1.0',
-        type: 'google.firebase.database.document.v1.written',
-        source:
-          '//firebasedatabase.googleapis.com/projects/_/instances/my-project-id',
-        subject: 'refs/gcf-test/xyz',
-        id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        time: '2020-09-29T11:32:00.000Z',
-        datacontenttype: 'application/json',
-        data: {
-          data: null,
-          delta: {
-            grandchild: 'other',
-          },
-        },
-      },
     },
   ];
   testData.forEach(test => {
-    it(`${test.name}`, async () => {
+    it(`should receive data and context from ${test.name}`, async () => {
       let receivedCloudEvent: functions.CloudEventsContext | null = null;
       const server = getServer((cloudevent: functions.CloudEventsContext) => {
         receivedCloudEvent = cloudevent as functions.CloudEventsContext;
@@ -219,7 +64,21 @@ describe('CloudEvent Function', () => {
         .set(test.headers)
         .send(test.body)
         .expect(204);
-      assert.deepStrictEqual(receivedCloudEvent, test.expectedCloudEvent);
+      assert.notStrictEqual(receivedCloudEvent, null);
+      assert.strictEqual(
+        receivedCloudEvent!.specversion,
+        TEST_CLOUD_EVENT.specversion
+      );
+      assert.strictEqual(receivedCloudEvent!.type, TEST_CLOUD_EVENT.type);
+      assert.strictEqual(receivedCloudEvent!.source, TEST_CLOUD_EVENT.source);
+      assert.strictEqual(receivedCloudEvent!.subject, TEST_CLOUD_EVENT.subject);
+      assert.strictEqual(receivedCloudEvent!.id, TEST_CLOUD_EVENT.id);
+      assert.strictEqual(receivedCloudEvent!.time, TEST_CLOUD_EVENT.time);
+      assert.strictEqual(
+        receivedCloudEvent!.datacontenttype,
+        TEST_CLOUD_EVENT.datacontenttype
+      );
+      assert.deepStrictEqual(receivedCloudEvent!.data, TEST_CLOUD_EVENT.data);
     });
   });
 });

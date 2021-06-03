@@ -16,21 +16,6 @@ import * as express from 'express';
 import {CloudEventsContext} from './functions';
 
 /**
- * Custom exception class to represent errors durring event conversions.
- */
-export class EventConversionError extends Error {}
-
-// CloudEvent service names.
-export const CE_SERVICE = {
-  FIREBASE_AUTH: 'firebaseauth.googleapis.com',
-  FIREBASE_DB: 'firebasedatabase.googleapis.com',
-  FIREBASE: 'firebase.googleapis.com',
-  FIRESTORE: 'firestore.googleapis.com',
-  PUBSUB: 'pubsub.googleapis.com',
-  STORAGE: 'storage.googleapis.com',
-};
-
-/**
  * Checks whether the incoming request is a CloudEvents event in binary content
  * mode. This is verified by checking the presence of required headers.
  *

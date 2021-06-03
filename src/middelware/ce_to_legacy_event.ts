@@ -12,45 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
-import {
-  CE_SERVICE,
-  isBinaryCloudEvent,
-  getBinaryCloudEventContext,
-  EventConversionError,
-} from '../cloudevents';
+import {isBinaryCloudEvent, getBinaryCloudEventContext} from '../cloudevents';
 
-// Maps CloudEvent types to the equivalent GCF Event type
-export const CE_TO_BACKGROUND_TYPE: {[k: string]: string} = {
-  'google.cloud.pubsub.topic.v1.messagePublished':
-    'google.pubsub.topic.publish',
-  'google.cloud.storage.object.v1.finalized': 'google.storage.object.finalize',
-  'google.cloud.storage.object.v1.deleted': 'google.storage.object.delete',
-  'google.cloud.storage.object.v1.archived': 'google.storage.object.archive',
-  'google.cloud.storage.object.v1.metadataUpdated':
-    'google.storage.object.metadataUpdate',
-  'google.cloud.firestore.document.v1.written':
-    'providers/cloud.firestore/eventTypes/document.write',
-  'google.cloud.firestore.document.v1.created':
-    'providers/cloud.firestore/eventTypes/document.create',
-  'google.cloud.firestore.document.v1.updated':
-    'providers/cloud.firestore/eventTypes/document.update',
-  'google.cloud.firestore.document.v1.deleted':
-    'providers/cloud.firestore/eventTypes/document.delete',
-  'google.firebase.auth.user.v1.created':
-    'providers/firebase.auth/eventTypes/user.create',
-  'google.firebase.auth.user.v1.deleted':
-    'providers/firebase.auth/eventTypes/user.delete',
-  'google.firebase.analytics.log.v1.written':
-    'providers/google.firebase.analytics/eventTypes/event.log',
-  'google.firebase.database.document.v1.created':
-    'providers/google.firebase.database/eventTypes/ref.create',
-  'google.firebase.database.document.v1.written':
-    'providers/google.firebase.database/eventTypes/ref.write',
-  'google.firebase.database.document.v1.updated':
-    'providers/google.firebase.database/eventTypes/ref.update',
-  'google.firebase.database.document.v1.deleted':
-    'providers/google.firebase.database/eventTypes/ref.delete',
-};
+const CE_TO_BACKGROUND_TYPE = new Map(
+  Object.entries({
+    'google.cloud.pubsub.topic.v1.messagePublished':
+      'google.pubsub.topic.publish',
+    'google.cloud.storage.object.v1.finalized':
+      'google.storage.object.finalize',
+    'google.cloud.storage.object.v1.deleted': 'google.storage.object.delete',
+    'google.cloud.storage.object.v1.archived': 'google.storage.object.archive',
+    'google.cloud.storage.object.v1.metadataUpdated':
+      'google.storage.object.metadataUpdate',
+    'google.cloud.firestore.document.v1.written':
+      'providers/cloud.firestore/eventTypes/document.write',
+    'google.cloud.firestore.document.v1.created':
+      'providers/cloud.firestore/eventTypes/document.create',
+    'google.cloud.firestore.document.v1.updated':
+      'providers/cloud.firestore/eventTypes/document.update',
+    'google.cloud.firestore.document.v1.deleted':
+      'providers/cloud.firestore/eventTypes/document.delete',
+    'google.firebase.auth.user.v1.created':
+      'providers/firebase.auth/eventTypes/user.create',
+    'google.firebase.auth.user.v1.deleted':
+      'providers/firebase.auth/eventTypes/user.delete',
+    'google.firebase.analytics.log.v1.written':
+      'providers/google.firebase.analytics/eventTypes/event.log',
+    'google.firebase.database.document.v1.created':
+      'providers/google.firebase.database/eventTypes/ref.create',
+    'google.firebase.database.document.v1.written':
+      'providers/google.firebase.database/eventTypes/ref.write',
+    'google.firebase.database.document.v1.updated':
+      'providers/google.firebase.database/eventTypes/ref.update',
+    'google.firebase.database.document.v1.deleted':
+      'providers/google.firebase.database/eventTypes/ref.delete',
+  })
+);
+
+// CloudEvent service names.
+const FIREBASE_AUTH_CE_SERVICE = 'firebaseauth.googleapis.com';
+const PUBSUB_CE_SERVICE = 'pubsub.googleapis.com';
+const STORAGE_CE_SERVICE = 'storage.googleapis.com';
 
 const PUBSUB_MESSAGE_TYPE =
   'type.googleapis.com/google.pubsub.v1.PubsubMessage';
@@ -61,6 +63,11 @@ const PUBSUB_MESSAGE_TYPE =
 const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
 
 /**
+ * Costom exception class to represent errors durring event converion.
+ */
+export class EventConversionError extends Error {}
+
+/**
  * Is the given request a known CloudEvent that can be converted to a legacy event.
  * @param request express request object
  * @returns true if the request can be converted
@@ -68,7 +75,7 @@ const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
 const isConvertableCloudEvent = (request: Request): boolean => {
   if (isBinaryCloudEvent(request)) {
     const ceType = request.header('ce-type');
-    return !!ceType && ceType in CE_TO_BACKGROUND_TYPE;
+    return CE_TO_BACKGROUND_TYPE.has(ceType!);
   }
   return false;
 };
@@ -110,7 +117,7 @@ const marshallConvertableCloudEvent = (
   let resource: string | {[key: string]: string} = `${name}/${subject}`;
 
   switch (service) {
-    case CE_SERVICE.PUBSUB:
+    case PUBSUB_CE_SERVICE:
       // PubSub resource format
       resource = {
         service: service,
@@ -122,7 +129,7 @@ const marshallConvertableCloudEvent = (
         data = data.message;
       }
       break;
-    case CE_SERVICE.FIREBASE_AUTH:
+    case FIREBASE_AUTH_CE_SERVICE:
       // FirebaseAuth resource format
       resource = name;
       if ('metadata' in data) {
@@ -137,7 +144,7 @@ const marshallConvertableCloudEvent = (
         }
       }
       break;
-    case CE_SERVICE.STORAGE:
+    case STORAGE_CE_SERVICE:
       // CloudStorage resource format
       resource = {
         name: `${name}/${subject}`,
@@ -151,7 +158,7 @@ const marshallConvertableCloudEvent = (
     context: {
       eventId: ceContext.id!,
       timestamp: ceContext.time!,
-      eventType: CE_TO_BACKGROUND_TYPE[ceContext.type!],
+      eventType: CE_TO_BACKGROUND_TYPE.get(ceContext.type!),
       resource,
     },
     data,
