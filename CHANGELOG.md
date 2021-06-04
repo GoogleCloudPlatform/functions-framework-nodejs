@@ -4,6 +4,57 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## v1.8.0
+
+06-04-2021 16:11 PDT
+
+### Features
+
+- Update event and cloudevent interfaces (#276)
+- Support local development with Pub/Sub emulator (#272)
+- Disable x-powered-by header (#223)
+
+### Bug Fixes
+
+- Allow killing process with CTRL+C (#264)
+- Do not pass numeric arguments to res.send (#242)
+- Fix cloudevent signature callbacks (#234)
+- Log function signature type (#228)
+- Export the public interfaces (#218)
+
+### Dependencies
+
+- update lodash to 4.17.21 (#284)
+- update hosted-git-info to 2.8.9 (#282)
+- update googlecloudplatform/functions-framework-conformance action to v0.3.9 (#271)
+- update typescript to v4.2.3 (#269)
+- update mocha to v8.3.2 (#268)
+- update @types/supertest to v2.0.11 (#267)
+- update @types/node to v11.15.50 (#266)
+- update supertest to v6 (#251)
+- update gts to v3 (#250)
+- update actions/setup-node action to v2 (#249)
+- update @types/minimist to v1.2.1 (#245)
+- update @types/express to v4.17.11 (#244)
+- update ini to 1.3.7 (#240)
+- update @types/mocha to v8.0.3 (#201)
+- update minimist to 1.2.5 (#259)
+
+### Documentation
+
+- Add buildpacks/docker quickstart (#212)
+- Mention express as the request/response parameters (#200)
+
+### Internal / Testing Changues
+
+- Updates to functions-framework-conformance action (#224, #236, #279, #280)
+- Split up invoker tests into separate integration test files (#281)
+- Enable eslint for tests (#275)
+- Add useful npm scripts (#274)
+- CI configuration updates (#219, #217)
+- Refactor: split invoker and router (#213)
+- Update renovate.json schedule (#210)
+
 ## v1.7.1
 
 08-10-2020 11:13 PDT
