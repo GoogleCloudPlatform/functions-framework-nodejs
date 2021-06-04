@@ -20,8 +20,6 @@ import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {registerFunctionRoutes} from './router';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
-import {ceToLegacyEventMiddleware} from './middelware/ce_to_legacy_event';
-import {legacyEventToCloudEventMiddleware} from './middelware/legacy_event_to_cloudevent';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -100,21 +98,11 @@ export function getServer(
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
 
-  if (
-    functionSignatureType === SignatureType.EVENT ||
-    functionSignatureType === SignatureType.CLOUDEVENT
-  ) {
-    // If a Pub/Sub subscription is configured to invoke a user's function directly, the request body
-    // needs to be marshalled into the structure that wrapEventFunction expects. This unblocks local
-    // development with the Pub/Sub emulator
-    app.use(legacyPubSubEventMiddleware);
-  }
-
+  // If a Pub/Sub subscription is configured to invoke a user's function directly, the request body
+  // needs to be marshalled into the structure that wrapEventFunction expects. This unblocks local
+  // development with the Pub/Sub emulator
   if (functionSignatureType === SignatureType.EVENT) {
-    app.use(ceToLegacyEventMiddleware);
-  }
-  if (functionSignatureType === SignatureType.CLOUDEVENT) {
-    app.use(legacyEventToCloudEventMiddleware);
+    app.use(legacyPubSubEventMiddleware);
   }
 
   registerFunctionRoutes(app, userFunction, functionSignatureType);

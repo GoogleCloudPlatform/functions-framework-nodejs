@@ -195,9 +195,14 @@ export function wrapEventFunction(
         }
       }
     );
-    const data = event.data;
+    let data = event.data;
     let context = event.context;
-    if (context === undefined) {
+    if (isBinaryCloudEvent(req)) {
+      // Support CloudEvents in binary content mode, with data being the whole
+      // request body and context attributes retrieved from request headers.
+      data = event;
+      context = getBinaryCloudEventContext(req);
+    } else if (context === undefined) {
       // Support legacy events and CloudEvents in structured content mode, with
       // context properties represented as event top-level properties.
       // Context is everything but data.

@@ -45,7 +45,7 @@ jobs:
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
-        validateMapping: true
+        validateMapping: false
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
 
@@ -54,6 +54,6 @@ jobs:
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
-        validateMapping: true
+        validateMapping: false
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
