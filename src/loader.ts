@@ -24,14 +24,32 @@
 import {HandlerFunction} from './functions';
 
 /**
+ * This function encapsulates the import call in a way
+ * that TypeScript does not transpile `import()`.
+ * https://github.com/microsoft/TypeScript/issues/43329
+ */
+const _dynamicImport = new Function(
+  'modulePath',
+  'return import(modulePath)'
+) as (modulePath: string) => Promise<any>;
+
+function majorVersion(version: string) {
+  var m = version.match(/v?([0-9]+)\..+/);
+  if (!m) {
+    throw new Error('Unrecognized node version: ' + version);
+  }
+  return +m[1];
+}
+
+/**
  * Returns user's function from function file.
  * Returns null if function can't be retrieved.
  * @return User's function or null.
  */
-export function getUserFunction(
+export async function getUserFunction(
   codeLocation: string,
   functionTarget: string
-): HandlerFunction | null {
+): Promise<HandlerFunction | null> {
   try {
     const functionModulePath = getFunctionModulePath(codeLocation);
     if (functionModulePath === null) {
@@ -39,8 +57,25 @@ export function getUserFunction(
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const functionModule = require(functionModulePath);
+    let functionModule;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      functionModule = require(functionModulePath);
+    } catch (e) {
+      if (e.code !== 'ERR_REQUIRE_ESM') {
+        throw e;
+      }
+      if (majorVersion(process.version) < 13) {
+        console.error(
+          'ES modules are incompatible with Node.js ' +
+            process.version +
+            '. Please upgrade Node.js version to v13 or greater.'
+        );
+        return null;
+      }
+      functionModule = await _dynamicImport(functionModulePath);
+    }
+
     let userFunction = functionTarget
       .split('.')
       .reduce((code, functionTargetPart) => {

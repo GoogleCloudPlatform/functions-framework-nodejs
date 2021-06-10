@@ -35,14 +35,19 @@ describe('loading function', () => {
       codeLocation: '/test/data/with_main',
       target: 'testFunction',
     },
+    {
+      name: 'function in esmodule',
+      codeLocation: '/test/data/with_main_esm',
+      target: 'testFunction',
+    },
   ];
 
   for (const test of testData) {
-    it(`should load ${test.name}`, () => {
-      const loadedFunction = loader.getUserFunction(
+    it(`should load ${test.name}`, async () => {
+      const loadedFunction = (await loader.getUserFunction(
         process.cwd() + test.codeLocation,
         test.target
-      ) as functions.HttpFunction;
+      )) as functions.HttpFunction;
       const returned = loadedFunction(express.request, express.response);
       assert.strictEqual(returned, 'PASS');
     });
