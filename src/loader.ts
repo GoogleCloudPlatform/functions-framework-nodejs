@@ -20,7 +20,7 @@
 
 import * as path from 'path';
 import * as semver from 'semver';
-
+import * as readPkgUp from 'read-pkg-up';
 /**
  * Import function signature type's definition.
  */
@@ -41,70 +41,25 @@ export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
  * In words:
  *   1. A module with .mjs extension is an ES module.
  *   2. A module with .clj extension is CommonJS.
- *   3. A module with .js extensions where...
- *     a. Nearest package.json's with "type": "module" is an ES
- *        module.
- *     b. Otherwise, it is CommonJS.
+ *   3. A module with .js extensions where the nearest package.json's
+ *      with "type": "module" is an ES module
+ *   4. Otherwise, it is CommonJS.
  *
- * @returns {string} Module format ('commonjs' or 'module')
+ * @returns {Promise<'commonjs' | 'module'>} Module format ('commonjs' or 'module')
  */
-function moduleFormat(modulePath: string): 'commonjs' | 'module' {
+async function moduleFormat(
+  modulePath: string
+): Promise<'commonjs' | 'module'> {
   if (/\.mjs$/.test(modulePath)) return 'module';
   if (/\.cjs$/.test(modulePath)) return 'commonjs';
 
-  const packageJson = readNearestPackageJson(path.dirname(modulePath));
+  const pkg = await readPkgUp({
+    cwd: path.dirname(modulePath),
+    normalize: false,
+  });
 
   // Default to commonjs unless package.json specifies type as 'module'.
-  return packageJson?.type === 'module' ? 'module' : 'commonjs';
-}
-
-/**
- * Reads nearest package.json relative to the given module directory.
- *
- * Searches the current folder, that folder’s parent, and so on up
- * until a node_modules folder or the volume root is reached.
- *
- * Returns null if no valid package.json is found.
- *
- * @returns Contents of nearest package.json.
- */
-function readNearestPackageJson(moduleDir: string): any {
-  let pJsonDir = moduleDir;
-  while (true) {
-    if (pJsonDir.endsWith('/node_modules')) break;
-
-    try {
-      const packageJson = readPackageJson(path.join(pJsonDir, 'package.json'));
-      if (packageJson) return packageJson;
-    } catch (e) {
-      // Probably an invalid package.json. End search.
-      break;
-    }
-
-    const prevDir = pJsonDir;
-    pJsonDir = path.resolve(pJsonDir, '..');
-    if (prevDir === pJsonDir) break;
-  }
-  return null;
-}
-
-/**
- * Reads contents of package.json at the given path.
- *
- * Returns null if package.json does not exists at the given path.
- * Throws an error if package.json is invalid.
- *
- * @returns Contents of package.json.
- */
-function readPackageJson(pJsonPath: string): any {
-  try {
-    return require(pJsonPath);
-  } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') {
-      return null;
-    }
-    throw e;
-  }
+  return pkg?.packageJson.type === 'module' ? 'module' : 'commonjs';
 }
 
 /**
@@ -135,7 +90,7 @@ export async function getUserFunction(
     }
 
     let functionModule;
-    if (moduleFormat(functionModulePath) === 'module') {
+    if ((await moduleFormat(functionModulePath)) === 'module') {
       if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
