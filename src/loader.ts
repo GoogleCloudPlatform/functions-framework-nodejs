@@ -26,15 +26,14 @@ import * as semver from 'semver';
  */
 import {HandlerFunction} from './functions';
 
-// Dynamic import, required to load user codes packaged as ES module,
-// is only available on Node.js v13.2.0 and up.
+// Dynamic import function required to load user code packaged as an
+// ES module is only available on Node.js v13.2.0 and up.
 //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
 // Exported for testing.
 export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
 
 /**
- * Determines format of the module (CommonJS vs Es module) on the
- * given module path.
+ * Determines format of the given module (CommonJS vs ES module).
  *
  * Implements "algorithm" described at:
  *   https://nodejs.org/api/packages.html#packages_type
@@ -42,7 +41,7 @@ export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
  * In words:
  *   1. A module with .mjs extension is an ES module.
  *   2. A module with .clj extension is CommonJS.
- *   3. A module with .js extensions with...
+ *   3. A module with .js extensions where...
  *     a. Nearest package.json's with "type": "module" is an ES
  *        module.
  *     b. Otherwise, it is CommonJS.
@@ -55,7 +54,7 @@ function moduleFormat(modulePath: string): 'commonjs' | 'module' {
 
   const packageJson = readNearestPackageJson(path.dirname(modulePath));
 
-  // Assume commonjs unless package.json's "type"="module".
+  // Default to commonjs unless package.json specifies type as 'module'.
   return packageJson?.type === 'module' ? 'module' : 'commonjs';
 }
 
@@ -65,7 +64,7 @@ function moduleFormat(modulePath: string): 'commonjs' | 'module' {
  * Searches the current folder, that folder’s parent, and so on up
  * until a node_modules folder or the volume root is reached.
  *
- * Returns null if no valid package.json can't be found.
+ * Returns null if no valid package.json is found.
  *
  * @returns Contents of nearest package.json.
  */
@@ -109,8 +108,10 @@ function readPackageJson(pJsonPath: string): any {
 }
 
 /**
- * Dynamically load import function to prevent TypeScript from transpiling
- * into a reqiure. See https://github.com/microsoft/TypeScript/issues/43329
+ * Dynamically load import function to prevent TypeScript from
+ * transpiling into a require.
+ *
+ * See https://github.com/microsoft/TypeScript/issues/43329.
  */
 const dynamicImport = new Function(
   'modulePath',
