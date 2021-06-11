@@ -18,28 +18,104 @@
  * @packageDocumentation
  */
 
+import * as path from 'path';
+import * as semver from 'semver';
+
 /**
  * Import function signature type's definition.
  */
 import {HandlerFunction} from './functions';
 
+// Dynamic import, required to load user codes packaged as ES module,
+// is only available on Node.js v13.2.0 and up.
+//   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
+// Exported for testing.
+export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
+
 /**
- * This function encapsulates the import call in a way
- * that TypeScript does not transpile `import()`.
- * https://github.com/microsoft/TypeScript/issues/43329
+ * Determines format of the module (CommonJS vs Es module) on the
+ * given module path.
+ *
+ * Implements "algorithm" described at:
+ *   https://nodejs.org/api/packages.html#packages_type
+ *
+ * In words:
+ *   1. A module with .mjs extension is an ES module.
+ *   2. A module with .clj extension is CommonJS.
+ *   3. A module with .js extensions with...
+ *     a. Nearest package.json's with "type": "module" is an ES
+ *        module.
+ *     b. Otherwise, it is CommonJS.
+ *
+ * @returns {string} Module format ('commonjs' or 'module')
  */
-const _dynamicImport = new Function(
+function moduleFormat(modulePath: string): 'commonjs' | 'module' {
+  if (/\.mjs$/.test(modulePath)) return 'module';
+  if (/\.cjs$/.test(modulePath)) return 'commonjs';
+
+  const packageJson = readNearestPackageJson(path.dirname(modulePath));
+
+  // Assume commonjs unless package.json's "type"="module".
+  return packageJson?.type === 'module' ? 'module' : 'commonjs';
+}
+
+/**
+ * Reads nearest package.json relative to the given module directory.
+ *
+ * Searches the current folder, that folder’s parent, and so on up
+ * until a node_modules folder or the volume root is reached.
+ *
+ * Returns null if no valid package.json can't be found.
+ *
+ * @returns Contents of nearest package.json.
+ */
+function readNearestPackageJson(moduleDir: string): any {
+  let pJsonDir = moduleDir;
+  while (true) {
+    if (pJsonDir.endsWith('/node_modules')) break;
+
+    try {
+      const packageJson = readPackageJson(path.join(pJsonDir, 'package.json'));
+      if (packageJson) return packageJson;
+    } catch (e) {
+      // Probably an invalid package.json. End search.
+      break;
+    }
+
+    const prevDir = pJsonDir;
+    pJsonDir = path.resolve(pJsonDir, '..');
+    if (prevDir === pJsonDir) break;
+  }
+  return null;
+}
+
+/**
+ * Reads contents of package.json at the given path.
+ *
+ * Returns null if package.json does not exists at the given path.
+ * Throws an error if package.json is invalid.
+ *
+ * @returns Contents of package.json.
+ */
+function readPackageJson(pJsonPath: string): any {
+  try {
+    return require(pJsonPath);
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return null;
+    }
+    throw e;
+  }
+}
+
+/**
+ * Dynamically load import function to prevent TypeScript from transpiling
+ * into a reqiure. See https://github.com/microsoft/TypeScript/issues/43329
+ */
+const dynamicImport = new Function(
   'modulePath',
   'return import(modulePath)'
 ) as (modulePath: string) => Promise<any>;
-
-function majorVersion(version: string) {
-  var m = version.match(/v?([0-9]+)\..+/);
-  if (!m) {
-    throw new Error('Unrecognized node version: ' + version);
-  }
-  return +m[1];
-}
 
 /**
  * Returns user's function from function file.
@@ -58,22 +134,17 @@ export async function getUserFunction(
     }
 
     let functionModule;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      functionModule = require(functionModulePath);
-    } catch (e) {
-      if (e.code !== 'ERR_REQUIRE_ESM') {
-        throw e;
-      }
-      if (majorVersion(process.version) < 13) {
+    if (moduleFormat(functionModulePath) === 'module') {
+      if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
         console.error(
-          'ES modules are incompatible with Node.js ' +
-            process.version +
-            '. Please upgrade Node.js version to v13 or greater.'
+          `Cannot load ES Module on Node.js ${process.version}. ` +
+            'Please upgrade to Node.js v13.2.0 and up.'
         );
         return null;
       }
-      functionModule = await _dynamicImport(functionModulePath);
+      functionModule = await dynamicImport(functionModulePath);
+    } else {
+      functionModule = require(functionModulePath);
     }
 
     let userFunction = functionTarget
