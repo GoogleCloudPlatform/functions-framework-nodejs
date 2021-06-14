@@ -71,6 +71,7 @@ async function moduleFormat(
 const dynamicImport = new Function(
   'modulePath',
   'return import(modulePath)'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as (modulePath: string) => Promise<any>;
 
 /**
