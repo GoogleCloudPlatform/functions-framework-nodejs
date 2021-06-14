@@ -99,7 +99,7 @@ export async function getUserFunction(
       if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
-            'Please upgrade to Node.js v13.2.0 and up.'
+            `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`
         );
         return null;
       }
