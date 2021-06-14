@@ -96,14 +96,14 @@ Documentation:
   process.exit(0);
 }
 
-getUserFunction(CODE_LOCATION, TARGET).then(USER_FUNCTION => {
-  if (!USER_FUNCTION) {
+getUserFunction(CODE_LOCATION, TARGET).then(userFunction => {
+  if (!userFunction) {
     console.error('Could not load the function, shutting down.');
     // eslint-disable-next-line no-process-exit
     process.exit(1);
   }
 
-  const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
+  const SERVER = getServer(userFunction!, SIGNATURE_TYPE!);
   const ERROR_HANDLER = new ErrorHandler(SERVER);
 
   SERVER.listen(PORT, () => {

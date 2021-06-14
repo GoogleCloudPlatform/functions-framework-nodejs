@@ -33,33 +33,36 @@ import {HandlerFunction} from './functions';
 export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
 
 /**
- * Determines format of the given module (CommonJS vs ES module).
+ * Determines whether the given module is an ES module.
  *
  * Implements "algorithm" described at:
  *   https://nodejs.org/api/packages.html#packages_type
  *
  * In words:
  *   1. A module with .mjs extension is an ES module.
- *   2. A module with .clj extension is CommonJS.
+ *   2. A module with .clj extension is not an ES module.
  *   3. A module with .js extensions where the nearest package.json's
- *      with "type": "module" is an ES module
- *   4. Otherwise, it is CommonJS.
+ *      with "type": "module" is an ES module.
+ *   4. Otherwise, it is not an ES module.
  *
- * @returns {Promise<'commonjs' | 'module'>} Module format ('commonjs' or 'module')
+ * @returns {Promise<boolean>} True if module is an ES module.
  */
-async function moduleFormat(
-  modulePath: string
-): Promise<'commonjs' | 'module'> {
-  if (/\.mjs$/.test(modulePath)) return 'module';
-  if (/\.cjs$/.test(modulePath)) return 'commonjs';
+async function isEsModule(modulePath: string): Promise<boolean> {
+  const ext = path.extname(modulePath);
+  if (ext === '.mjs') {
+    return true;
+  }
+  if (ext === '.cjs') {
+    return false;
+  }
 
   const pkg = await readPkgUp({
     cwd: path.dirname(modulePath),
     normalize: false,
   });
 
-  // Default to commonjs unless package.json specifies type as 'module'.
-  return pkg?.packageJson.type === 'module' ? 'module' : 'commonjs';
+  // If package.json specifies type as 'module', it's an ES module.
+  return pkg?.packageJson.type === 'module';
 }
 
 /**
@@ -91,7 +94,8 @@ export async function getUserFunction(
     }
 
     let functionModule;
-    if ((await moduleFormat(functionModulePath)) === 'module') {
+    const esModule = await isEsModule(functionModulePath);
+    if (esModule) {
       if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
