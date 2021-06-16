@@ -21,6 +21,7 @@
 import * as path from 'path';
 import * as semver from 'semver';
 import * as readPkgUp from 'read-pkg-up';
+import {pathToFileURL} from 'url';
 /**
  * Import function signature type's definition.
  */
@@ -103,7 +104,10 @@ export async function getUserFunction(
         );
         return null;
       }
-      functionModule = await dynamicImport(functionModulePath);
+      // Resolve module path to file:// URL.
+      // Required for windows support.
+      const fpath = pathToFileURL(functionModulePath);
+      functionModule = await dynamicImport(fpath.href);
     } else {
       functionModule = require(functionModulePath);
     }
