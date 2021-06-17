@@ -104,8 +104,7 @@ export async function getUserFunction(
         );
         return null;
       }
-      // Resolve module path to file:// URL.
-      // Required for windows support.
+      // Resolve module path to file:// URL. Required for windows support.
       const fpath = pathToFileURL(functionModulePath);
       functionModule = await dynamicImport(fpath.href);
     } else {
