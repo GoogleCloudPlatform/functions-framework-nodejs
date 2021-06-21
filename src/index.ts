@@ -96,22 +96,23 @@ Documentation:
   process.exit(0);
 }
 
-const USER_FUNCTION = getUserFunction(CODE_LOCATION, TARGET);
-if (!USER_FUNCTION) {
-  console.error('Could not load the function, shutting down.');
-  // eslint-disable-next-line no-process-exit
-  process.exit(1);
-}
-
-const SERVER = getServer(USER_FUNCTION!, SIGNATURE_TYPE!);
-const ERROR_HANDLER = new ErrorHandler(SERVER);
-
-SERVER.listen(PORT, () => {
-  ERROR_HANDLER.register();
-  if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
-    console.log('Serving function...');
-    console.log(`Function: ${TARGET}`);
-    console.log(`Signature type: ${SIGNATURE_TYPE}`);
-    console.log(`URL: http://localhost:${PORT}/`);
+getUserFunction(CODE_LOCATION, TARGET).then(userFunction => {
+  if (!userFunction) {
+    console.error('Could not load the function, shutting down.');
+    // eslint-disable-next-line no-process-exit
+    process.exit(1);
   }
-}).setTimeout(0); // Disable automatic timeout on incoming connections.
+
+  const SERVER = getServer(userFunction!, SIGNATURE_TYPE!);
+  const ERROR_HANDLER = new ErrorHandler(SERVER);
+
+  SERVER.listen(PORT, () => {
+    ERROR_HANDLER.register();
+    if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
+      console.log('Serving function...');
+      console.log(`Function: ${TARGET}`);
+      console.log(`Signature type: ${SIGNATURE_TYPE}`);
+      console.log(`URL: http://localhost:${PORT}/`);
+    }
+  }).setTimeout(0); // Disable automatic timeout on incoming connections.
+});
