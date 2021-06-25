@@ -1,9 +1,9 @@
 on:
   release:
     types: [created]
-name: release-please
+name: publish
 jobs:
-  release-please-pr:
+  publish-to-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,21 +18,3 @@ jobs:
           npm install
           npm run compile
           npm publish
-      - uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
-            await github.issues.addLabels({
-              owner,
-              repo,
-              issue_number: ${{steps.release.outputs.pr}},
-              labels: ['autorelease: published']
-            });
-            github.issues.removeLabel({
-              owner,
-              repo,
-              issue_number: ${{steps.release.outputs.pr}},
-              name: 'autorelease: tagged',
-            });
-            console.log(`Tagged ${{steps.release.outputs.pr}}`)
