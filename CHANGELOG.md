@@ -4,6 +4,24 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [1.8.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.7.1...v1.8.0) (2021-06-25)
+
+
+### Features
+
+* disable x-powered-by header ([#223](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/223)) ([1ca74ae](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1ca74aee74cdc803cba90721d98fffbf2db3ab60))
+* updates event and cloudevent interfaces ([#276](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/276)) ([f67d11d](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/f67d11d9305965e6df2a10389e64389fa623f689))
+
+
+### Bug Fixes
+
+* Do not pass numeric arguments to res.send ([#242](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/242)) ([a8ace7b](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/a8ace7b7b62a00e25304f90e4ec0c87e8a114e1f))
+* fix cloudevent signature callbacks ([#234](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/234)) ([2449956](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/2449956aeef7db4a33e89760ab97ce4a892ff03c))
+* Log function signature type ([#228](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/228)) ([0726a2d](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/0726a2d9a7b715f992f473cf159397de51f4067c))
+* re-add interfaces ([#218](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/218)) ([0e71491](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/0e714916f68ad39a6e893a91747fc56b37cb8272))
+* run conformance tests against the current FF version ([#236](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/236)) ([240defc](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/240defc0a6c7076fcffef89bdf6b95a0a1f95f48)), closes [#231](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/231)
+* smooth functions crash ([#264](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/264)) ([506c503](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/506c503a1a8da83ea68775899d33741693376e5a))
+
 ## v1.8.0
 
 06-04-2021 16:11 PDT
@@ -235,4 +253,3 @@
 
 ### Internal / Testing Changes
 - chore: remove the converter
-
