@@ -1,0 +1,20 @@
+on:
+  release:
+    types: [created]
+name: publish
+jobs:
+  publish-to-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: 'https://wombat-dressing-room.appspot.com'
+      - id: publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          npm install
+          npm run compile
+          npm publish
