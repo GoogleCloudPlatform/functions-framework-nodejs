@@ -38,7 +38,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/body-parser": "1.17.0",
-    "@types/express": "4.17.11",
+    "@types/express": "4.17.12",
     "@types/minimist": "1.2.1",
     "@types/mocha": "8.2.2",
     "@types/node": "11.15.50",
