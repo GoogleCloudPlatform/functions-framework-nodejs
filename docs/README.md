@@ -6,7 +6,7 @@ This directory contains advanced docs around the Functions Framework.
 - [Debugging Functions](debugging.md)
 - [Running and Deploying Docker Containers](docker.md)
 - [Writing a Function in Typescript](typescript.md)
-- [ES Modules](esm.md)
+- [ES Modules](esm/README.md)
 
 ## TODO Docs
 
