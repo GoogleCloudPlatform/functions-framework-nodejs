@@ -12,4 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// [START functions_esm_const]
 export const MY_CONST = 'ESM';
+// [END functions_esm_const]

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// [START functions_esm]
 import {MY_CONST} from './consts.js';
 
 export const esm = (req, res) => {
   res.send(`Hello, ${MY_CONST}!`);
 };
+// [END functions_esm]
