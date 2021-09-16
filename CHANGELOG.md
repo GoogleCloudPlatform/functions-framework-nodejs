@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [1.10.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.9.0...v1.10.0) (2021-09-16)
+
+
+### Features
+
+* Enable cloudevent conversion logic ([#321](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/321)) ([b97cfdd](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/b97cfdd1046097d181b8ac72fec1805e05913720))
+
 ## [1.9.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.7.1...v1.9.0) (2021-06-25)
 
 
