@@ -26,15 +26,15 @@ exports.users = app;
 You can using Express built middleware directly. For example using cors in our app
 
 ```js
-const express = require('express')
-conxt cors = require('cors')
-const app = express()
+const express = require("express");
+const cors = require("cors");
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
-app.get('/products/:id', function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for all origins!'})
-})
+app.get("/products/:id", function (req, res, next) {
+  res.json({ msg: "This is CORS-enabled for all origins!" });
+});
 
 // Set our GCF handler to our Express app.
 exports.products = app;
