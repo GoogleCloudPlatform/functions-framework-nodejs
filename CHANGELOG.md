@@ -4,6 +4,76 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [1.9.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.7.1...v1.9.0) (2021-06-25)
+
+
+### Features
+
+* disable x-powered-by header ([#223](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/223)) ([1ca74ae](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1ca74aee74cdc803cba90721d98fffbf2db3ab60))
+* updates event and cloudevent interfaces ([#276](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/276)) ([f67d11d](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/f67d11d9305965e6df2a10389e64389fa623f689))
+
+
+### Bug Fixes
+
+* **build:** release should be v1.9.0 ([#300](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/300)) ([4859f8b](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/4859f8b3e522b4718349844efbca454445312f37))
+* Do not pass numeric arguments to res.send ([#242](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/242)) ([a8ace7b](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/a8ace7b7b62a00e25304f90e4ec0c87e8a114e1f))
+* fix cloudevent signature callbacks ([#234](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/234)) ([2449956](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/2449956aeef7db4a33e89760ab97ce4a892ff03c))
+* Log function signature type ([#228](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/228)) ([0726a2d](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/0726a2d9a7b715f992f473cf159397de51f4067c))
+* re-add interfaces ([#218](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/218)) ([0e71491](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/0e714916f68ad39a6e893a91747fc56b37cb8272))
+* run conformance tests against the current FF version ([#236](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/236)) ([240defc](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/240defc0a6c7076fcffef89bdf6b95a0a1f95f48)), closes [#231](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/231)
+* smooth functions crash ([#264](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/264)) ([506c503](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/506c503a1a8da83ea68775899d33741693376e5a))
+
+## v1.8.0
+
+06-04-2021 16:11 PDT
+
+### Features
+
+- Update event and cloudevent interfaces (#276)
+- Support local development with Pub/Sub emulator (#272)
+- Disable x-powered-by header (#223)
+
+### Bug Fixes
+
+- Allow killing process with CTRL+C (#264)
+- Do not pass numeric arguments to res.send (#242)
+- Fix cloudevent signature callbacks (#234)
+- Log function signature type (#228)
+- Export the public interfaces (#218)
+
+### Dependencies
+
+- update lodash to 4.17.21 (#284)
+- update hosted-git-info to 2.8.9 (#282)
+- update googlecloudplatform/functions-framework-conformance action to v0.3.9 (#271)
+- update typescript to v4.2.3 (#269)
+- update mocha to v8.3.2 (#268)
+- update @types/supertest to v2.0.11 (#267)
+- update @types/node to v11.15.50 (#266)
+- update supertest to v6 (#251)
+- update gts to v3 (#250)
+- update actions/setup-node action to v2 (#249)
+- update @types/minimist to v1.2.1 (#245)
+- update @types/express to v4.17.11 (#244)
+- update ini to 1.3.7 (#240)
+- update @types/mocha to v8.0.3 (#201)
+- update minimist to 1.2.5 (#259)
+
+### Documentation
+
+- Add buildpacks/docker quickstart (#212)
+- Mention express as the request/response parameters (#200)
+
+### Internal / Testing Changues
+
+- Updates to functions-framework-conformance action (#224, #236, #279, #280)
+- Split up invoker tests into separate integration test files (#281)
+- Enable eslint for tests (#275)
+- Add useful npm scripts (#274)
+- CI configuration updates (#219, #217)
+- Refactor: split invoker and router (#213)
+- Update renovate.json schedule (#210)
+
 ## v1.7.1
 
 08-10-2020 11:13 PDT
@@ -184,4 +254,3 @@
 
 ### Internal / Testing Changes
 - chore: remove the converter
-

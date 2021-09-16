@@ -44,7 +44,7 @@ export type HandlerFunction =
  * A legacy event.
  */
 export interface LegacyEvent {
-  data: object;
+  data: {[key: string]: any};
   context: CloudFunctionsContext;
 }
 
@@ -75,7 +75,7 @@ export interface CloudFunctionsContext {
   /**
    * The resource that emitted the event.
    */
-  resource?: string | object;
+  resource?: string | {[key: string]: string};
 }
 
 /**

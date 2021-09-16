@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/functions-framework",
-  "version": "1.7.1",
+  "version": "1.9.0",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=10.0.0"
@@ -12,7 +12,9 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "minimist": "^1.2.5",
-    "on-finished": "^2.3.0"
+    "on-finished": "^2.3.0",
+    "read-pkg-up": "^7.0.1",
+    "semver": "^7.3.5"
   },
   "scripts": {
     "test": "mocha build/test --recursive",
@@ -36,18 +38,19 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/body-parser": "1.17.0",
-    "@types/express": "4.17.11",
+    "@types/express": "4.17.12",
     "@types/minimist": "1.2.1",
     "@types/mocha": "8.2.2",
-    "@types/node": "11.15.50",
+    "@types/node": "14.17.5",
     "@types/on-finished": "2.3.1",
+    "@types/semver": "^7.3.6",
     "@types/sinon": "^10.0.0",
     "@types/supertest": "2.0.11",
     "gts": "3.1.0",
-    "mocha": "8.3.2",
+    "mocha": "9.0.1",
     "power-assert": "1.6.1",
-    "sinon": "^10.0.0",
+    "sinon": "^11.0.0",
     "supertest": "6.1.3",
-    "typescript": "4.2.3"
+    "typescript": "4.3.5"
   }
 }

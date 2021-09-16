@@ -45,7 +45,8 @@ describe('Event Function', () => {
         },
         data: {some: 'payload'},
       },
-      expectedResource: {
+      expectedData: {some: 'payload'},
+      expectedContext: {
         eventId: 'testEventId',
         eventType: 'testEventType',
         resource: 'testResource',
@@ -62,7 +63,8 @@ describe('Event Function', () => {
         resource: 'testResource',
         data: {some: 'payload'},
       },
-      expectedResource: {
+      expectedData: {some: 'payload'},
+      expectedContext: {
         eventId: 'testEventId',
         eventType: 'testEventType',
         resource: 'testResource',
@@ -85,7 +87,8 @@ describe('Event Function', () => {
         },
         data: {some: 'payload'},
       },
-      expectedResource: {
+      expectedData: {some: 'payload'},
+      expectedContext: {
         eventId: 'testEventId',
         eventType: 'testEventType',
         resource: {
@@ -100,7 +103,8 @@ describe('Event Function', () => {
       name: 'CloudEvents v1.0 structured content request',
       headers: {'Content-Type': 'application/cloudevents+json'},
       body: TEST_CLOUD_EVENT,
-      expectedResource: {
+      expectedData: {some: 'payload'},
+      expectedContext: {
         datacontenttype: 'application/json',
         id: 'test-1234-1234',
         source:
@@ -124,7 +128,8 @@ describe('Event Function', () => {
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
       },
       body: TEST_CLOUD_EVENT.data,
-      expectedResource: {
+      expectedData: TEST_CLOUD_EVENT.data,
+      expectedContext: {
         datacontenttype: 'application/json',
         id: 'test-1234-1234',
         source:
@@ -133,6 +138,33 @@ describe('Event Function', () => {
         subject: 'test-subject',
         time: '2020-05-13T01:23:45Z',
         type: 'com.google.cloud.storage',
+      },
+    },
+    {
+      name: 'Firebase Database CloudEvent',
+      headers: {
+        'ce-specversion': '1.0',
+        'ce-type': 'google.firebase.database.ref.v1.written',
+        'ce-source':
+          '//firebasedatabase.googleapis.com/projects/_/locations/us-central1/instances/my-project-id',
+        'ce-subject': 'refs/gcf-test/xyz',
+        'ce-id': 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+        'ce-time': '2020-09-29T11:32:00.000Z',
+        'ce-datacontenttype': 'application/json',
+      },
+      body: {
+        data: null,
+        delta: 10,
+      },
+      expectedData: {
+        data: null,
+        delta: 10,
+      },
+      expectedContext: {
+        resource: 'projects/_/instances/my-project-id/refs/gcf-test/xyz',
+        timestamp: '2020-09-29T11:32:00.000Z',
+        eventType: 'providers/google.firebase.database/eventTypes/ref.write',
+        eventId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
       },
     },
   ];
@@ -153,8 +185,8 @@ describe('Event Function', () => {
         .send(test.body)
         .set(requestHeaders)
         .expect(204);
-      assert.deepStrictEqual(receivedData, {some: 'payload'});
-      assert.deepStrictEqual(receivedContext, test.expectedResource);
+      assert.deepStrictEqual(receivedData, test.expectedData);
+      assert.deepStrictEqual(receivedContext, test.expectedContext);
     });
   });
 });

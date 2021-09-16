@@ -14,6 +14,7 @@
 
 import * as assert from 'assert';
 import * as express from 'express';
+import * as semver from 'semver';
 import * as functions from '../src/functions';
 import * as loader from '../src/loader';
 
@@ -38,13 +39,51 @@ describe('loading function', () => {
   ];
 
   for (const test of testData) {
-    it(`should load ${test.name}`, () => {
-      const loadedFunction = loader.getUserFunction(
+    it(`should load ${test.name}`, async () => {
+      const loadedFunction = (await loader.getUserFunction(
         process.cwd() + test.codeLocation,
         test.target
-      ) as functions.HttpFunction;
+      )) as functions.HttpFunction;
       const returned = loadedFunction(express.request, express.response);
       assert.strictEqual(returned, 'PASS');
     });
+  }
+
+  const esmTestData: TestData[] = [
+    {
+      name: 'specified in package.json type field',
+      codeLocation: '/test/data/esm_type',
+      target: 'testFunction',
+    },
+    {
+      name: 'nested dir, specified in package.json type field',
+      codeLocation: '/test/data/esm_nested',
+      target: 'testFunction',
+    },
+    {
+      name: '.mjs extension',
+      codeLocation: '/test/data/esm_mjs',
+      target: 'testFunction',
+    },
+  ];
+
+  for (const test of esmTestData) {
+    const loadFn: () => Promise<functions.HttpFunction> = async () => {
+      return loader.getUserFunction(
+        process.cwd() + test.codeLocation,
+        test.target
+      ) as Promise<functions.HttpFunction>;
+    };
+    if (semver.lt(process.version, loader.MIN_NODE_VERSION_ESMODULES)) {
+      it(`should fail to load function in an ES module ${test.name}`, async () => {
+        assert.rejects(loadFn);
+      });
+    } else {
+      it(`should load function in an ES module ${test.name}`, async () => {
+        const loadedFunction = await loadFn();
+        const returned = loadedFunction(express.request, express.response);
+        assert.strictEqual(returned, 'PASS');
+      });
+    }
   }
 });

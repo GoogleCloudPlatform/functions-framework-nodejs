@@ -18,20 +18,75 @@
  * @packageDocumentation
  */
 
+import * as path from 'path';
+import * as semver from 'semver';
+import * as readPkgUp from 'read-pkg-up';
+import {pathToFileURL} from 'url';
 /**
  * Import function signature type's definition.
  */
 import {HandlerFunction} from './functions';
+
+// Dynamic import function required to load user code packaged as an
+// ES module is only available on Node.js v13.2.0 and up.
+//   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
+// Exported for testing.
+export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
+
+/**
+ * Determines whether the given module is an ES module.
+ *
+ * Implements "algorithm" described at:
+ *   https://nodejs.org/api/packages.html#packages_type
+ *
+ * In words:
+ *   1. A module with .mjs extension is an ES module.
+ *   2. A module with .clj extension is not an ES module.
+ *   3. A module with .js extensions where the nearest package.json's
+ *      with "type": "module" is an ES module.
+ *   4. Otherwise, it is not an ES module.
+ *
+ * @returns {Promise<boolean>} True if module is an ES module.
+ */
+async function isEsModule(modulePath: string): Promise<boolean> {
+  const ext = path.extname(modulePath);
+  if (ext === '.mjs') {
+    return true;
+  }
+  if (ext === '.cjs') {
+    return false;
+  }
+
+  const pkg = await readPkgUp({
+    cwd: path.dirname(modulePath),
+    normalize: false,
+  });
+
+  // If package.json specifies type as 'module', it's an ES module.
+  return pkg?.packageJson.type === 'module';
+}
+
+/**
+ * Dynamically load import function to prevent TypeScript from
+ * transpiling into a require.
+ *
+ * See https://github.com/microsoft/TypeScript/issues/43329.
+ */
+const dynamicImport = new Function(
+  'modulePath',
+  'return import(modulePath)'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+) as (modulePath: string) => Promise<any>;
 
 /**
  * Returns user's function from function file.
  * Returns null if function can't be retrieved.
  * @return User's function or null.
  */
-export function getUserFunction(
+export async function getUserFunction(
   codeLocation: string,
   functionTarget: string
-): HandlerFunction | null {
+): Promise<HandlerFunction | null> {
   try {
     const functionModulePath = getFunctionModulePath(codeLocation);
     if (functionModulePath === null) {
@@ -39,8 +94,23 @@ export function getUserFunction(
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const functionModule = require(functionModulePath);
+    let functionModule;
+    const esModule = await isEsModule(functionModulePath);
+    if (esModule) {
+      if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
+        console.error(
+          `Cannot load ES Module on Node.js ${process.version}. ` +
+            `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`
+        );
+        return null;
+      }
+      // Resolve module path to file:// URL. Required for windows support.
+      const fpath = pathToFileURL(functionModulePath);
+      functionModule = await dynamicImport(fpath.href);
+    } else {
+      functionModule = require(functionModulePath);
+    }
+
     let userFunction = functionTarget
       .split('.')
       .reduce((code, functionTargetPart) => {

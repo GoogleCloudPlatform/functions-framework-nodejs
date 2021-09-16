@@ -24,6 +24,8 @@ information on using pull requests.
 
 ## Testing
 
+### Unit Tests
+
 All pull requests should have an associated test to ensure foward compatibility.
 
 To run an individual test, you can run a command such as the following:
@@ -31,6 +33,23 @@ To run an individual test, you can run a command such as the following:
 ```
 npm run test -- -g 'loading function'
 ```
+
+### Manual Testing
+
+When developing a feature locally, you can install a local version of the Functions Framework
+using `npm link`. First compile your local clone of the Functions Framework:
+
+```
+npm compile
+```
+
+Then link the Functions Framework using `npm link`.
+
+```
+npm link
+```
+
+You can then run the Functions Framework locally using `functions-framework`.
 
 ## Community Guidelines
 
