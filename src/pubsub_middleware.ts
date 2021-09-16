@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
+import {isBinaryCloudEvent} from './cloudevents';
 
 const PUBSUB_EVENT_TYPE = 'google.pubsub.topic.publish';
 const PUBSUB_MESSAGE_TYPE =
@@ -162,7 +163,7 @@ export const legacyPubSubEventMiddleware = (
   next: NextFunction
 ) => {
   const {body, path} = req;
-  if (isRawPubSubRequestBody(body)) {
+  if (isRawPubSubRequestBody(body) && !isBinaryCloudEvent(req)) {
     req.body = marshalPubSubRequestBody(body, path);
   }
   next();

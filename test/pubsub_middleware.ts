@@ -95,6 +95,8 @@ describe('legacyPubSubEventMiddleware', () => {
       const request = {
         path: test.path,
         body: test.body,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        header: (_: string) => '',
       };
       legacyPubSubEventMiddleware(request as Request, {} as Response, next);
       assert.deepStrictEqual(request.body, test.expectedBody());
