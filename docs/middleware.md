@@ -48,7 +48,7 @@ Middleware functions are functions that have access to the express request objec
 const express = require("express");
 const app = express();
 
-var myLogger = function (req, res, next) {
+const myLogger = function (req, res, next) {
   console.log("LOGGED");
   next();
 };
