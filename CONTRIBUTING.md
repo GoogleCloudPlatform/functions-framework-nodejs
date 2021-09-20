@@ -51,6 +51,20 @@ npm link
 
 You can then run the Functions Framework locally using `functions-framework`.
 
+## Publishing
+
+This module is published using Release Please. When you merge a release PR, the npm package will be automatically published.
+
+### Reverting a Publish
+
+If the release process fails, you can revert the publish by running the following (i.e. unpublishing `1.10.0`):
+
+```sh
+npm login --registry https://wombat-dressing-room.appspot.com
+npm unpublish @google-cloud/functions-framework@1.10.0
+npm dist-tag add @google-cloud/functions-framework@1.9.0 latest --registry=https://wombat-dressing-room.appspot.com
+```
+
 ## Community Guidelines
 
 This project follows [Google's Open Source Community
