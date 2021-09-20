@@ -51,7 +51,7 @@ npm link
 
 You can then run the Functions Framework locally using `functions-framework`.
 
-## Publishing
+## Publishing (Admins only)
 
 This module is published using Release Please. When you merge a release PR, the npm package will be automatically published.
 
@@ -60,8 +60,11 @@ This module is published using Release Please. When you merge a release PR, the 
 If the release process fails, you can revert the publish by running the following (i.e. unpublishing `1.10.0`):
 
 ```sh
+# Login to the Wombat Dressing Room. Create a 24 hour token. Close the window.
 npm login --registry https://wombat-dressing-room.appspot.com
+# Unpublish the package (must be done within 24 hours of publishing).
 npm unpublish @google-cloud/functions-framework@1.10.0
+# Set the default version to the previous working version.
 npm dist-tag add @google-cloud/functions-framework@1.9.0 latest --registry=https://wombat-dressing-room.appspot.com
 ```
 
