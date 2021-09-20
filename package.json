@@ -27,8 +27,8 @@
     "pretest": "npm run compile"
   },
   "files": [
-    "build/src/*.js",
-    "build/src/*.d.ts"
+    "build/src/**/*.js",
+    "build/src/**/*.d.ts"
   ],
   "bin": {
     "functions-framework": "./build/src/index.js",
