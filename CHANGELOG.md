@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+### [1.10.1](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.0...v1.10.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* update publish to include directories ([#328](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/328)) ([5fb44a2](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/5fb44a2a72391b84ba4712ea83285ce45ab0e8fa))
+
 ## [1.10.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.9.0...v1.10.0) (2021-09-16)
 
 
