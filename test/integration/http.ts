@@ -15,7 +15,6 @@
 import * as assert from 'assert';
 import * as express from 'express';
 import {getServer} from '../../src/server';
-import {SignatureType} from '../../src/types';
 import * as supertest from 'supertest';
 
 describe('HTTP Function', () => {
@@ -73,7 +72,7 @@ describe('HTTP Function', () => {
             query: req.query.param,
           });
         },
-        SignatureType.HTTP
+        'http'
       );
       const st = supertest(server);
       await (test.httpVerb === 'GET'

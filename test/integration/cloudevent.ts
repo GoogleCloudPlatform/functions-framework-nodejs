@@ -16,7 +16,6 @@ import * as assert from 'assert';
 import * as functions from '../../src/functions';
 import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
-import {SignatureType} from '../../src/types';
 import * as supertest from 'supertest';
 
 const TEST_CLOUD_EVENT = {
@@ -224,7 +223,7 @@ describe('CloudEvent Function', () => {
       let receivedCloudEvent: functions.CloudEventsContext | null = null;
       const server = getServer((cloudevent: functions.CloudEventsContext) => {
         receivedCloudEvent = cloudevent as functions.CloudEventsContext;
-      }, SignatureType.CLOUDEVENT);
+      }, 'cloudevent');
       await supertest(server)
         .post('/')
         .set(test.headers)

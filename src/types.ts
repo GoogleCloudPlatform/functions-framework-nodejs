@@ -16,8 +16,22 @@
 // executing the client function.
 export const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
 
-export enum SignatureType {
-  HTTP = 'http',
-  EVENT = 'event',
-  CLOUDEVENT = 'cloudevent',
-}
+/**
+ * List of function signature types that are supported by the framework.
+ */
+export const SignatureType = ['http', 'event', 'cloudevent'] as const;
+
+/**
+ * Union type of all valid function SignatureType values.
+ */
+export type SignatureType = typeof SignatureType[number];
+
+/**
+ * Type guard to test if a provided value is valid SignatureType
+ * @param x the value to test
+ * @returns true if the provided value is a valid SignatureType
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isValidSignatureType = (x: any): x is SignatureType => {
+  return SignatureType.includes(x);
+};

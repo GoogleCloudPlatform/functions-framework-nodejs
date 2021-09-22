@@ -36,7 +36,7 @@ import {resolve} from 'path';
 import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
-import {SignatureType} from './types';
+import {SignatureType, isValidSignatureType} from './types';
 
 // Supported command-line flags
 const FLAG = {
@@ -54,10 +54,6 @@ const ENV = {
   SOURCE: 'FUNCTION_SOURCE',
 };
 
-enum NodeEnv {
-  PRODUCTION = 'production',
-}
-
 const argv = minimist(process.argv, {
   string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
 });
@@ -68,17 +64,14 @@ const CODE_LOCATION = resolve(
 const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
 const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
 
-const SIGNATURE_TYPE_STRING =
-  argv[FLAG.SIGNATURE_TYPE] || process.env[ENV.SIGNATURE_TYPE] || 'http';
-const SIGNATURE_TYPE =
-  SignatureType[
-    SIGNATURE_TYPE_STRING.toUpperCase() as keyof typeof SignatureType
-  ];
-if (SIGNATURE_TYPE === undefined) {
+const SIGNATURE_TYPE = (
+  argv[FLAG.SIGNATURE_TYPE] ||
+  process.env[ENV.SIGNATURE_TYPE] ||
+  'http'
+).toLowerCase();
+if (!isValidSignatureType(SIGNATURE_TYPE)) {
   console.error(
-    `Function signature type must be one of: ${Object.values(
-      SignatureType
-    ).join(', ')}.`
+    `Function signature type must be one of: ${SignatureType.join(', ')}.`
   );
   // eslint-disable-next-line no-process-exit
   process.exit(1);
@@ -108,7 +101,7 @@ getUserFunction(CODE_LOCATION, TARGET).then(userFunction => {
 
   SERVER.listen(PORT, () => {
     ERROR_HANDLER.register();
-    if (process.env.NODE_ENV !== NodeEnv.PRODUCTION) {
+    if (process.env.NODE_ENV !== 'production') {
       console.log('Serving function...');
       console.log(`Function: ${TARGET}`);
       console.log(`Signature type: ${SIGNATURE_TYPE}`);
