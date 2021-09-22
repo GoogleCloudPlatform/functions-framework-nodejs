@@ -16,96 +16,47 @@
 
 // Functions framework entry point that configures and starts Node.js server
 // that runs user's code on HTTP request.
-// The following environment variables can be set to configure the framework:
-//   - PORT - defines the port on which this server listens to all HTTP
-//     requests.
-//   - FUNCTION_TARGET - defines the name of the function within user's
-//     node module to execute. If such a function is not defined,
-//     then falls back to 'function' name.
-//   - FUNCTION_SIGNATURE_TYPE - defines the type of the client function
-//     signature:
-//     - 'http' for function signature with HTTP request and HTTP
-//     response arguments,
-//     - 'event' for function signature with arguments
-//     unmarshalled from an incoming request,
-//     - 'cloudevent' for function signature with arguments
-//     unmarshalled as CloudEvents from an incoming request.
-
-import * as minimist from 'minimist';
-import {resolve} from 'path';
 import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
-import {SignatureType, isValidSignatureType} from './types';
+import {parseOptions, helpText, OptionsError} from './options';
 
-// Supported command-line flags
-const FLAG = {
-  PORT: 'port',
-  TARGET: 'target',
-  SIGNATURE_TYPE: 'signature-type', // dash
-  SOURCE: 'source',
-};
+(async () => {
+  try {
+    const options = parseOptions();
 
-// Supported environment variables
-const ENV = {
-  PORT: 'PORT',
-  TARGET: 'FUNCTION_TARGET',
-  SIGNATURE_TYPE: 'FUNCTION_SIGNATURE_TYPE', // underscore
-  SOURCE: 'FUNCTION_SOURCE',
-};
-
-const argv = minimist(process.argv, {
-  string: [FLAG.PORT, FLAG.TARGET, FLAG.SIGNATURE_TYPE],
-});
-
-const CODE_LOCATION = resolve(
-  argv[FLAG.SOURCE] || process.env[ENV.SOURCE] || ''
-);
-const PORT = argv[FLAG.PORT] || process.env[ENV.PORT] || '8080';
-const TARGET = argv[FLAG.TARGET] || process.env[ENV.TARGET] || 'function';
-
-const SIGNATURE_TYPE = (
-  argv[FLAG.SIGNATURE_TYPE] ||
-  process.env[ENV.SIGNATURE_TYPE] ||
-  'http'
-).toLowerCase();
-if (!isValidSignatureType(SIGNATURE_TYPE)) {
-  console.error(
-    `Function signature type must be one of: ${SignatureType.join(', ')}.`
-  );
-  // eslint-disable-next-line no-process-exit
-  process.exit(1);
-}
-
-// CLI Help Flag
-if (process.argv[2] === '-h' || process.argv[2] === '--help') {
-  console.error(
-    `Example usage:
-  functions-framework --target=helloWorld --port=8080
-Documentation:
-  https://github.com/GoogleCloudPlatform/functions-framework-nodejs`
-  );
-  // eslint-disable-next-line no-process-exit
-  process.exit(0);
-}
-
-getUserFunction(CODE_LOCATION, TARGET).then(userFunction => {
-  if (!userFunction) {
-    console.error('Could not load the function, shutting down.');
-    // eslint-disable-next-line no-process-exit
-    process.exit(1);
-  }
-
-  const SERVER = getServer(userFunction!, SIGNATURE_TYPE!);
-  const ERROR_HANDLER = new ErrorHandler(SERVER);
-
-  SERVER.listen(PORT, () => {
-    ERROR_HANDLER.register();
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Serving function...');
-      console.log(`Function: ${TARGET}`);
-      console.log(`Signature type: ${SIGNATURE_TYPE}`);
-      console.log(`URL: http://localhost:${PORT}/`);
+    if (options.printHelp) {
+      console.error(helpText);
+      return;
     }
-  }).setTimeout(0); // Disable automatic timeout on incoming connections.
-});
+    const userFunction = await getUserFunction(
+      options.sourceLocation,
+      options.target
+    );
+    if (!userFunction) {
+      console.error('Could not load the function, shutting down.');
+      // eslint-disable-next-line no-process-exit
+      process.exit(1);
+    }
+    const server = getServer(userFunction!, options.signatureType);
+    const errorHandler = new ErrorHandler(server);
+    server
+      .listen(options.port, () => {
+        errorHandler.register();
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('Serving function...');
+          console.log(`Function: ${options.target}`);
+          console.log(`Signature type: ${options.signatureType}`);
+          console.log(`URL: http://localhost:${options.port}/`);
+        }
+      })
+      .setTimeout(0); // Disable automatic timeout on incoming connections.
+  } catch (e) {
+    if (e instanceof OptionsError) {
+      console.error(e.message);
+      // eslint-disable-next-line no-process-exit
+      process.exit(1);
+    }
+    throw e;
+  }
+})();
