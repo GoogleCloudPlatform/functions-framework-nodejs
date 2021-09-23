@@ -101,8 +101,8 @@ export function getServer(
   app.disable('x-powered-by');
 
   if (
-    functionSignatureType === SignatureType.EVENT ||
-    functionSignatureType === SignatureType.CLOUDEVENT
+    functionSignatureType === 'event' ||
+    functionSignatureType === 'cloudevent'
   ) {
     // If a Pub/Sub subscription is configured to invoke a user's function directly, the request body
     // needs to be marshalled into the structure that wrapEventFunction expects. This unblocks local
@@ -110,10 +110,10 @@ export function getServer(
     app.use(legacyPubSubEventMiddleware);
   }
 
-  if (functionSignatureType === SignatureType.EVENT) {
+  if (functionSignatureType === 'event') {
     app.use(cloudeventToBackgroundEventMiddleware);
   }
-  if (functionSignatureType === SignatureType.CLOUDEVENT) {
+  if (functionSignatureType === 'cloudevent') {
     app.use(backgroundEventToCloudEventMiddleware);
   }
 

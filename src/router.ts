@@ -39,7 +39,7 @@ export function registerFunctionRoutes(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType
 ) {
-  if (functionSignatureType === SignatureType.HTTP) {
+  if (functionSignatureType === 'http') {
     app.use('/favicon.ico|/robots.txt', (req, res) => {
       // Neither crawlers nor browsers attempting to pull the icon find the body
       // contents particularly useful, so we send nothing in the response body.
@@ -57,7 +57,7 @@ export function registerFunctionRoutes(
       const handler = makeHttpHandler(userFunction as HttpFunction);
       handler(req, res, next);
     });
-  } else if (functionSignatureType === SignatureType.EVENT) {
+  } else if (functionSignatureType === 'event') {
     app.post('/*', (req, res, next) => {
       const wrappedUserFunction = wrapEventFunction(
         userFunction as EventFunction | EventFunctionWithCallback

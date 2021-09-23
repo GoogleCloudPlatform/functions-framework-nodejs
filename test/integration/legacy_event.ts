@@ -15,7 +15,6 @@
 import * as assert from 'assert';
 import * as functions from '../../src/functions';
 import {getServer} from '../../src/server';
-import {SignatureType} from '../../src/types';
 import * as supertest from 'supertest';
 
 const TEST_CLOUD_EVENT = {
@@ -175,7 +174,7 @@ describe('Event Function', () => {
       const server = getServer((data: {}, context: functions.Context) => {
         receivedData = data;
         receivedContext = context as functions.CloudFunctionsContext;
-      }, SignatureType.EVENT);
+      }, 'event');
       const requestHeaders = {
         'Content-Type': 'application/json',
         ...test.headers,
