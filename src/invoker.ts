@@ -19,21 +19,10 @@
 //     with non-HTTP trigger).
 //   - ANY (all methods) '/*' for executing functions (only for servers handling
 //     functions with HTTP trigger).
-
-// eslint-disable-next-line node/no-deprecated-api
-import * as domain from 'domain';
 import * as express from 'express';
 import * as http from 'http';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
-import {
-  HttpFunction,
-  EventFunction,
-  EventFunctionWithCallback,
-  CloudEventFunction,
-  CloudEventFunctionWithCallback,
-} from './functions';
 
 // We optionally annotate the express Request with a rawBody field.
 // Express leaves the Express namespace open to allow merging of new fields.
@@ -61,8 +50,13 @@ export const setLatestRes = (res: express.Response) => {
  * @param err Error from function execution.
  * @param res Express response object.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sendResponse(result: any, err: Error | null, res: express.Response) {
+
+export function sendResponse(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result: any,
+  err: Error | null,
+  res: express.Response
+) {
   if (err) {
     res.set(FUNCTION_STATUS_HEADER_FIELD, 'error');
     // Sending error message back is fine for Pub/Sub-based functions as they do
@@ -90,144 +84,6 @@ function sendResponse(result: any, err: Error | null, res: express.Response) {
       res.sendStatus(204); // No Content
     }
   }
-}
-
-/**
- * Wraps the provided function into an Express handler function with additional
- * instrumentation logic.
- * @param execute Runs user's function.
- * @return An Express handler function.
- */
-export function makeHttpHandler(execute: HttpFunction): express.RequestHandler {
-  return (req: express.Request, res: express.Response) => {
-    const d = domain.create();
-    // Catch unhandled errors originating from this request.
-    d.on('error', err => {
-      if (res.locals.functionExecutionFinished) {
-        console.error(`Exception from a finished function: ${err}`);
-      } else {
-        res.locals.functionExecutionFinished = true;
-        sendCrashResponse({err, res});
-      }
-    });
-    d.run(() => {
-      process.nextTick(() => {
-        execute(req, res);
-      });
-    });
-  };
-}
-
-/**
- * Wraps cloudevent function (or cloudevent function with callback) in HTTP
- * function signature.
- * @param userFunction User's function.
- * @return HTTP function which wraps the provided event function.
- */
-export function wrapCloudEventFunction(
-  userFunction: CloudEventFunction | CloudEventFunctionWithCallback
-): HttpFunction {
-  return (req: express.Request, res: express.Response) => {
-    const callback = process.domain.bind(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (err: Error | null, result: any) => {
-        if (res.locals.functionExecutionFinished) {
-          console.log('Ignoring extra callback call');
-        } else {
-          res.locals.functionExecutionFinished = true;
-          if (err) {
-            console.error(err.stack);
-          }
-          sendResponse(result, err, res);
-        }
-      }
-    );
-    let cloudevent = req.body;
-    if (isBinaryCloudEvent(req)) {
-      cloudevent = getBinaryCloudEventContext(req);
-      cloudevent.data = req.body;
-    }
-    // Callback style if user function has more than 1 argument.
-    if (userFunction!.length > 1) {
-      const fn = userFunction as CloudEventFunctionWithCallback;
-      return fn(cloudevent, callback);
-    }
-
-    const fn = userFunction as CloudEventFunction;
-    Promise.resolve()
-      .then(() => {
-        const result = fn(cloudevent);
-        return result;
-      })
-      .then(
-        result => {
-          callback(null, result);
-        },
-        err => {
-          callback(err, undefined);
-        }
-      );
-  };
-}
-
-/**
- * Wraps event function (or event function with callback) in HTTP function
- * signature.
- * @param userFunction User's function.
- * @return HTTP function which wraps the provided event function.
- */
-export function wrapEventFunction(
-  userFunction: EventFunction | EventFunctionWithCallback
-): HttpFunction {
-  return (req: express.Request, res: express.Response) => {
-    const event = req.body;
-    const callback = process.domain.bind(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (err: Error | null, result: any) => {
-        if (res.locals.functionExecutionFinished) {
-          console.log('Ignoring extra callback call');
-        } else {
-          res.locals.functionExecutionFinished = true;
-          if (err) {
-            console.error(err.stack);
-          }
-          sendResponse(result, err, res);
-        }
-      }
-    );
-    const data = event.data;
-    let context = event.context;
-    if (context === undefined) {
-      // Support legacy events and CloudEvents in structured content mode, with
-      // context properties represented as event top-level properties.
-      // Context is everything but data.
-      context = event;
-      // Clear the property before removing field so the data object
-      // is not deleted.
-      context.data = undefined;
-      delete context.data;
-    }
-    // Callback style if user function has more than 2 arguments.
-    if (userFunction!.length > 2) {
-      const fn = userFunction as EventFunctionWithCallback;
-      return fn(data, context, callback);
-    }
-
-    const fn = userFunction as EventFunction;
-    Promise.resolve()
-      .then(() => {
-        const result = fn(data, context);
-        return result;
-      })
-      .then(
-        result => {
-          callback(null, result);
-        },
-        err => {
-          callback(err, undefined);
-        }
-      );
-  };
 }
 
 // Use an exit code which is unused by Node.js:
