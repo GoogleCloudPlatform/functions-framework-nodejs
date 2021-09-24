@@ -15,13 +15,14 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
+import * as onFinished from 'on-finished';
 import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
-import {registerFunctionRoutes} from './router';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudeventToBackgroundEventMiddleware} from './middleware/cloudevent_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloudevent';
+import {wrapUserFunction} from './function_wrappers';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -117,6 +118,28 @@ export function getServer(
     app.use(backgroundEventToCloudEventMiddleware);
   }
 
-  registerFunctionRoutes(app, userFunction, functionSignatureType);
+  if (functionSignatureType === 'http') {
+    app.use('/favicon.ico|/robots.txt', (req, res) => {
+      // Neither crawlers nor browsers attempting to pull the icon find the body
+      // contents particularly useful, so we send nothing in the response body.
+      res.status(404).send(null);
+    });
+
+    app.use('/*', (req, res, next) => {
+      onFinished(res, (err, res) => {
+        res.locals.functionExecutionFinished = true;
+      });
+      next();
+    });
+  }
+
+  // Set up the routes for the user's function
+  const requestHandler = wrapUserFunction(userFunction, functionSignatureType);
+  if (functionSignatureType === 'http') {
+    app.all('/*', requestHandler);
+  } else {
+    app.post('/*', requestHandler);
+  }
+
   return http.createServer(app);
 }
