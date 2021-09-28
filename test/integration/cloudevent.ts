@@ -53,6 +53,17 @@ describe('CloudEvent Function', () => {
       expectedCloudEvent: TEST_CLOUD_EVENT,
     },
     {
+      name: 'CloudEvents v1.0 structured content request',
+      headers: {
+        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
+      },
+      body: TEST_CLOUD_EVENT,
+      expectedCloudEvent: {
+        ...TEST_CLOUD_EVENT,
+        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
+      },
+    },
+    {
       name: 'CloudEvents v1.0 binary content request',
       headers: {
         'Content-Type': 'application/json',
