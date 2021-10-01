@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/body-parser": "1.17.0",
     "@types/express": "4.17.12",
-    "@types/minimist": "1.2.1",
+    "@types/minimist": "1.2.2",
     "@types/mocha": "8.2.2",
     "@types/node": "14.17.5",
     "@types/on-finished": "2.3.1",
