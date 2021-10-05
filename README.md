@@ -1,4 +1,11 @@
-# Functions Framework for Node.js [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FGoogleCloudPlatform%2Ffunctions-framework-nodejs%2Fbadge&style=flat)](https://actions-badge.atrox.dev/GoogleCloudPlatform/functions-framework-nodejs/goto) [![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
+# Functions Framework for Node.js
+
+[![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework)
+[![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
+
+[![Node unit CI][ff_node_unit_img]][ff_node_unit_link] 
+[![Node lint CI][ff_node_lint_img]][ff_node_lint_link] 
+[![Node conformace CI][ff_node_conformance_img]][ff_node_conformance_link] 
 
 An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
 for writing portable Node.js functions -- brought to you by the Google Cloud Functions team.
@@ -247,3 +254,10 @@ More advanced guides and docs can be found in the [`docs/` folder](docs/).
 
 Contributions to this library are welcome and encouraged. See
 [CONTRIBUTING](CONTRIBUTING.md) for more information on how to get started.
+
+[ff_node_unit_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Unit%20CI/badge.svg
+[ff_node_unit_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Unit+CI"
+[ff_node_lint_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Lint%20CI/badge.svg
+[ff_node_lint_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Lint+CI"
+[ff_node_conformance_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Conformance%20CI/badge.svg
+[ff_node_conformance_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Conformance+CI"
