@@ -1,11 +1,8 @@
 # Functions Framework for Node.js
 
-[![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework)
-[![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
+[![npm version](https://img.shields.io/npm/v/@google-cloud/functions-framework.svg)](https://www.npmjs.com/package/@google-cloud/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@google-cloud/functions-framework.svg)](https://npmcharts.com/compare/@google-cloud/functions-framework?minimal=true)
 
-[![Node unit CI][ff_node_unit_img]][ff_node_unit_link] 
-[![Node lint CI][ff_node_lint_img]][ff_node_lint_link] 
-[![Node conformace CI][ff_node_conformance_img]][ff_node_conformance_link] 
+[![Node unit CI][ff_node_unit_img]][ff_node_unit_link] [![Node lint CI][ff_node_lint_img]][ff_node_lint_link] [![Node conformace CI][ff_node_conformance_img]][ff_node_conformance_link]
 
 An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
 for writing portable Node.js functions -- brought to you by the Google Cloud Functions team.
