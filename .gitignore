@@ -6,6 +6,8 @@ npm-debug.log
 .vscode
 .idea
 .DS_Store
+.tgz
+.zip
 yarn.lock
 yarn-error.log
 function_output.json
