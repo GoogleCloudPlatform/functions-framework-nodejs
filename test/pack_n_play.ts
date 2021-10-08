@@ -14,16 +14,4 @@ describe('📦 pack-n-play test', () => {
     };
     await packNTest(options);
   });
-
-  it('TypeScript code', async function () {
-    this.timeout(300000);
-    const options = {
-      packageDir: process.cwd(),
-      sample: {
-        description: 'TypeScript user can use the main index',
-        ts: readFileSync('./build/src/index.d.ts').toString(),
-      },
-    };
-    await packNTest(options);
-  });
 });
