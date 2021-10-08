@@ -7,7 +7,7 @@
   },
   "repository": "GoogleCloudPlatform/functions-framework-nodejs",
   "main": "build/src/index.js",
-  "types": "build/src/functions.d.ts",
+  "types": "build/src/index.d.ts",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",

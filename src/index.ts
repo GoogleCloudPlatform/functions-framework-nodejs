@@ -14,49 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Functions framework entry point that configures and starts Node.js server
-// that runs user's code on HTTP request.
-import {getUserFunction} from './loader';
-import {ErrorHandler} from './invoker';
-import {getServer} from './server';
-import {parseOptions, helpText, OptionsError} from './options';
+import {main} from './main';
 
-(async () => {
-  try {
-    const options = parseOptions();
+export * from './functions';
 
-    if (options.printHelp) {
-      console.error(helpText);
-      return;
-    }
-    const userFunction = await getUserFunction(
-      options.sourceLocation,
-      options.target
-    );
-    if (!userFunction) {
-      console.error('Could not load the function, shutting down.');
-      // eslint-disable-next-line no-process-exit
-      process.exit(1);
-    }
-    const server = getServer(userFunction!, options.signatureType);
-    const errorHandler = new ErrorHandler(server);
-    server
-      .listen(options.port, () => {
-        errorHandler.register();
-        if (process.env.NODE_ENV !== 'production') {
-          console.log('Serving function...');
-          console.log(`Function: ${options.target}`);
-          console.log(`Signature type: ${options.signatureType}`);
-          console.log(`URL: http://localhost:${options.port}/`);
-        }
-      })
-      .setTimeout(0); // Disable automatic timeout on incoming connections.
-  } catch (e) {
-    if (e instanceof OptionsError) {
-      console.error(e.message);
-      // eslint-disable-next-line no-process-exit
-      process.exit(1);
-    }
-    throw e;
-  }
-})();
+export {http, cloudevent} from './function_registry';
+
+// Call the main method to load the user code and start the http server.
+main();
