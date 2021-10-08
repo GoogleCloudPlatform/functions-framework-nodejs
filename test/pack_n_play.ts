@@ -9,7 +9,7 @@ describe('📦 pack-n-play test', () => {
     const options = {
       packageDir: process.cwd(),
       sample: {
-        description: 'JavaScript user can use the main index',
+        description: 'JavaScript user can use the cloudevents file',
         js: readFileSync(
           './build/src/cloudevents.js'
         ).toString(),
