@@ -1,6 +1,5 @@
 import {packNTest} from 'pack-n-play';
 import {readFileSync} from 'fs';
-import {describe, it} from 'mocha';
 
 describe('📦 pack-n-play test', () => {
   it('JavaScript code', async function () {
