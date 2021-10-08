@@ -1,5 +1,17 @@
+/* eslint-disable node/no-missing-require */
 const fs = require('fs');
+const functions = require('@google-cloud/functions-framework');
 const fileName = 'function_output.json';
+
+functions.http('writeHttpDeclarative', (req, res) => {
+  writeJson(req.body);
+  res.end(200);
+});
+
+functions.cloudevent('writeCloudEventDeclarative', cloudevent => {
+  cloudevent.datacontenttype = 'application/json';
+  writeJson(cloudevent);
+});
 
 function writeHttp(req, res) {
   writeJson(req.body);
