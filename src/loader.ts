@@ -22,10 +22,9 @@ import * as path from 'path';
 import * as semver from 'semver';
 import * as readPkgUp from 'read-pkg-up';
 import {pathToFileURL} from 'url';
-/**
- * Import function signature type's definition.
- */
 import {HandlerFunction} from './functions';
+import {SignatureType} from './types';
+import {getRegisteredFunction} from './function_registry';
 
 // Dynamic import function required to load user code packaged as an
 // ES module is only available on Node.js v13.2.0 and up.
@@ -85,8 +84,12 @@ const dynamicImport = new Function(
  */
 export async function getUserFunction(
   codeLocation: string,
-  functionTarget: string
-): Promise<HandlerFunction | null> {
+  functionTarget: string,
+  signatureType: SignatureType
+): Promise<{
+  userFunction: HandlerFunction;
+  signatureType: SignatureType;
+} | null> {
   try {
     const functionModulePath = getFunctionModulePath(codeLocation);
     if (functionModulePath === null) {
@@ -109,6 +112,13 @@ export async function getUserFunction(
       functionModule = await dynamicImport(fpath.href);
     } else {
       functionModule = require(functionModulePath);
+    }
+
+    // If the customer declaratively registered a function matching the target
+    // return that.
+    const registeredFunction = getRegisteredFunction(functionTarget);
+    if (registeredFunction) {
+      return registeredFunction;
     }
 
     let userFunction = functionTarget
@@ -143,7 +153,7 @@ export async function getUserFunction(
       return null;
     }
 
-    return userFunction as HandlerFunction;
+    return {userFunction: userFunction as HandlerFunction, signatureType};
   } catch (ex) {
     let additionalHint: string;
     // TODO: this should be done based on ex.code rather than string matching.
