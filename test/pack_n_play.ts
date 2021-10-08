@@ -1,4 +1,3 @@
-
 import {packNTest} from 'pack-n-play';
 import {readFileSync} from 'fs';
 import {describe, it} from 'mocha';
@@ -10,9 +9,7 @@ describe('📦 pack-n-play test', () => {
       packageDir: process.cwd(),
       sample: {
         description: 'JavaScript user can use the cloudevents file',
-        js: readFileSync(
-          './build/src/cloudevents.js'
-        ).toString(),
+        js: readFileSync('./build/src/cloudevents.js').toString(),
       },
     };
     await packNTest(options);
@@ -24,9 +21,7 @@ describe('📦 pack-n-play test', () => {
       packageDir: process.cwd(),
       sample: {
         description: 'TypeScript user can use the main index',
-        ts: readFileSync(
-          './build/src/index.d.ts'
-        ).toString(),
+        ts: readFileSync('./build/src/index.d.ts').toString(),
       },
     };
     await packNTest(options);
