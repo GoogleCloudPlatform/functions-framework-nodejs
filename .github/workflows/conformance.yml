@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        runtime: ['nodejs10', 'nodejs12']
+        runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
       working-directory: ./test/conformance
       run: npm install
 
-    - name: Run HTTP conformance tests
+    - name: Run HTTP conformance tests using legacy API
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
       with:
         functionType: 'http'
@@ -40,7 +40,7 @@ jobs:
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeHttp --signature-type=http'"
 
-    - name: Run event conformance tests
+    - name: Run event conformance tests using legacy API
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
       with:
         functionType: 'legacyevent'
@@ -49,7 +49,7 @@ jobs:
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
 
-    - name: Run cloudevent conformance tests
+    - name: Run cloudevent conformance tests using legacy API
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
       with:
         functionType: 'cloudevent'
@@ -57,3 +57,21 @@ jobs:
         validateMapping: true
         workingDirectory: 'test/conformance'
         cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
+
+    - name: Run HTTP conformance tests using declarative API
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      with:
+        functionType: 'http'
+        useBuildpacks: false
+        validateMapping: false
+        workingDirectory: 'test/conformance'
+        cmd: "'npm start -- --target=writeHttpDeclarative'"
+
+    - name: Run cloudevent conformance tests using declarative API
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      with:
+        functionType: 'cloudevent'
+        useBuildpacks: false
+        validateMapping: true
+        workingDirectory: 'test/conformance'
+        cmd: "'npm start -- --target=writeCloudEventDeclarative'"
