@@ -75,7 +75,7 @@ describe('CloudEvent Function', () => {
         'ce-id': TEST_CLOUD_EVENT.id,
         'ce-time': TEST_CLOUD_EVENT.time,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
-        'traceparent': '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
+        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
       },
       body: TEST_CLOUD_EVENT.data,
       expectedCloudEvent: TEST_CLOUD_EVENT,
