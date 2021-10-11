@@ -126,6 +126,11 @@ export interface CloudEventsContext {
     | boolean
     | null
     | unknown;
+  /**
+   * The traceparent string, containing a trace version, trace ID, span ID, and trace options.
+   * @see https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md
+   */
+  traceparent?: string;
 }
 
 export type Context = CloudFunctionsContext | CloudEventsContext;

@@ -66,11 +66,6 @@ const parseCloudEventRequest = (req: Request): CloudEventsContext => {
     cloudevent = getBinaryCloudEventContext(req);
     cloudevent.data = req.body;
   }
-  // Populate the traceparent header.
-  // @see https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md
-  if (req.header('traceparent')) {
-    cloudevent.traceparent = req.header('traceparent');
-  }
   return cloudevent;
 };
 
