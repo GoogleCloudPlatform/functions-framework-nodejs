@@ -17,6 +17,7 @@ import * as express from 'express';
 import * as semver from 'semver';
 import * as functions from '../src/functions';
 import * as loader from '../src/loader';
+import * as FunctionRegistry from '../src/function_registry';
 
 describe('loading function', () => {
   interface TestData {
@@ -40,11 +41,13 @@ describe('loading function', () => {
 
   for (const test of testData) {
     it(`should load ${test.name}`, async () => {
-      const loadedFunction = (await loader.getUserFunction(
+      const loadedFunction = await loader.getUserFunction(
         process.cwd() + test.codeLocation,
-        test.target
-      )) as functions.HttpFunction;
-      const returned = loadedFunction(express.request, express.response);
+        test.target,
+        'http'
+      );
+      const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
+      const returned = userFunction(express.request, express.response);
       assert.strictEqual(returned, 'PASS');
     });
   }
@@ -69,10 +72,12 @@ describe('loading function', () => {
 
   for (const test of esmTestData) {
     const loadFn: () => Promise<functions.HttpFunction> = async () => {
-      return loader.getUserFunction(
+      const loadedFunction = await loader.getUserFunction(
         process.cwd() + test.codeLocation,
-        test.target
-      ) as Promise<functions.HttpFunction>;
+        test.target,
+        'http'
+      );
+      return loadedFunction?.userFunction as functions.HttpFunction;
     };
     if (semver.lt(process.version, loader.MIN_NODE_VERSION_ESMODULES)) {
       it(`should fail to load function in an ES module ${test.name}`, async () => {
@@ -86,4 +91,42 @@ describe('loading function', () => {
       });
     }
   }
+
+  it('loads a declaratively registered function', async () => {
+    FunctionRegistry.http('registeredFunction', () => {
+      return 'PASS';
+    });
+    const loadedFunction = await loader.getUserFunction(
+      process.cwd() + '/test/data/with_main',
+      'registeredFunction',
+      'http'
+    );
+    const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
+    const returned = userFunction(express.request, express.response);
+    assert.strictEqual(returned, 'PASS');
+  });
+
+  it('allows a mix of registered and non registered functions', async () => {
+    FunctionRegistry.http('registeredFunction', () => {
+      return 'FAIL';
+    });
+    const loadedFunction = await loader.getUserFunction(
+      process.cwd() + '/test/data/with_main',
+      'testFunction',
+      'http'
+    );
+    const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
+    const returned = userFunction(express.request, express.response);
+    assert.strictEqual(returned, 'PASS');
+  });
+
+  it('respects the registered signature type', async () => {
+    FunctionRegistry.cloudevent('registeredFunction', () => {});
+    const loadedFunction = await loader.getUserFunction(
+      process.cwd() + '/test/data/with_main',
+      'registeredFunction',
+      'http'
+    );
+    assert.strictEqual(loadedFunction?.signatureType, 'cloudevent');
+  });
 });
