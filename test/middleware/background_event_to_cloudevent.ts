@@ -148,6 +148,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
         subject: 'test-subject',
         id: 'test-1234-1234',
         time: '2020-05-13T01:23:45Z',
+        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
         datacontenttype: 'application/json',
         data: {
           some: 'payload',
@@ -161,6 +162,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
         subject: 'test-subject',
         id: 'test-1234-1234',
         time: '2020-05-13T01:23:45Z',
+        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
         datacontenttype: 'application/json',
         data: {
           some: 'payload',
