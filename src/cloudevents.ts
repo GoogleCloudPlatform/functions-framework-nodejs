@@ -68,5 +68,10 @@ export function getBinaryCloudEventContext(
       context[attributeName] = req.header(name);
     }
   }
+
+  // Populate the traceparent header.
+  if (req.header('traceparent')) {
+    context.traceparent = req.header('traceparent');
+  }
   return context;
 }
