@@ -22,6 +22,7 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
+    "docs": "api-extractor run --local --verbose",
     "watch": "npm run compile -- --watch",
     "prepare": "npm run compile",
     "pretest": "npm run compile"

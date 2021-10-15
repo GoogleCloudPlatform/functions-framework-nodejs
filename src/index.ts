@@ -16,9 +16,34 @@
 
 import {main} from './main';
 
-export * from './functions';
+/**
+ * The function registry
+ * @public
+ */
+export {
+  /**
+   * The function registry
+   * @public
+   */
+  CloudEventFunction
+} from './functions';
 
-export {http, cloudevent} from './function_registry';
+/**
+ * The function registry
+ * @public
+ */
+export {
+  /**
+   * The function registry
+   * @public
+   */
+  http,
+  /**
+   * The function registry
+   * @public
+   */
+  cloudevent
+} from './function_registry';
 
 // Call the main method to load the user code and start the http server.
 main();
