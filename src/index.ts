@@ -25,7 +25,7 @@ export {
    * The function registry
    * @public
    */
-  CloudEventFunction
+  CloudEventFunction,
 } from './functions';
 
 /**
@@ -42,7 +42,7 @@ export {
    * The function registry
    * @public
    */
-  cloudevent
+  cloudevent,
 } from './function_registry';
 
 // Call the main method to load the user code and start the http server.
