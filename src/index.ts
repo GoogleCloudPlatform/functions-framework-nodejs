@@ -16,9 +16,5 @@
 
 import {main} from './main';
 
-export * from './functions';
-
-export {http, cloudevent} from './function_registry';
-
 // Call the main method to load the user code and start the http server.
 main();

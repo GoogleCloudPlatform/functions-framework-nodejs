@@ -134,3 +134,5 @@ export interface CloudEventsContext {
 }
 
 export type Context = CloudFunctionsContext | CloudEventsContext;
+
+export {http, cloudevent} from './function_registry';
