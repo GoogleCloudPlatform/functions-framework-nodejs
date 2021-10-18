@@ -771,6 +771,48 @@
         },
         {
           "kind": "Interface",
+          "canonicalReference": "@google-cloud/functions-framework!Data:interface",
+          "docComment": "/**\n * A data object used for legacy event functions.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface Data "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Data",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@google-cloud/functions-framework!Data#data:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "data: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "object"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "data",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Interface",
           "canonicalReference": "@google-cloud/functions-framework!EventFunction:interface",
           "docComment": "/**\n * A legacy event function handler.\n *\n * @public\n */\n",
           "excerptTokens": [
@@ -1121,7 +1163,7 @@
             {
               "kind": "Reference",
               "text": "Data",
-              "canonicalReference": "@google-cloud/functions-framework!~Data:interface"
+              "canonicalReference": "@google-cloud/functions-framework!Data:interface"
             },
             {
               "kind": "Content",

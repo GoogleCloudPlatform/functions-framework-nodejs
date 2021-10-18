@@ -49,6 +49,12 @@ export interface CloudFunctionsContext {
 export type Context = CloudFunctionsContext | CloudEventsContext;
 
 // @public
+export interface Data {
+    // (undocumented)
+    data: object;
+}
+
+// @public
 export interface EventFunction {
     // (undocumented)
     (data: {}, context: Context): any;
@@ -72,8 +78,6 @@ export interface HttpFunction {
     (req: express.Request, res: express.Response): any;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Data" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type LegacyCloudFunctionsContext = CloudFunctionsContext | Data;
 

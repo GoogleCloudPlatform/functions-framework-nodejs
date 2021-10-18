@@ -108,8 +108,9 @@ export declare type Context = CloudFunctionsContext | CloudEventsContext;
 
 /**
  * A data object used for legacy event functions.
+ * @public
  */
-declare interface Data {
+export declare interface Data {
     data: object;
 }
 

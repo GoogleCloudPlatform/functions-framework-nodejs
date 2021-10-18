@@ -75,8 +75,9 @@ export interface LegacyEvent {
 
 /**
  * A data object used for legacy event functions.
+ * @public
  */
-interface Data {
+export interface Data {
   data: object;
 }
 /**
