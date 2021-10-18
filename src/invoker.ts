@@ -80,7 +80,9 @@ export function sendResponse(
       // CallFunction. The most sane resolution here is to succeed the function
       // (this was the customer's clear intent) but send a 204 (NO CONTENT) and
       // log an error message explaining why their content wasn't sent.
-      console.error('Error serializing return value: ' + sendErr.toString());
+      console.error(
+        'Error serializing return value: ' + (sendErr as Error).toString()
+      );
       res.sendStatus(204); // No Content
     }
   }

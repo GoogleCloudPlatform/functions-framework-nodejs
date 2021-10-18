@@ -155,9 +155,10 @@ export async function getUserFunction(
 
     return {userFunction: userFunction as HandlerFunction, signatureType};
   } catch (ex) {
+    const err: Error = <Error>ex;
     let additionalHint: string;
     // TODO: this should be done based on ex.code rather than string matching.
-    if (ex.stack && ex.stack.includes('Cannot find module')) {
+    if (err.stack && err.stack.includes('Cannot find module')) {
       additionalHint =
         'Did you list all required modules in the package.json ' +
         'dependencies?\n';
@@ -166,7 +167,7 @@ export async function getUserFunction(
     }
     console.error(
       `Provided module can't be loaded.\n${additionalHint}` +
-        `Detailed stack trace: ${ex.stack}`
+        `Detailed stack trace: ${err.stack}`
     );
     return null;
   }
