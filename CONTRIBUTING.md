@@ -73,13 +73,7 @@ npm dist-tag add @google-cloud/functions-framework@1.9.0 latest --registry=https
 
 ### API Extractor
 
-To generate the API Extractor documentation, first install the API extractor CLI:
-
-```sh
-npm install -g @microsoft/api-extractor
-```
-
-Then run the API extractor with the following command:
+To generate the API Extractor documentation, run the API extractor with the following command:
 
 ```sh
 npm run docs
