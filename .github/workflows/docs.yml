@@ -1,0 +1,19 @@
+name: Node.js Docs CI
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+jobs:
+  docs:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+    - name: Install dependencies
+      run: npm install
+    - name: Build TypeScript project
+      run: npm run docs
+    - name: Ensure there are no changes
+      run: git diff --exit-code .
