@@ -71,6 +71,16 @@ npm unpublish @google-cloud/functions-framework@1.10.0
 npm dist-tag add @google-cloud/functions-framework@1.9.0 latest --registry=https://wombat-dressing-room.appspot.com
 ```
 
+### API Extractor
+
+To generate the API Extractor documentation, run the API extractor with the following command:
+
+```sh
+npm run docs
+```
+
+The docs will be generated in [`docs/generated/`](docs/generated/).
+
 ## Community Guidelines
 
 This project follows [Google's Open Source Community

@@ -18,21 +18,45 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
 
+/**
+ * A HTTP function handler.
+ * @public
+ */
 export interface HttpFunction {
   (req: express.Request, res: express.Response): any;
 }
+/**
+ * A legacy event function handler.
+ * @public
+ */
 export interface EventFunction {
   (data: {}, context: Context): any;
 }
+/**
+ * A legacy event function handler with callback.
+ * @public
+ */
 export interface EventFunctionWithCallback {
   (data: {}, context: Context, callback: Function): any;
 }
+/**
+ * A cloudevent function handler.
+ * @public
+ */
 export interface CloudEventFunction {
   (cloudevent: CloudEventsContext): any;
 }
+/**
+ * A cloudevent function handler with callback.
+ * @public
+ */
 export interface CloudEventFunctionWithCallback {
   (cloudevent: CloudEventsContext, callback: Function): any;
 }
+/**
+ * A function handler.
+ * @public
+ */
 export type HandlerFunction =
   | HttpFunction
   | EventFunction
@@ -42,21 +66,30 @@ export type HandlerFunction =
 
 /**
  * A legacy event.
+ * @public
  */
 export interface LegacyEvent {
   data: {[key: string]: any};
   context: CloudFunctionsContext;
 }
 
-interface Data {
+/**
+ * A data object used for legacy event functions.
+ * @public
+ */
+export interface Data {
   data: object;
 }
+/**
+ * A legacy event function context.
+ * @public
+ */
 export type LegacyCloudFunctionsContext = CloudFunctionsContext | Data;
 
 /**
  * The Cloud Functions context object for the event.
- *
- * @link https://cloud.google.com/functions/docs/writing/background#function_parameters
+ * {@link https://cloud.google.com/functions/docs/writing/background#function_parameters}
+ * @public
  */
 export interface CloudFunctionsContext {
   /**
@@ -80,8 +113,8 @@ export interface CloudFunctionsContext {
 
 /**
  * The CloudEvents v1.0 context object for the event.
- *
- * @link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes
+ * {@link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes}
+ * @public
  */
 export interface CloudEventsContext {
   /**
@@ -133,4 +166,8 @@ export interface CloudEventsContext {
   traceparent?: string;
 }
 
+/**
+ * The function's context.
+ * @public
+ */
 export type Context = CloudFunctionsContext | CloudEventsContext;
