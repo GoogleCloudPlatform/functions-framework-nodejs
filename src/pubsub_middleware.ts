@@ -22,7 +22,7 @@ const PUBSUB_SERVICE = 'pubsub.googleapis.com';
 /**
  * The request body of an HTTP request received directly from a Pub/Sub subscription.
  *
- * @link https://cloud.google.com/pubsub/docs/push?hl=en#receiving_messages
+ * {@link https://cloud.google.com/pubsub/docs/push?hl=en#receiving_messages}
  */
 export interface RawPubSubBody {
   /**
@@ -34,7 +34,7 @@ export interface RawPubSubBody {
    * A message that is published by publishers and consumed by subscribers. The message must
    * contain either a non-empty data field or at least one attribute.
    *
-   * @link https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage
+   * {@link https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage}
    */
   message: {
     /**

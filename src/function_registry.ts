@@ -53,8 +53,9 @@ export const getRegisteredFunction = (
 
 /**
  * Register a function that responds to HTTP requests.
- * @param functionName the name of the function
- * @param handler the function to invoke when handling HTTP requests
+ * @param functionName - the name of the function
+ * @param handler - the function to invoke when handling HTTP requests
+ * @public
  */
 export const http = (functionName: string, handler: HttpFunction): void => {
   register(functionName, 'http', handler);
@@ -62,8 +63,9 @@ export const http = (functionName: string, handler: HttpFunction): void => {
 
 /**
  * Register a function that handles CloudEvents.
- * @param functionName the name of the function
- * @param handler the function to trigger when handling cloudevents
+ * @param functionName - the name of the function
+ * @param handler - the function to trigger when handling cloudevents
+ * @public
  */
 export const cloudevent = (
   functionName: string,
