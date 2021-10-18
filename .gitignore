@@ -13,4 +13,4 @@ yarn-error.log
 function_output.json
 serverlog_stderr.txt
 serverlog_stdout.txt
-temp # from npm run docs
+temp

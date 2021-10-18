@@ -8,17 +8,18 @@
   },
   "apiReport": {
     "enabled": true,
-    "reportFolder": "docs/",
+    "reportFolder": "docs/generated/",
     "reportFileName": "api.md"
   },
 
   "docModel": {
-    "enabled": true
+    "enabled": true,
+    "apiJsonFilePath": "docs/generated/api.json"
   },
 
   "dtsRollup": {
     "enabled": true,
-    "untrimmedFilePath": "build/src/rollup.d.ts",
+    "untrimmedFilePath": "docs/generated/api.d.ts",
     "omitTrimmingComments": true
   },
 
