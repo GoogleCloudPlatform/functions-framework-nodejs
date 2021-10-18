@@ -79,7 +79,7 @@ To generate the API Extractor documentation, run the API extractor with the foll
 npm run docs
 ```
 
-The docs will be generated in [`docs/api.md`](docs/api.md).
+The docs will be generated in [`docs/generated/`](docs/generated/).
 
 ## Community Guidelines
 
