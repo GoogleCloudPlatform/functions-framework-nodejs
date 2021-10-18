@@ -17,5 +17,5 @@ jobs:
       run: npm install
     - name: Build TypeScript project
       run: npm run docs
-    - name: Ensure there are no changes
-      run: git diff --exit-code .
+    - name: Ensure there are no changes in docs
+      run: git diff docs/ --exit-code .
