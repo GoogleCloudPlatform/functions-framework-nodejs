@@ -29,6 +29,7 @@ import {
   HandlerFunction,
 } from './functions';
 import {SignatureType} from './types';
+import {CastToDataFunction} from './cloudevent_types';
 
 /**
  * The handler function used to signal completion of event functions.
@@ -60,11 +61,17 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
  * @param req an Express HTTP request
  * @returns a cloudevent parsed from the request
  */
-const parseCloudEventRequest = (req: Request): CloudEventsContext => {
+const parseCloudEventRequest = (
+  req: Request,
+  eventDataTypeFunction?: CastToDataFunction
+): CloudEventsContext => {
   let cloudevent = req.body;
   if (isBinaryCloudEvent(req)) {
     cloudevent = getBinaryCloudEventContext(req);
-    cloudevent.data = req.body;
+    // Cast to datatype if provided.
+    cloudevent.data = eventDataTypeFunction
+      ? eventDataTypeFunction(cloudevent)
+      : cloudevent.data;
   }
   return cloudevent;
 };
@@ -124,11 +131,13 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
  * @return An Express hander function that invokes the user function.
  */
 const wrapCloudEventFunction = (
-  userFunction: CloudEventFunction
+  userFunction: CloudEventFunction,
+  eventDataTypeFunction?: CastToDataFunction
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
-    const cloudevent = parseCloudEventRequest(req);
+    const cloudevent = parseCloudEventRequest(req, eventDataTypeFunction);
+
     Promise.resolve()
       .then(() => userFunction(cloudevent))
       .then(
@@ -145,11 +154,12 @@ const wrapCloudEventFunction = (
  * @return An Express hander function that invokes the user function.
  */
 const wrapCloudEventFunctionWithCallback = (
-  userFunction: CloudEventFunctionWithCallback
+  userFunction: CloudEventFunctionWithCallback,
+  eventDataTypeFunction?: CastToDataFunction
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
-    const cloudevent = parseCloudEventRequest(req);
+    const cloudevent = parseCloudEventRequest(req, eventDataTypeFunction);
     return userFunction(cloudevent, callback);
   };
   return wrapHttpFunction(httpHandler);
@@ -198,7 +208,8 @@ const wrapEventFunctionWithCallback = (
  */
 export const wrapUserFunction = (
   userFunction: HandlerFunction,
-  signatureType: SignatureType
+  signatureType: SignatureType,
+  eventDataTypeFunction?: CastToDataFunction
 ): RequestHandler => {
   switch (signatureType) {
     case 'http':
@@ -215,9 +226,13 @@ export const wrapUserFunction = (
       if (userFunction!.length > 1) {
         // Callback style if user function has more than 1 argument.
         return wrapCloudEventFunctionWithCallback(
-          userFunction as CloudEventFunctionWithCallback
+          userFunction as CloudEventFunctionWithCallback,
+          eventDataTypeFunction
         );
       }
-      return wrapCloudEventFunction(userFunction as CloudEventFunction);
+      return wrapCloudEventFunction(
+        userFunction as CloudEventFunction,
+        eventDataTypeFunction
+      );
   }
 };

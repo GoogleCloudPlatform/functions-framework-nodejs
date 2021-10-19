@@ -23,6 +23,7 @@ import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudeventToBackgroundEventMiddleware} from './middleware/cloudevent_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloudevent';
 import {wrapUserFunction} from './function_wrappers';
+import {CastToDataFunction} from './cloudevent_types';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -33,7 +34,8 @@ import {wrapUserFunction} from './function_wrappers';
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
+  functionSignatureType: SignatureType,
+  functionEventTypeFunction?: CastToDataFunction
 ): http.Server {
   // App to use for function executions.
   const app = express();
@@ -134,7 +136,11 @@ export function getServer(
   }
 
   // Set up the routes for the user's function
-  const requestHandler = wrapUserFunction(userFunction, functionSignatureType);
+  const requestHandler = wrapUserFunction(
+    userFunction,
+    functionSignatureType,
+    functionEventTypeFunction
+  );
   if (functionSignatureType === 'http') {
     app.all('/*', requestHandler);
   } else {

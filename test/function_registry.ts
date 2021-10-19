@@ -34,4 +34,19 @@ describe('function_registry', () => {
     assert.deepStrictEqual('cloudevent', signatureType);
     assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
   });
+
+  it('can register cloudevent functions with types', () => {
+    interface MyInterface {
+      greeting: string;
+    }
+
+    const castFn = (o: object) => o as MyInterface;
+    FunctionRegistry.cloudevent('ceFunction', castFn, () => 'CE_PASS');
+    const {
+      userFunction,
+      signatureType,
+    } = FunctionRegistry.getRegisteredFunction('ceFunction')!;
+    assert.deepStrictEqual('cloudevent', signatureType);
+    assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
+  });
 });

@@ -13,11 +13,13 @@
 // limitations under the License.
 
 import {HttpFunction, CloudEventFunction, HandlerFunction} from './functions';
+import {CastToDataFunction, noopCastToDataFunction} from './cloudevent_types';
 import {SignatureType} from './types';
 
 interface RegisteredFunction {
   signatureType: SignatureType;
   userFunction: HandlerFunction;
+  eventDataTypeFunction: CastToDataFunction;
 }
 
 /**
@@ -28,14 +30,21 @@ const registrationContainer = new Map<string, RegisteredFunction>();
 /**
  * Helper method to store a registered function in the registration container
  */
-const register = (
-  functionName: string,
-  signatureType: SignatureType,
-  userFunction: HandlerFunction
-): void => {
+const register = ({
+  functionName,
+  signatureType,
+  userFunction,
+  eventDataTypeFunction,
+}: {
+  functionName: string;
+  signatureType: SignatureType;
+  userFunction: HandlerFunction;
+  eventDataTypeFunction?: CastToDataFunction;
+}): void => {
   registrationContainer.set(functionName, {
     signatureType,
     userFunction,
+    eventDataTypeFunction: eventDataTypeFunction || noopCastToDataFunction,
   });
 };
 
@@ -54,11 +63,18 @@ export const getRegisteredFunction = (
 /**
  * Register a function that responds to HTTP requests.
  * @param functionName - the name of the function
- * @param handler - the function to invoke when handling HTTP requests
+ * @param userFunction - the function to invoke when handling HTTP requests
  * @public
  */
-export const http = (functionName: string, handler: HttpFunction): void => {
-  register(functionName, 'http', handler);
+export const http = (
+  functionName: string,
+  userFunction: HttpFunction
+): void => {
+  register({
+    functionName,
+    signatureType: 'http',
+    userFunction,
+  });
 };
 
 /**
@@ -69,7 +85,22 @@ export const http = (functionName: string, handler: HttpFunction): void => {
  */
 export const cloudevent = (
   functionName: string,
-  handler: CloudEventFunction
+  eventDataTypeOrCloudEventFunction: CastToDataFunction | CloudEventFunction,
+  userFunction?: CloudEventFunction
 ): void => {
-  register(functionName, 'cloudevent', handler);
+  // If only two arguments are provided, the second argument is the handler.
+  if (!userFunction) {
+    register({
+      functionName,
+      signatureType: 'cloudevent',
+      userFunction: eventDataTypeOrCloudEventFunction as HandlerFunction,
+    });
+  } else {
+    register({
+      functionName,
+      signatureType: 'cloudevent',
+      userFunction,
+      eventDataTypeFunction: eventDataTypeOrCloudEventFunction,
+    });
+  }
 };
