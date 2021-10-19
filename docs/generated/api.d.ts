@@ -9,7 +9,7 @@ import * as express from 'express';
 export declare const cloudevent: (functionName: string, handler: CloudEventFunction) => void;
 
 /**
- * A cloudevent function TEST handler.
+ * A cloudevent function handler.
  * @public
  */
 export declare interface CloudEventFunction {
