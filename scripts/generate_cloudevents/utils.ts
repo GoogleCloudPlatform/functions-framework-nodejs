@@ -54,7 +54,11 @@ export const fetch = (url: string): Promise<{[key: string]: any}> => {
  * @returns the relative file path to write the interface type to
  */
 export const getDataFilePath = (url: string): string => {
+<<<<<<< HEAD
   return './src/cloudevent_types' + url.split('jsonschema/google/events')[1].replace('.json', '.ts');
+=======
+  return '.' + url.split('jsonschema/google')[1].replace('.json', '.ts');
+>>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
 };
 
 /**
@@ -64,7 +68,11 @@ export const getDataFilePath = (url: string): string => {
  */
 export const getCloudEventImportPath = (url: string): string => {
   const dataPath = getDataFilePath(url);
+<<<<<<< HEAD
   return dataPath.replace('.ts', '').replace('./src/cloudevent_types/', './');
+=======
+  return dataPath.replace('.ts', '').replace('./events/', './');
+>>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
 };
 
 /**
