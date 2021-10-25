@@ -18,6 +18,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
 
+express.request
+
 /**
  * A HTTP function handler.
  * @public

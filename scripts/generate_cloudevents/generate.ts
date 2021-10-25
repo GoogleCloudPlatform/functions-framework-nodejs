@@ -31,11 +31,7 @@ import {
  * URL of the type catalog in the googleapis/google-cloudevents repo
  */
 const ROOT_TYPE_CATALOG_URL =
-<<<<<<< HEAD
   'https://googleapis.github.io/google-cloudevents/jsonschema/catalog.json';
-=======
-  'https://raw.githubusercontent.com/googleapis/google-cloudevents/main/jsonschema/catalog.json';
->>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
 
 /**
  * Create an AST node representing a schema property
@@ -146,11 +142,7 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
   const typeTypes = schema.cloudeventTypes.map(x =>
     t.tsLiteralType(t.stringLiteral(x))
   );
-<<<<<<< HEAD
   const exportStmt = t.exportNamedDeclaration(
-=======
-  return t.exportNamedDeclaration(
->>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
     t.tsInterfaceDeclaration(
       t.identifier(schema.name.replace(/Data$/, 'CloudEvent')),
       null,
@@ -169,11 +161,8 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
       ])
     )
   );
-<<<<<<< HEAD
   utils.addComment(exportStmt, `The CloudEvent schema emmitted by ${schema.product}.`);
   return exportStmt;
-=======
->>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
 };
 
 /**
@@ -232,10 +221,6 @@ utils.fetch(ROOT_TYPE_CATALOG_URL).then(catalog => {
     utils.addCopyright(ast);
 
     const {code} = generate(ast);
-<<<<<<< HEAD
     fs.writeFileSync('./src/cloudevent_types/GoogleCloudEvent.ts', code);
-=======
-    fs.writeFileSync('./events/GoogleCloudEvent.ts', code);
->>>>>>> 71d07f4 (feat: generate cloudevent types from googleapis/google-cloudevents)
   });
 });
