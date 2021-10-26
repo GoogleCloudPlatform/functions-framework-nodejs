@@ -28,3 +28,16 @@ export {http, cloudevent} from './function_registry';
 
 // Call the main method to load the user code and start the http server.
 main();
+
+// We annotate the express Request with a rawBody field.
+// Express leaves the Express namespace open to allow merging of new fields.
+declare global {
+    namespace Express {
+        export interface Request {
+            /**
+             * A buffer which provides access to the request's raw HTTP body.
+             */
+            rawBody?: Buffer;
+        }
+    }
+}
