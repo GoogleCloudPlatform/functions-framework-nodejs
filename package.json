@@ -18,6 +18,7 @@
   },
   "scripts": {
     "test": "mocha build/test --recursive",
+    "conformance": "./run_conformance_tests.sh",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
