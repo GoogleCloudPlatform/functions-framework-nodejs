@@ -1,8 +1,6 @@
 name: Node.js Conformance CI
 on: 
   push:
-    branches:
-    - master
   pull_request:
 jobs:
   build:
@@ -32,7 +30,7 @@ jobs:
       run: npm install
 
     - name: Run HTTP conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       with:
         functionType: 'http'
         useBuildpacks: false
@@ -41,7 +39,7 @@ jobs:
         cmd: "'npm start -- --target=writeHttp --signature-type=http'"
 
     - name: Run event conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
@@ -50,7 +48,7 @@ jobs:
         cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
 
     - name: Run cloudevent conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
@@ -59,7 +57,7 @@ jobs:
         cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
 
     - name: Run HTTP conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       with:
         functionType: 'http'
         useBuildpacks: false
@@ -68,7 +66,7 @@ jobs:
         cmd: "'npm start -- --target=writeHttpDeclarative'"
 
     - name: Run cloudevent conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
