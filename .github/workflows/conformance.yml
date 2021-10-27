@@ -32,46 +32,46 @@ jobs:
       run: npm install
 
     - name: Run HTTP conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@grant_conformance_no_extra_string_cmd
       with:
         functionType: 'http'
         useBuildpacks: false
         validateMapping: false
         workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeHttp --signature-type=http'"
+        cmd: "npm start -- --target=writeHttp --signature-type=http"
 
     - name: Run event conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@grant_conformance_no_extra_string_cmd
       with:
         functionType: 'legacyevent'
         useBuildpacks: false
         validateMapping: true
         workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
+        cmd: "npm start -- --target=writeLegacyEvent --signature-type=event"
 
     - name: Run cloudevent conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@grant_conformance_no_extra_string_cmd
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
         workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
+        cmd: "npm start -- --target=writeCloudEvent --signature-type=cloudevent"
 
     - name: Run HTTP conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@grant_conformance_no_extra_string_cmd
       with:
         functionType: 'http'
         useBuildpacks: false
         validateMapping: false
         workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeHttpDeclarative'"
+        cmd: "npm start -- --target=writeHttpDeclarative"
 
     - name: Run cloudevent conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.0.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@grant_conformance_no_extra_string_cmd
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
         workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeCloudEventDeclarative'"
+        cmd: "npm start -- --target=writeCloudEventDeclarative"
