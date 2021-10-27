@@ -4,6 +4,8 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import * as express from 'express';
 
 // @public
@@ -75,7 +77,7 @@ export const http: (functionName: string, handler: HttpFunction) => void;
 // @public
 export interface HttpFunction {
     // (undocumented)
-    (req: express.Request, res: express.Response): any;
+    (req: Request_2, res: Response_2): any;
 }
 
 // @public
@@ -90,6 +92,16 @@ export interface LegacyEvent {
         [key: string]: any;
     };
 }
+
+// @public (undocumented)
+interface Request_2 extends express.Request {
+    rawBody?: Buffer;
+}
+export { Request_2 as Request }
+
+// @public (undocumented)
+type Response_2 = express.Response;
+export { Response_2 as Response }
 
 // (No @packageDocumentation comment for this package)
 
