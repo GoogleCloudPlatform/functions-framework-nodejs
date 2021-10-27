@@ -19,11 +19,26 @@
 import * as express from 'express';
 
 /**
+ * @public
+ */
+export interface Request extends express.Request {
+  /**
+   * A buffer which provides access to the request's raw HTTP body.
+   */
+  rawBody?: Buffer;
+}
+
+/**
+ * @public
+ */
+export type Response = express.Response;
+
+/**
  * A HTTP function handler.
  * @public
  */
 export interface HttpFunction {
-  (req: express.Request, res: express.Response): any;
+  (req: Request, res: Response): any;
 }
 /**
  * A legacy event function handler.

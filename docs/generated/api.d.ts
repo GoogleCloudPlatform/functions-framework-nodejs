@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import * as express from 'express';
 
 /**
@@ -149,7 +151,7 @@ export declare const http: (functionName: string, handler: HttpFunction) => void
  * @public
  */
 export declare interface HttpFunction {
-    (req: express.Request, res: express.Response): any;
+    (req: Request_2, res: Response_2): any;
 }
 
 /**
@@ -168,5 +170,22 @@ export declare interface LegacyEvent {
     };
     context: CloudFunctionsContext;
 }
+
+/**
+ * @public
+ */
+declare interface Request_2 extends express.Request {
+    /**
+     * A buffer which provides access to the request's raw HTTP body.
+     */
+    rawBody?: Buffer;
+}
+export { Request_2 as Request }
+
+/**
+ * @public
+ */
+declare type Response_2 = express.Response;
+export { Response_2 as Response }
 
 export { }

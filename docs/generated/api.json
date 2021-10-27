@@ -1091,8 +1091,8 @@
                 },
                 {
                   "kind": "Reference",
-                  "text": "express.Request",
-                  "canonicalReference": "@types/express!~e.Request:interface"
+                  "text": "Request",
+                  "canonicalReference": "@google-cloud/functions-framework!Request:interface"
                 },
                 {
                   "kind": "Content",
@@ -1100,8 +1100,8 @@
                 },
                 {
                   "kind": "Reference",
-                  "text": "express.Response",
-                  "canonicalReference": "@types/express!~e.Response:interface"
+                  "text": "Response",
+                  "canonicalReference": "@google-cloud/functions-framework!Response:type"
                 },
                 {
                   "kind": "Content",
@@ -1245,6 +1245,89 @@
             }
           ],
           "extendsTokenRanges": []
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@google-cloud/functions-framework!Request_2:interface",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface Request extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "express.Request",
+              "canonicalReference": "@types/express!~e.Request:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Request_2",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@google-cloud/functions-framework!Request_2#rawBody:member",
+              "docComment": "/**\n * A buffer which provides access to the request's raw HTTP body.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "rawBody?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Buffer",
+                  "canonicalReference": "!Buffer:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "rawBody",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 3
+            }
+          ]
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@google-cloud/functions-framework!Response_2:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Response = "
+            },
+            {
+              "kind": "Reference",
+              "text": "express.Response",
+              "canonicalReference": "@types/express!~e.Response:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Response_2",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
         }
       ]
     }

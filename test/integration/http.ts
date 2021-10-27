@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as express from 'express';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
+import {Request, Response} from '../../src/functions';
 
 describe('HTTP Function', () => {
   const testData = [
@@ -64,16 +64,13 @@ describe('HTTP Function', () => {
   testData.forEach(test => {
     it(test.name, async () => {
       let callCount = 0;
-      const server = getServer(
-        (req: express.Request, res: express.Response) => {
-          ++callCount;
-          res.send({
-            result: req.body.text,
-            query: req.query.param,
-          });
-        },
-        'http'
-      );
+      const server = getServer((req: Request, res: Response) => {
+        ++callCount;
+        res.send({
+          result: req.body.text,
+          query: req.query.param,
+        });
+      }, 'http');
       const st = supertest(server);
       await (test.httpVerb === 'GET'
         ? st.get(test.path)
