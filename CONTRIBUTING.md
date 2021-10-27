@@ -34,6 +34,14 @@ To run an individual test, you can run a command such as the following:
 npm run test -- -g 'loading function'
 ```
 
+### Conformance Tests
+
+To run the conformance tests, first install Go 1.16+, then run the tests:
+
+```
+npm run conformance
+```
+
 ### Manual Testing
 
 When developing a feature locally, you can install a local version of the Functions Framework
