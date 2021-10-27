@@ -16,7 +16,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
-import {HandlerFunction} from './functions';
+import {HandlerFunction, Request, Response} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
@@ -55,11 +55,7 @@ export function getServer(
    * @param res Express response object.
    * @param buf Buffer to be saved.
    */
-  function rawBodySaver(
-    req: express.Request,
-    res: express.Response,
-    buf: Buffer
-  ) {
+  function rawBodySaver(req: Request, res: Response, buf: Buffer) {
     req.rawBody = buf;
   }
 
