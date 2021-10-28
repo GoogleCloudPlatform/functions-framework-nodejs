@@ -112,6 +112,16 @@ const generateInterfaceBody = (properties: {
 };
 
 /**
+ * Generate the AST for the import declaration that pulls in the base CloudEvent interface.
+ */
+const generateCloudEventImport = (): t.Statement => {
+  return t.importDeclaration(
+    [t.importSpecifier(t.identifier('CloudEvent'), t.identifier('CloudEvent'))],
+    t.stringLiteral('./CloudEvent')
+  );
+};
+
+/**
  * Generate all interfaces in a given cloudevent schema
  * @param schema The cloudevent data payload schema
  * @returns a set of Statement AST nodes representing interfaces declarations
@@ -128,7 +138,7 @@ const generateInterfaces = (schema: TypeSchema): t.Statement[] => {
       generateInterfaceBody(definitions[definition].properties)
     );
     const exportStmt = t.exportNamedDeclaration(interfaceStmt);
-    utils.addComment(exportStmt, definitions[definition].description);
+    utils.addComment(exportStmt, definitions[definition].description, true);
     return exportStmt;
   });
 };
@@ -146,7 +156,7 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
     t.tsInterfaceDeclaration(
       t.identifier(schema.name.replace(/Data$/, 'CloudEvent')),
       null,
-      [],
+      [t.tsExpressionWithTypeArguments(t.identifier('CloudEvent'))],
       t.tsInterfaceBody([
         t.tsPropertySignature(
           t.identifier('type'),
@@ -163,7 +173,8 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
   );
   utils.addComment(
     exportStmt,
-    `The CloudEvent schema emmitted by ${schema.product}.`
+    `The schema of CloudEvents emmitted by ${schema.product}.`,
+    true
   );
   return exportStmt;
 };
@@ -173,15 +184,20 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
  * googleapis/google-cloudevents
  */
 utils.fetch(ROOT_TYPE_CATALOG_URL).then(catalog => {
-  const rootImports: {importPath: string; ceTypeName: string}[] = [];
+  const rootImports: {
+    importPath: string;
+    ceDataTypeName: string;
+    ceInterface: t.Statement;
+  }[] = [];
   const promises = (catalog as EventCatalog).schemas.map(async catSchema => {
     const schema = (await utils.fetch(catSchema.url)) as TypeSchema;
     const interfaces = generateInterfaces(schema);
-    interfaces.push(generateCloudEventInterface(schema));
+
     const ast = t.file(t.program(interfaces));
     rootImports.push({
       importPath: utils.getCloudEventImportPath(catSchema.url),
-      ceTypeName: utils.getCloudEventTypeName(schema.name),
+      ceDataTypeName: schema.name,
+      ceInterface: generateCloudEventInterface(schema),
     });
     utils.addCopyright(ast);
     const {code} = generate(ast);
@@ -193,24 +209,32 @@ utils.fetch(ROOT_TYPE_CATALOG_URL).then(catalog => {
   Promise.all(promises).then(() => {
     const imports: t.Statement[] = rootImports
       .sort((a, b) => (a.importPath > b.importPath ? 1 : -1))
-      .map(({importPath, ceTypeName}) => {
+      .map(({importPath, ceDataTypeName}) => {
         return t.importDeclaration(
           [
             t.importSpecifier(
-              t.identifier(ceTypeName),
-              t.identifier(ceTypeName)
+              t.identifier(ceDataTypeName),
+              t.identifier(ceDataTypeName)
             ),
           ],
           t.stringLiteral(importPath)
         );
       });
 
+    imports.push(generateCloudEventImport());
+
+    imports.push(...rootImports.map(x => x.ceInterface));
+
     const googleCloudEventExport = t.exportNamedDeclaration(
       t.tsTypeAliasDeclaration(
         t.identifier('GoogleCloudEvent'),
         null,
         t.tsUnionType(
-          rootImports.map(x => t.tsTypeReference(t.identifier(x.ceTypeName)))
+          rootImports.map(x =>
+            t.tsTypeReference(
+              t.identifier(utils.getCloudEventTypeName(x.ceDataTypeName))
+            )
+          )
         )
       )
     );
