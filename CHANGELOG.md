@@ -4,6 +4,33 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [2.0.0-beta.1](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.1...v2.0.0) (2021-10-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add type annotation for Request.rawBody
+* move function wrapping earlier (#335)
+* This commit refactors the SignatureType enum into an array of strings declared [as const](https://github.com/Microsoft/TypeScript/pull/29510). This allows the SignatureType type to be expressed as a union type, which works a bit better when parsing a users provided string.
+
+### Features
+
+* enable traceparent header for cloudevents ([#336](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/336)) ([aba9cb4](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/aba9cb44c7551cdeb335a96ddce3628c89103de2))
+* generate cloudevent types from googleapis/google-cloudevents ([#371](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/371)) ([7617801](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/7617801e3cbd3f5da1ef7797ebc98962f3e2e0b4))
+* introduce declarative function signatures ([#347](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/347)) ([db1ba9e](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/db1ba9e480b9256f5129ae5c58877cd316c08b26))
+
+
+### Bug Fixes
+
+* Add type annotation for Request.rawBody ([60edd7e](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/60edd7e33bc8d78446c5f6b7911126ddd5d19ffe))
+* remove tgz file ([#346](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/346)) ([51cb666](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/51cb666a4d768b6679a06ff1657a92c9d76721ef))
+
+
+### Code Refactoring
+
+* move function wrapping earlier ([#335](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/335)) ([b70b2d8](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/b70b2d8395b885287960ef841517d7a3ed90ba05))
+* use a union type for SignatureType ([#331](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/331)) ([9cf46ed](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/9cf46edc9b1b890e2a6fd1aec8d818074585783b))
+
 ### [1.10.1](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.0...v1.10.1) (2021-09-20)
 
 
