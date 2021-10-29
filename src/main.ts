@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,3 +66,6 @@ export const main = async () => {
     throw e;
   }
 };
+
+// Call the main method to load the user code and start the http server.
+main();
