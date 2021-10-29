@@ -25,12 +25,22 @@ export const RELATIVE_SRC_DIR = '../../src/cloudevent_types';
  * Add a JSDoc comment to an AST node
  * @param node the AST node to add a comment to
  * @param comment the text content of the comment
+ * @param isPublic whether or not to add an "@public" annotation
  * @returns the AST node with attached comment
  */
-export const addComment = <T extends t.Node>(node: T, comment?: string): T => {
+export const addComment = <T extends t.Node>(
+  node: T,
+  comment?: string,
+  isPublic = false
+): T => {
   if (comment) {
     const lines = comment.split('\n').map(l => ' * ' + l.trim());
     lines.unshift('*');
+
+    if (isPublic) {
+      lines.push(' * ');
+      lines.push(' * @public');
+    }
 
     t.addComment(node, 'leading', lines.join('\n') + '\n ');
   }
@@ -91,6 +101,12 @@ export const getCloudEventTypeName = (dataTypeName: string): string => {
  * @returns the updated AST node
  */
 export const addCopyright = (file: t.File): t.File => {
+  t.addComment(
+    file,
+    'leading',
+    ' eslint-disable @typescript-eslint/no-explicit-any',
+    false
+  );
   [
     ' Copyright 2021 Google LLC',
     '',
