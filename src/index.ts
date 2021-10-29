@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {main} from './main';
-
 /**
  * @public
  */
@@ -25,6 +21,3 @@ export * from './functions';
  * @public
  */
 export {http, cloudevent} from './function_registry';
-
-// Call the main method to load the user code and start the http server.
-main();
