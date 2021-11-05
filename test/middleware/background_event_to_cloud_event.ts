@@ -5,9 +5,9 @@ import {Response, Request} from 'express';
 import {
   splitResource,
   backgroundEventToCloudEventMiddleware,
-} from '../../src/middleware/background_event_to_cloudevent';
+} from '../../src/middleware/background_event_to_cloud_event';
 import {CloudFunctionsContext} from '../../src/functions';
-import {EventConversionError} from '../../src/cloudevents';
+import {EventConversionError} from '../../src/cloud_events';
 
 describe('splitResource', () => {
   const testData = [

@@ -7,8 +7,8 @@ describe('📦 pack-n-play test', () => {
     const options = {
       packageDir: process.cwd(),
       sample: {
-        description: 'JavaScript user can use the cloudevents file',
-        js: readFileSync('./build/src/cloudevents.js').toString(),
+        description: 'JavaScript user can use the cloud_events file',
+        js: readFileSync('./build/src/cloud_events.js').toString(),
       },
     };
     await packNTest(options);

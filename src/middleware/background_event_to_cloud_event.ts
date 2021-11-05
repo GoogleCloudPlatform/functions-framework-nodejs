@@ -16,8 +16,8 @@ import {
   CE_SERVICE,
   EventConversionError,
   isBinaryCloudEvent,
-} from '../cloudevents';
-import {CE_TO_BACKGROUND_TYPE} from './cloudevent_to_background_event';
+} from '../cloud_events';
+import {CE_TO_BACKGROUND_TYPE} from './cloud_event_to_background_event';
 import {CloudFunctionsContext, LegacyEvent} from '../functions';
 
 // Maps GCF Event types to the equivalent CloudEventType
@@ -193,7 +193,7 @@ export const backgroundEventToCloudEventMiddleware = (
 
     if (service === CE_SERVICE.FIREBASE_AUTH) {
       if ('metadata' in data) {
-        // Some metadata are not consistent between cloudevents and background events
+        // Some metadata are not consistent between CloudEvents and background events
         const metadata: object = data.metadata;
         data.metadata = {};
         // eslint-disable-next-line prefer-const
@@ -213,7 +213,7 @@ export const backgroundEventToCloudEventMiddleware = (
       const domain = req.body['domain'];
       if (!domain) {
         throw new EventConversionError(
-          `Unable convert to ${CE_SERVICE.FIREBASE_DB} cloudevent: invalid domain`
+          `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`
         );
       }
       let location = 'us-central1';
@@ -221,7 +221,7 @@ export const backgroundEventToCloudEventMiddleware = (
         const match = domain.match(/^([\w-]+)\.firebasedatabase\.app$/);
         if (!match) {
           throw new EventConversionError(
-            `Unable convert to ${CE_SERVICE.FIREBASE_DB} cloudevent: invalid domain`
+            `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`
           );
         }
         location = match[1];

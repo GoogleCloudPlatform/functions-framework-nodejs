@@ -121,7 +121,7 @@ describe('loading function', () => {
   });
 
   it('respects the registered signature type', async () => {
-    FunctionRegistry.cloudevent('registeredFunction', () => {});
+    FunctionRegistry.cloudEvent('registeredFunction', () => {});
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'registeredFunction',

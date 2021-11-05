@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {Request, Response, NextFunction} from 'express';
-import {isBinaryCloudEvent} from './cloudevents';
+import {isBinaryCloudEvent} from './cloud_events';
 
 const PUBSUB_EVENT_TYPE = 'google.pubsub.topic.publish';
 const PUBSUB_MESSAGE_TYPE =

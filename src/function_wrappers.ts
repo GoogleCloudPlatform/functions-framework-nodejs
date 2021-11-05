@@ -17,7 +17,7 @@ import * as domain from 'domain';
 import {Request, Response, RequestHandler} from 'express';
 import {sendCrashResponse} from './logger';
 import {sendResponse} from './invoker';
-import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloudevents';
+import {isBinaryCloudEvent, getBinaryCloudEventContext} from './cloud_events';
 import {
   HttpFunction,
   EventFunction,
@@ -56,17 +56,17 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
 };
 
 /**
- * Helper function to parse a cloudevent object from an HTTP request.
+ * Helper function to parse a CloudEvent object from an HTTP request.
  * @param req an Express HTTP request
- * @returns a cloudevent parsed from the request
+ * @returns a CloudEvent parsed from the request
  */
 const parseCloudEventRequest = (req: Request): CloudEventsContext => {
-  let cloudevent = req.body;
+  let cloudEvent = req.body;
   if (isBinaryCloudEvent(req)) {
-    cloudevent = getBinaryCloudEventContext(req);
-    cloudevent.data = req.body;
+    cloudEvent = getBinaryCloudEventContext(req);
+    cloudEvent.data = req.body;
   }
-  return cloudevent;
+  return cloudEvent;
 };
 
 /**
@@ -119,7 +119,7 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
 };
 
 /**
- * Wraps an async cloudevent function in an express RequestHandler.
+ * Wraps an async CloudEvent function in an express RequestHandler.
  * @param userFunction User's function.
  * @return An Express hander function that invokes the user function.
  */
@@ -128,9 +128,9 @@ const wrapCloudEventFunction = (
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
-    const cloudevent = parseCloudEventRequest(req);
+    const cloudEvent = parseCloudEventRequest(req);
     Promise.resolve()
-      .then(() => userFunction(cloudevent))
+      .then(() => userFunction(cloudEvent))
       .then(
         result => callback(null, result),
         err => callback(err, undefined)
@@ -140,7 +140,7 @@ const wrapCloudEventFunction = (
 };
 
 /**
- * Wraps callback style cloudevent function in an express RequestHandler.
+ * Wraps callback style CloudEvent function in an express RequestHandler.
  * @param userFunction User's function.
  * @return An Express hander function that invokes the user function.
  */
@@ -149,8 +149,8 @@ const wrapCloudEventFunctionWithCallback = (
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
-    const cloudevent = parseCloudEventRequest(req);
-    return userFunction(cloudevent, callback);
+    const cloudEvent = parseCloudEventRequest(req);
+    return userFunction(cloudEvent, callback);
   };
   return wrapHttpFunction(httpHandler);
 };

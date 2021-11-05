@@ -9,18 +9,18 @@
 import * as express from 'express';
 
 // @public
-export const cloudevent: (functionName: string, handler: CloudEventFunction) => void;
+export const cloudEvent: (functionName: string, handler: CloudEventFunction) => void;
 
 // @public
 export interface CloudEventFunction {
     // (undocumented)
-    (cloudevent: CloudEventsContext): any;
+    (cloudEvent: CloudEventsContext): any;
 }
 
 // @public
 export interface CloudEventFunctionWithCallback {
     // (undocumented)
-    (cloudevent: CloudEventsContext, callback: Function): any;
+    (cloudEvent: CloudEventsContext, callback: Function): any;
 }
 
 // @public
