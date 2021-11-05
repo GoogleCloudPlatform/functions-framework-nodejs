@@ -7,20 +7,18 @@ This guide shows you how to use the Functions Framework for local testing with:
 
 ## Local Testing of CloudEvents
 
-In your `package.json`, specify `--signature-type=cloudevent"` for the `functions-framework`:
+Install `@google-cloud/functions-framework` and list it as a dependency in your `package.json`:
 
-```sh
-{
-  "scripts": {
-    "start": "functions-framework --target=helloCloudEvents --signature-type=cloudevent"
-  }
-}
+```
+npm install --save @google-cloud/functions-framework
 ```
 
-Create an `index.js` file:
+Create an `index.js` file and declare your function:
 
 ```js
-exports.helloCloudEvents = (cloudevent) => {
+const functions = require('@google-cloud/functions-framework');
+
+functions.cloudEvent('helloCloudEvents', (cloudevent) => {
   console.log(cloudevent.specversion);
   console.log(cloudevent.type);
   console.log(cloudevent.source);
@@ -28,6 +26,16 @@ exports.helloCloudEvents = (cloudevent) => {
   console.log(cloudevent.id);
   console.log(cloudevent.time);
   console.log(cloudevent.datacontenttype);
+});
+```
+
+Add a `package.json` script to start the Functions Framework and pass the name of your function as the `target`.
+
+```sh
+{
+  "scripts": {
+    "start": "functions-framework --target=helloCloudEvents"
+  }
 }
 ```
 
