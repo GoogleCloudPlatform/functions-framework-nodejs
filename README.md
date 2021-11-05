@@ -228,7 +228,9 @@ It will be passed as an argument to your function when it receives a request.
 Note that your function must use the `cloudevent`-style function signature:
 
 ```js
-exports.helloCloudEvents = (cloudevent) => {
+const functions = require('@google-cloud/functions-framework');
+
+functions.cloudEvent('helloCloudEvents', (cloudevent) => {
   console.log(cloudevent.specversion);
   console.log(cloudevent.type);
   console.log(cloudevent.source);
@@ -236,10 +238,18 @@ exports.helloCloudEvents = (cloudevent) => {
   console.log(cloudevent.id);
   console.log(cloudevent.time);
   console.log(cloudevent.datacontenttype);
-};
+});
 ```
 
-To enable CloudEvents, set the signature type to `cloudevent`. By default, the HTTP signature will be used and automatic event unmarshalling will be disabled.
+To enable the CloudEvent functions, you must list the Functions Framework as a dependency in your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "~2.0.0-beta.1"
+  }
+}
+```
 
 Learn how to use CloudEvents in this [guide](docs/cloudevents.md).
 
