@@ -17,7 +17,7 @@ import {
   isBinaryCloudEvent,
   getBinaryCloudEventContext,
   EventConversionError,
-} from '../cloudevents';
+} from '../cloud_events';
 
 // Maps CloudEvent types to the equivalent GCF Event type
 export const CE_TO_BACKGROUND_TYPE: {[k: string]: string} = {
@@ -132,7 +132,7 @@ const marshalConvertableCloudEvent = (
       // FirebaseAuth resource format
       resource = name;
       if ('metadata' in data) {
-        // Some metadata are not consistent between cloudevents and legacy events
+        // Some metadata are not consistent between CloudEvents and legacy events
         const metadata: object = data.metadata;
         data.metadata = {};
         // eslint-disable-next-line prefer-const
@@ -177,7 +177,7 @@ const marshalConvertableCloudEvent = (
  * @param res express response object
  * @param next function used to pass control to the next middle middleware function in the stack
  */
-export const cloudeventToBackgroundEventMiddleware = (
+export const cloudEventToBackgroundEventMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction

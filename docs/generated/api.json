@@ -171,12 +171,12 @@
       "members": [
         {
           "kind": "Variable",
-          "canonicalReference": "@google-cloud/functions-framework!cloudevent:var",
-          "docComment": "/**\n * Register a function that handles CloudEvents.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to trigger when handling cloudevents\n *\n * @public\n */\n",
+          "canonicalReference": "@google-cloud/functions-framework!cloudEvent:var",
+          "docComment": "/**\n * Register a function that handles CloudEvents.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to trigger when handling CloudEvents\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "cloudevent: "
+              "text": "cloudEvent: "
             },
             {
               "kind": "Content",
@@ -193,7 +193,7 @@
             }
           ],
           "releaseTag": "Public",
-          "name": "cloudevent",
+          "name": "cloudEvent",
           "variableTypeTokenRange": {
             "startIndex": 1,
             "endIndex": 4
@@ -202,7 +202,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "@google-cloud/functions-framework!CloudEventFunction:interface",
-          "docComment": "/**\n * A cloudevent function handler.\n *\n * @public\n */\n",
+          "docComment": "/**\n * A CloudEvent function handler.\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -219,7 +219,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "(cloudevent: "
+                  "text": "(cloudEvent: "
                 },
                 {
                   "kind": "Reference",
@@ -247,7 +247,7 @@
               "overloadIndex": 1,
               "parameters": [
                 {
-                  "parameterName": "cloudevent",
+                  "parameterName": "cloudEvent",
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
@@ -261,7 +261,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "@google-cloud/functions-framework!CloudEventFunctionWithCallback:interface",
-          "docComment": "/**\n * A cloudevent function handler with callback.\n *\n * @public\n */\n",
+          "docComment": "/**\n * A CloudEvent function handler with callback.\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -278,7 +278,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "(cloudevent: "
+                  "text": "(cloudEvent: "
                 },
                 {
                   "kind": "Reference",
@@ -315,7 +315,7 @@
               "overloadIndex": 1,
               "parameters": [
                 {
-                  "parameterName": "cloudevent",
+                  "parameterName": "cloudEvent",
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2

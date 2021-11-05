@@ -5,25 +5,25 @@ import * as express from 'express';
 /**
  * Register a function that handles CloudEvents.
  * @param functionName - the name of the function
- * @param handler - the function to trigger when handling cloudevents
+ * @param handler - the function to trigger when handling CloudEvents
  * @public
  */
-export declare const cloudevent: (functionName: string, handler: CloudEventFunction) => void;
+export declare const cloudEvent: (functionName: string, handler: CloudEventFunction) => void;
 
 /**
- * A cloudevent function handler.
+ * A CloudEvent function handler.
  * @public
  */
 export declare interface CloudEventFunction {
-    (cloudevent: CloudEventsContext): any;
+    (cloudEvent: CloudEventsContext): any;
 }
 
 /**
- * A cloudevent function handler with callback.
+ * A CloudEvent function handler with callback.
  * @public
  */
 export declare interface CloudEventFunctionWithCallback {
-    (cloudevent: CloudEventsContext, callback: Function): any;
+    (cloudEvent: CloudEventsContext, callback: Function): any;
 }
 
 /**

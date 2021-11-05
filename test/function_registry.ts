@@ -25,8 +25,8 @@ describe('function_registry', () => {
     assert.deepStrictEqual((userFunction as () => string)(), 'HTTP_PASS');
   });
 
-  it('can register cloudevent functions', () => {
-    FunctionRegistry.cloudevent('ceFunction', () => 'CE_PASS');
+  it('can register CloudEvent functions', () => {
+    FunctionRegistry.cloudEvent('ceFunction', () => 'CE_PASS');
     const {
       userFunction,
       signatureType,

@@ -3,10 +3,10 @@ import * as sinon from 'sinon';
 import {Response, Request} from 'express';
 
 import {
-  cloudeventToBackgroundEventMiddleware,
+  cloudEventToBackgroundEventMiddleware,
   parseSource,
-} from '../../src/middleware/cloudevent_to_background_event';
-import {EventConversionError} from '../../src/cloudevents';
+} from '../../src/middleware/cloud_event_to_background_event';
+import {EventConversionError} from '../../src/cloud_events';
 
 const ceHeaders = (eventType: string, source: string) => ({
   'ce-id': 'my-id',
@@ -54,7 +54,7 @@ describe('parseSource', () => {
   });
 });
 
-describe('cloudeventToBackgroundEventMiddleware', () => {
+describe('cloudEventToBackgroundEventMiddleware', () => {
   const testData = [
     {
       name: 'Non-CE-Request is not altered',
@@ -174,7 +174,7 @@ describe('cloudeventToBackgroundEventMiddleware', () => {
         headers: test.headers as object,
         header: (key: string) => (test.headers as {[key: string]: string})[key],
       };
-      cloudeventToBackgroundEventMiddleware(
+      cloudEventToBackgroundEventMiddleware(
         request as Request,
         {} as Response,
         next
