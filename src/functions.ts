@@ -55,18 +55,18 @@ export interface EventFunctionWithCallback {
   (data: {}, context: Context, callback: Function): any;
 }
 /**
- * A cloudevent function handler.
+ * A CloudEvent function handler.
  * @public
  */
 export interface CloudEventFunction {
-  (cloudevent: CloudEventsContext): any;
+  (cloudEvent: CloudEventsContext): any;
 }
 /**
- * A cloudevent function handler with callback.
+ * A CloudEvent function handler with callback.
  * @public
  */
 export interface CloudEventFunctionWithCallback {
-  (cloudevent: CloudEventsContext, callback: Function): any;
+  (cloudEvent: CloudEventsContext, callback: Function): any;
 }
 /**
  * A function handler.

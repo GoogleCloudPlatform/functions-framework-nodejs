@@ -20,8 +20,8 @@ import {HandlerFunction, Request, Response} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
-import {cloudeventToBackgroundEventMiddleware} from './middleware/cloudevent_to_background_event';
-import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloudevent';
+import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
+import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
 
 /**
@@ -108,7 +108,7 @@ export function getServer(
   }
 
   if (functionSignatureType === 'event') {
-    app.use(cloudeventToBackgroundEventMiddleware);
+    app.use(cloudEventToBackgroundEventMiddleware);
   }
   if (functionSignatureType === 'cloudevent') {
     app.use(backgroundEventToCloudEventMiddleware);

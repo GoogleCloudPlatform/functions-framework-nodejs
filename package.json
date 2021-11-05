@@ -21,7 +21,7 @@
     "conformance": "./run_conformance_tests.sh",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc -p .",
+    "compile": "rm -rf ./build && tsc -p .",
     "fix": "gts fix",
     "predocs": "npm run compile",
     "docs": "api-extractor run --local --verbose",

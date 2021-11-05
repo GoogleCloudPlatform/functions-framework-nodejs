@@ -234,8 +234,8 @@ describe('CloudEvent Function', () => {
   testData.forEach(test => {
     it(`${test.name}`, async () => {
       let receivedCloudEvent: functions.CloudEventsContext | null = null;
-      const server = getServer((cloudevent: functions.CloudEventsContext) => {
-        receivedCloudEvent = cloudevent as functions.CloudEventsContext;
+      const server = getServer((cloudEvent: functions.CloudEventsContext) => {
+        receivedCloudEvent = cloudEvent as functions.CloudEventsContext;
       }, 'cloudevent');
       await supertest(server)
         .post('/')

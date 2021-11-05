@@ -8,9 +8,9 @@ functions.http('writeHttpDeclarative', (req, res) => {
   res.end(200);
 });
 
-functions.cloudevent('writeCloudEventDeclarative', cloudevent => {
-  cloudevent.datacontenttype = 'application/json';
-  writeJson(cloudevent);
+functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
+  cloudEvent.datacontenttype = 'application/json';
+  writeJson(cloudEvent);
 });
 
 function writeHttp(req, res) {
@@ -18,9 +18,9 @@ function writeHttp(req, res) {
   res.end(200);
 }
 
-function writeCloudEvent(cloudevent) {
-  cloudevent.datacontenttype = 'application/json';
-  writeJson(cloudevent);
+function writeCloudEvent(cloudEvent) {
+  cloudEvent.datacontenttype = 'application/json';
+  writeJson(cloudEvent);
 }
 
 function writeLegacyEvent(data, context) {

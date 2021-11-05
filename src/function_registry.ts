@@ -64,10 +64,10 @@ export const http = (functionName: string, handler: HttpFunction): void => {
 /**
  * Register a function that handles CloudEvents.
  * @param functionName - the name of the function
- * @param handler - the function to trigger when handling cloudevents
+ * @param handler - the function to trigger when handling CloudEvents
  * @public
  */
-export const cloudevent = (
+export const cloudEvent = (
   functionName: string,
   handler: CloudEventFunction
 ): void => {
