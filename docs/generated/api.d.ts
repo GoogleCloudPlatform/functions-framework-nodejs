@@ -27,27 +27,27 @@ export declare interface CloudEventFunctionWithCallback {
 }
 
 /**
- * The CloudEvents v1.0 context object for the event.
- * {@link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes}
+ * The CloudEvents v1.0 context attributes.
+ * {@link https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#context-attributes}
  * @public
  */
 export declare interface CloudEventsContext {
     /**
-     * Type of occurrence which has happened.
+     * ID of the event.
      */
-    type?: string;
-    /**
-     * The version of the CloudEvents specification which the event uses.
-     */
-    specversion?: string;
+    id: string;
     /**
      * The event producer.
      */
-    source?: string;
+    source: string;
     /**
-     * ID of the event.
+     * The version of the CloudEvents specification which the event uses.
      */
-    id?: string;
+    specversion: string;
+    /**
+     * Type of occurrence which has happened.
+     */
+    type: string;
     /**
      * Timestamp of when the event happened.
      */
@@ -65,14 +65,14 @@ export declare interface CloudEventsContext {
      */
     datacontenttype?: string;
     /**
-     * The event data.
-     */
-    data?: Record<string, unknown | string | number | boolean> | string | number | boolean | null | unknown;
-    /**
      * The traceparent string, containing a trace version, trace ID, span ID, and trace options.
      * @see https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md
      */
     traceparent?: string;
+    /**
+     * The event payload.
+     */
+    data?: any;
 }
 
 /**

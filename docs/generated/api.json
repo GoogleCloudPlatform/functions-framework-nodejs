@@ -336,7 +336,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "@google-cloud/functions-framework!CloudEventsContext:interface",
-          "docComment": "/**\n * The CloudEvents v1.0 context object for the event. {@link https://github.com/cloudevents/spec/blob/master/spec.md#context-attributes}\n *\n * @public\n */\n",
+          "docComment": "/**\n * The CloudEvents v1.0 context attributes. {@link https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#context-attributes}\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -349,20 +349,15 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "@google-cloud/functions-framework!CloudEventsContext#data:member",
-              "docComment": "/**\n * The event data.\n */\n",
+              "docComment": "/**\n * The event payload.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
                   "text": "data?: "
                 },
                 {
-                  "kind": "Reference",
-                  "text": "Record",
-                  "canonicalReference": "!Record:type"
-                },
-                {
                   "kind": "Content",
-                  "text": "<string, unknown | string | number | boolean> | string | number | boolean | null | unknown"
+                  "text": "any"
                 },
                 {
                   "kind": "Content",
@@ -374,7 +369,7 @@
               "name": "data",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 3
+                "endIndex": 2
               }
             },
             {
@@ -436,7 +431,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "id?: "
+                  "text": "id: "
                 },
                 {
                   "kind": "Content",
@@ -447,7 +442,7 @@
                   "text": ";"
                 }
               ],
-              "isOptional": true,
+              "isOptional": false,
               "releaseTag": "Public",
               "name": "id",
               "propertyTypeTokenRange": {
@@ -462,7 +457,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "source?: "
+                  "text": "source: "
                 },
                 {
                   "kind": "Content",
@@ -473,7 +468,7 @@
                   "text": ";"
                 }
               ],
-              "isOptional": true,
+              "isOptional": false,
               "releaseTag": "Public",
               "name": "source",
               "propertyTypeTokenRange": {
@@ -488,7 +483,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "specversion?: "
+                  "text": "specversion: "
                 },
                 {
                   "kind": "Content",
@@ -499,7 +494,7 @@
                   "text": ";"
                 }
               ],
-              "isOptional": true,
+              "isOptional": false,
               "releaseTag": "Public",
               "name": "specversion",
               "propertyTypeTokenRange": {
@@ -592,7 +587,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type?: "
+                  "text": "type: "
                 },
                 {
                   "kind": "Content",
@@ -603,7 +598,7 @@
                   "text": ";"
                 }
               ],
-              "isOptional": true,
+              "isOptional": false,
               "releaseTag": "Public",
               "name": "type",
               "propertyTypeTokenRange": {

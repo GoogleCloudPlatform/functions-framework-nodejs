@@ -8,4 +8,4 @@ It can be run via the following command:
 npm run generate_cloudevents
 ```
 
-This will regenerate all known CloudEvent type interfaces in the `src/cloudevent_types` directory of this repository.
+This will regenerate all known CloudEvent type interfaces in the `src/cloud_event_types` directory of this repository.

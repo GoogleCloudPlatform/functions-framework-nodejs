@@ -25,16 +25,16 @@ export interface CloudEventFunctionWithCallback {
 
 // @public
 export interface CloudEventsContext {
-    data?: Record<string, unknown | string | number | boolean> | string | number | boolean | null | unknown;
+    data?: any;
     datacontenttype?: string;
     dataschema?: string;
-    id?: string;
-    source?: string;
-    specversion?: string;
+    id: string;
+    source: string;
+    specversion: string;
     subject?: string;
     time?: string;
     traceparent?: string;
-    type?: string;
+    type: string;
 }
 
 // @public

@@ -5,7 +5,7 @@
   "main": "build/src/index.js",
   "dependencies": {},
   "scripts": {
-    "generate_cloudevents": "ts-node ./src/generate.ts && gts fix ../../src/cloudevent_types/**/*.ts"
+    "generate_cloudevents": "ts-node ./src/generate.ts && gts fix ../../src/cloud_event_types/**/*.ts"
   },
   "files": [
     "build/src/**/*.js",
