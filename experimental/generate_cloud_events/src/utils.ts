@@ -19,7 +19,7 @@ import * as https from 'https';
 /**
  * Relative path of src dictory to write the TS files ts.
  */
-export const RELATIVE_SRC_DIR = '../../src/cloudevent_types';
+export const RELATIVE_SRC_DIR = '../../src/cloud_event_types';
 
 /**
  * Add a JSDoc comment to an AST node
@@ -72,7 +72,11 @@ export const fetch = (url: string): Promise<{[key: string]: any}> => {
 export const getDataFilePath = (url: string): string => {
   return (
     RELATIVE_SRC_DIR +
-    url.split('jsonschema/google/events')[1].replace('.json', '.ts')
+    url
+      .split('jsonschema/google/events')[1]
+      .replace('.json', '.ts')
+      .replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+      .replace('/_', '/')
   );
 };
 

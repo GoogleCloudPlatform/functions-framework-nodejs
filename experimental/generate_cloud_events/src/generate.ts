@@ -116,8 +116,13 @@ const generateInterfaceBody = (properties: {
  */
 const generateCloudEventImport = (): t.Statement => {
   return t.importDeclaration(
-    [t.importSpecifier(t.identifier('CloudEvent'), t.identifier('CloudEvent'))],
-    t.stringLiteral('./CloudEvent')
+    [
+      t.importSpecifier(
+        t.identifier('CloudEventsContext'),
+        t.identifier('CloudEventsContext')
+      ),
+    ],
+    t.stringLiteral('./cloud_events_context')
   );
 };
 
@@ -156,7 +161,7 @@ const generateCloudEventInterface = (schema: TypeSchema): t.Statement => {
     t.tsInterfaceDeclaration(
       t.identifier(schema.name.replace(/Data$/, 'CloudEvent')),
       null,
-      [t.tsExpressionWithTypeArguments(t.identifier('CloudEvent'))],
+      [t.tsExpressionWithTypeArguments(t.identifier('CloudEventsContext'))],
       t.tsInterfaceBody([
         t.tsPropertySignature(
           t.identifier('type'),
@@ -248,6 +253,6 @@ utils.fetch(ROOT_TYPE_CATALOG_URL).then(catalog => {
     utils.addCopyright(ast);
 
     const {code} = generate(ast);
-    fs.writeFileSync(utils.RELATIVE_SRC_DIR + '/GoogleCloudEvent.ts', code);
+    fs.writeFileSync(utils.RELATIVE_SRC_DIR + '/google_cloud_event.ts', code);
   });
 });

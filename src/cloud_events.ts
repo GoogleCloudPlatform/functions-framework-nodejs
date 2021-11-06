@@ -59,7 +59,7 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
 export function getBinaryCloudEventContext(
   req: express.Request
 ): CloudEventsContext {
-  const context: CloudEventsContext = {};
+  const context = {} as CloudEventsContext;
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {
       const attributeName = name.substr(

@@ -13,25 +13,25 @@
 // limitations under the License.
 
 /* eslint-disable @typescript-eslint/no-explicit-any*/
-import {LogEntryData} from './cloud/audit/v1/LogEntryData';
-import {BuildEventData} from './cloud/cloudbuild/v1/BuildEventData';
-import {DocumentEventData} from './cloud/firestore/v1/DocumentEventData';
-import {MessagePublishedData} from './cloud/pubsub/v1/MessagePublishedData';
-import {SchedulerJobData} from './cloud/scheduler/v1/SchedulerJobData';
-import {StorageObjectData} from './cloud/storage/v1/StorageObjectData';
-import {AnalyticsLogData} from './firebase/analytics/v1/AnalyticsLogData';
-import {AuthEventData} from './firebase/auth/v1/AuthEventData';
-import {ReferenceEventData} from './firebase/database/v1/ReferenceEventData';
-import {RemoteConfigEventData} from './firebase/remoteconfig/v1/RemoteConfigEventData';
-import {TestMatrixEventData} from './firebase/testlab/v1/TestMatrixEventData';
-import {CloudEvent} from './CloudEvent';
+import {LogEntryData} from './cloud/audit/v1/log_entry_data';
+import {BuildEventData} from './cloud/cloudbuild/v1/build_event_data';
+import {DocumentEventData} from './cloud/firestore/v1/document_event_data';
+import {MessagePublishedData} from './cloud/pubsub/v1/message_published_data';
+import {SchedulerJobData} from './cloud/scheduler/v1/scheduler_job_data';
+import {StorageObjectData} from './cloud/storage/v1/storage_object_data';
+import {AnalyticsLogData} from './firebase/analytics/v1/analytics_log_data';
+import {AuthEventData} from './firebase/auth/v1/auth_event_data';
+import {ReferenceEventData} from './firebase/database/v1/reference_event_data';
+import {RemoteConfigEventData} from './firebase/remoteconfig/v1/remote_config_event_data';
+import {TestMatrixEventData} from './firebase/testlab/v1/test_matrix_event_data';
+import {CloudEventsContext} from './cloud_events_context';
 
 /**
  * The schema of CloudEvents emmitted by Cloud Audit Logs.
  *
  * @public
  */
-export interface LogEntryCloudEvent extends CloudEvent {
+export interface LogEntryCloudEvent extends CloudEventsContext {
   type: 'google.cloud.audit.log.v1.written';
   data: LogEntryData;
 }
@@ -41,7 +41,7 @@ export interface LogEntryCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface BuildEventCloudEvent extends CloudEvent {
+export interface BuildEventCloudEvent extends CloudEventsContext {
   type: 'google.cloud.cloudbuild.build.v1.statusChanged';
   data: BuildEventData;
 }
@@ -51,7 +51,7 @@ export interface BuildEventCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface DocumentEventCloudEvent extends CloudEvent {
+export interface DocumentEventCloudEvent extends CloudEventsContext {
   type:
     | 'google.cloud.firestore.document.v1.created'
     | 'google.cloud.firestore.document.v1.updated'
@@ -65,7 +65,7 @@ export interface DocumentEventCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface MessagePublishedCloudEvent extends CloudEvent {
+export interface MessagePublishedCloudEvent extends CloudEventsContext {
   type: 'google.cloud.pubsub.topic.v1.messagePublished';
   data: MessagePublishedData;
 }
@@ -75,7 +75,7 @@ export interface MessagePublishedCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface SchedulerJobCloudEvent extends CloudEvent {
+export interface SchedulerJobCloudEvent extends CloudEventsContext {
   type: 'google.cloud.scheduler.job.v1.executed';
   data: SchedulerJobData;
 }
@@ -85,7 +85,7 @@ export interface SchedulerJobCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface StorageObjectCloudEvent extends CloudEvent {
+export interface StorageObjectCloudEvent extends CloudEventsContext {
   type:
     | 'google.cloud.storage.object.v1.finalized'
     | 'google.cloud.storage.object.v1.archived'
@@ -99,7 +99,7 @@ export interface StorageObjectCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface AnalyticsLogCloudEvent extends CloudEvent {
+export interface AnalyticsLogCloudEvent extends CloudEventsContext {
   type: 'google.firebase.analytics.log.v1.written';
   data: AnalyticsLogData;
 }
@@ -109,7 +109,7 @@ export interface AnalyticsLogCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface AuthEventCloudEvent extends CloudEvent {
+export interface AuthEventCloudEvent extends CloudEventsContext {
   type:
     | 'google.firebase.auth.user.v1.created'
     | 'google.firebase.auth.user.v1.deleted';
@@ -121,7 +121,7 @@ export interface AuthEventCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface ReferenceEventCloudEvent extends CloudEvent {
+export interface ReferenceEventCloudEvent extends CloudEventsContext {
   type:
     | 'google.firebase.database.ref.v1.created'
     | 'google.firebase.database.ref.v1.updated'
@@ -135,7 +135,7 @@ export interface ReferenceEventCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface RemoteConfigEventCloudEvent extends CloudEvent {
+export interface RemoteConfigEventCloudEvent extends CloudEventsContext {
   type: 'google.firebase.remoteconfig.remoteConfig.v1.updated';
   data: RemoteConfigEventData;
 }
@@ -145,7 +145,7 @@ export interface RemoteConfigEventCloudEvent extends CloudEvent {
  *
  * @public
  */
-export interface TestMatrixEventCloudEvent extends CloudEvent {
+export interface TestMatrixEventCloudEvent extends CloudEventsContext {
   type: 'google.firebase.testlab.testMatrix.v1.completed';
   data: TestMatrixEventData;
 }
