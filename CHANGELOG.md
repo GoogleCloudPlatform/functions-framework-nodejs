@@ -4,6 +4,46 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [2.0.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.1...v2.0.0) (2021-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove eventarc cloudevent types (#385)
+* update the build to use api-extractor types (#383)
+* use snake case for generated cloudevent files (#382)
+* rename cloudevent to CloudEvent (#379)
+* Add type annotation for Request.rawBody
+* move function wrapping earlier (#335)
+* This commit refactors the SignatureType enum into an array of strings declared [as const](https://github.com/Microsoft/TypeScript/pull/29510). This allows the SignatureType type to be expressed as a union type, which works a bit better when parsing a users provided string.
+
+### Features
+
+* add google CloudEvent types ([#376](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/376)) ([292ade9](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/292ade9e5530b401c093882da857e0b107aef14b))
+* enable traceparent header for cloudevents ([#336](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/336)) ([aba9cb4](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/aba9cb44c7551cdeb335a96ddce3628c89103de2))
+* generate cloudevent types from googleapis/google-cloudevents ([#371](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/371)) ([7617801](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/7617801e3cbd3f5da1ef7797ebc98962f3e2e0b4))
+* introduce declarative function signatures ([#347](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/347)) ([db1ba9e](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/db1ba9e480b9256f5129ae5c58877cd316c08b26))
+* update the build to use api-extractor types ([#383](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/383)) ([752c49c](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/752c49ccf075c1869643234f646ed4590e3b31c4))
+
+
+### Bug Fixes
+
+* Add type annotation for Request.rawBody ([60edd7e](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/60edd7e33bc8d78446c5f6b7911126ddd5d19ffe))
+* remove tgz file ([#346](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/346)) ([51cb666](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/51cb666a4d768b6679a06ff1657a92c9d76721ef))
+
+
+### Reverts
+
+* remove eventarc cloudevent types ([#385](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/385)) ([5207741](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/5207741e38e28145bda6e82c33aea07921ff464b))
+
+
+### Code Refactoring
+
+* move function wrapping earlier ([#335](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/335)) ([b70b2d8](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/b70b2d8395b885287960ef841517d7a3ed90ba05))
+* rename cloudevent to CloudEvent ([#379](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/379)) ([11d35b3](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/11d35b33ba39aad0b45b3c2e4f9fd1748520e113)), closes [#378](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/378)
+* use a union type for SignatureType ([#331](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/331)) ([9cf46ed](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/9cf46edc9b1b890e2a6fd1aec8d818074585783b))
+* use snake case for generated cloudevent files ([#382](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/382)) ([05a0527](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/05a0527871052a915320d3e288e63565e7003528))
+
 ### [1.10.1](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.0...v1.10.1) (2021-09-20)
 
 
