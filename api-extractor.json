@@ -19,7 +19,7 @@
 
   "dtsRollup": {
     "enabled": true,
-    "untrimmedFilePath": "docs/generated/api.d.ts",
+    "untrimmedFilePath": "build/src/index.d.ts",
     "omitTrimmingComments": true
   },
 
