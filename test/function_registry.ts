@@ -17,20 +17,16 @@ import * as FunctionRegistry from '../src/function_registry';
 describe('function_registry', () => {
   it('can register http functions', () => {
     FunctionRegistry.http('httpFunction', () => 'HTTP_PASS');
-    const {
-      userFunction,
-      signatureType,
-    } = FunctionRegistry.getRegisteredFunction('httpFunction')!;
+    const {userFunction, signatureType} =
+      FunctionRegistry.getRegisteredFunction('httpFunction')!;
     assert.deepStrictEqual('http', signatureType);
     assert.deepStrictEqual((userFunction as () => string)(), 'HTTP_PASS');
   });
 
   it('can register CloudEvent functions', () => {
     FunctionRegistry.cloudEvent('ceFunction', () => 'CE_PASS');
-    const {
-      userFunction,
-      signatureType,
-    } = FunctionRegistry.getRegisteredFunction('ceFunction')!;
+    const {userFunction, signatureType} =
+      FunctionRegistry.getRegisteredFunction('ceFunction')!;
     assert.deepStrictEqual('cloudevent', signatureType);
     assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
   });
