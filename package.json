@@ -18,15 +18,15 @@
   },
   "scripts": {
     "test": "mocha build/test --recursive",
+    "build": "npm run clean && npm run compile && npm run docs",
     "conformance": "./run_conformance_tests.sh",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "rm -rf ./build && tsc -p .",
+    "compile": "tsc -p .",
     "fix": "gts fix",
-    "predocs": "npm run compile",
     "docs": "api-extractor run --local --verbose",
     "watch": "npm run compile -- --watch",
-    "prepare": "npm run compile",
+    "prepare": "npm run build",
     "pretest": "npm run compile"
   },
   "files": [

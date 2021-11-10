@@ -16,5 +16,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           npm install
-          npm run compile
+          npm run build
           npm publish
