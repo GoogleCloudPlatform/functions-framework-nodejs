@@ -46,7 +46,8 @@ describe('loading function', () => {
         test.target,
         'http'
       );
-      const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
+      const userFunction =
+        loadedFunction?.userFunction as functions.HttpFunction;
       const returned = userFunction(express.request, express.response);
       assert.strictEqual(returned, 'PASS');
     });

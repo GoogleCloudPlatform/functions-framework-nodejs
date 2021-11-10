@@ -25,12 +25,12 @@ describe('wrapUserFunction', () => {
     } as Request);
 
   const createResponse = () =>
-    (({
+    ({
       locals: {
         functionExecutionFinished: false,
       },
       sendStatus: sinon.spy(),
-    } as unknown) as Response);
+    } as unknown as Response);
 
   it('correctly wraps an http function', done => {
     const request = createRequest({foo: 'bar'});
