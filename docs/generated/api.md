@@ -6,6 +6,7 @@
 
 /// <reference types="node" />
 
+import { CloudEvent } from 'cloudevents';
 import * as express from 'express';
 
 // @public
@@ -14,27 +15,13 @@ export const cloudEvent: (functionName: string, handler: CloudEventFunction) => 
 // @public
 export interface CloudEventFunction {
     // (undocumented)
-    (cloudEvent: CloudEventsContext): any;
+    (cloudEvent: CloudEvent): any;
 }
 
 // @public
 export interface CloudEventFunctionWithCallback {
     // (undocumented)
-    (cloudEvent: CloudEventsContext, callback: Function): any;
-}
-
-// @public
-export interface CloudEventsContext {
-    data?: any;
-    datacontenttype?: string;
-    dataschema?: string;
-    id: string;
-    source: string;
-    specversion: string;
-    subject?: string;
-    time?: string;
-    traceparent?: string;
-    type: string;
+    (cloudEvent: CloudEvent, callback: Function): any;
 }
 
 // @public
@@ -48,7 +35,7 @@ export interface CloudFunctionsContext {
 }
 
 // @public
-export type Context = CloudFunctionsContext | CloudEventsContext;
+export type Context = CloudFunctionsContext | CloudEvent;
 
 // @public
 export interface Data {
