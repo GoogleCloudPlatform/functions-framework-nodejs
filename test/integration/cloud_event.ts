@@ -17,6 +17,7 @@ import * as functions from '../../src/functions';
 import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
+import {CloudEvent} from 'cloudevents';
 
 const TEST_CLOUD_EVENT = {
   specversion: '1.0',
@@ -233,9 +234,9 @@ describe('CloudEvent Function', () => {
   ];
   testData.forEach(test => {
     it(`${test.name}`, async () => {
-      let receivedCloudEvent: functions.CloudEventsContext | null = null;
-      const server = getServer((cloudEvent: functions.CloudEventsContext) => {
-        receivedCloudEvent = cloudEvent as functions.CloudEventsContext;
+      let receivedCloudEvent: CloudEvent | null = null;
+      const server = getServer((cloudEvent: CloudEvent) => {
+        receivedCloudEvent = cloudEvent as CloudEvent;
       }, 'cloudevent');
       await supertest(server)
         .post('/')
