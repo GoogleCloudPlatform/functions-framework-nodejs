@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as functions from '../../src/functions';
 import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
