@@ -40,7 +40,7 @@ describe('function_registry', () => {
     ];
     validFunctions.forEach((functionName) => {
       assert.doesNotThrow(() => {
-        FunctionRegistry.http(functionName, () => 'FAIL')
+        FunctionRegistry.http(functionName, () => 'OK')
       });
     });
 
@@ -52,7 +52,7 @@ describe('function_registry', () => {
     ];
     invalidFunctions.forEach((functionName) => {
       assert.throws(() => {
-        FunctionRegistry.http(functionName, () => 'FAIL')
+        FunctionRegistry.http(functionName, () => 'OK')
       });
     });
   });
