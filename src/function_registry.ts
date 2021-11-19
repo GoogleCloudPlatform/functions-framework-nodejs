@@ -52,7 +52,7 @@ const register = (
  */
 export const isValidFunctionName = (functionName: string): boolean => {
   // Validate function name with alpha characters, and dashes
-  const regex = /^[a-zA-Z0-9-]+$/;
+  const regex = /^[A-Za-z](?:[-_A-Za-z0-9]{0,61}[A-Za-z0-9])?$/;
   return regex.test(functionName);
 };
 
