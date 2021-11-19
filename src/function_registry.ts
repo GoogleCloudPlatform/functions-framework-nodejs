@@ -44,9 +44,11 @@ const register = (
 };
 
 /**
- * Returns true if the function name is valid (lowercase alphanumeric, numbers, or dash characters).
- * Does not check for beginning or ending with a dash.
- * Does not check for length <= 63 characters.
+ * Returns true if the function name is valid
+ * - must contain only alphanumeric, numbers, or dash characters
+ * - must be <= 63 characters
+ * - must start with a letter
+ * - must end with a letter or number
  * @param functionName the function name
  * @returns true if the function name is valid
  */
