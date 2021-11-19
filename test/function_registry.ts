@@ -33,26 +33,18 @@ describe('function_registry', () => {
 
   it('throws an error if you try to register a function with an invalid URL', () => {
     // Valid function names
-    const validFunctions = [
-      'httpFunction',
-      'ceFunction',
-      'test-func',
-    ];
-    validFunctions.forEach((functionName) => {
+    const validFunctions = ['httpFunction', 'ceFunction', 'test-func'];
+    validFunctions.forEach(functionName => {
       assert.doesNotThrow(() => {
-        FunctionRegistry.http(functionName, () => 'OK')
+        FunctionRegistry.http(functionName, () => 'OK');
       });
     });
 
     // Invalid function names
-    const invalidFunctions = [
-      '',
-      'foo bar',
-      'ស្ថានីយ',
-    ];
-    invalidFunctions.forEach((functionName) => {
+    const invalidFunctions = ['', 'foo bar', 'ស្ថានីយ'];
+    invalidFunctions.forEach(functionName => {
       assert.throws(() => {
-        FunctionRegistry.http(functionName, () => 'OK')
+        FunctionRegistry.http(functionName, () => 'OK');
       });
     });
   });

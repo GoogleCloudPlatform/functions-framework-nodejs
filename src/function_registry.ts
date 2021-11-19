@@ -44,17 +44,17 @@ const register = (
 };
 
 /**
- * Returns true if the function name is valid (lowercase alphanumeric or dash characters).
+ * Returns true if the function name is valid (lowercase alphanumeric, numbers, or dash characters).
  * Does not check for beginning or ending with a dash.
  * Does not check for length <= 63 characters.
  * @param functionName the function name
  * @returns true if the function name is valid
  */
 export const isValidFunctionName = (functionName: string): boolean => {
-  // Validate function name with alpha characters, numbers, and dashes
-  const regex = /^[a-zA-Z-]+$/;
+  // Validate function name with alpha characters, and dashes
+  const regex = /^[a-zA-Z0-9-]+$/;
   return regex.test(functionName);
-}
+};
 
 /**
  * Get a declaratively registered function
