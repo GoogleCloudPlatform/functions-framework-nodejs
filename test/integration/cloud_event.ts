@@ -18,6 +18,7 @@ import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
 
+// A structured CloudEvent
 const TEST_CLOUD_EVENT = {
   specversion: '1.0',
   type: 'com.google.cloud.storage',
@@ -25,11 +26,13 @@ const TEST_CLOUD_EVENT = {
   subject: 'test-subject',
   id: 'test-1234-1234',
   time: '2020-05-13T01:23:45Z',
-  traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
   datacontenttype: 'application/json',
   data: {
     some: 'payload',
   },
+};
+const TEST_EXTENSIONS = {
+  traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
 };
 
 describe('CloudEvent Function', () => {
@@ -55,13 +58,10 @@ describe('CloudEvent Function', () => {
     },
     {
       name: 'CloudEvents v1.0 structured content request',
-      headers: {
-        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
-      },
+      headers: {},
       body: TEST_CLOUD_EVENT,
       expectedCloudEvent: {
         ...TEST_CLOUD_EVENT,
-        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
       },
     },
     {
@@ -75,9 +75,10 @@ describe('CloudEvent Function', () => {
         'ce-id': TEST_CLOUD_EVENT.id,
         'ce-time': TEST_CLOUD_EVENT.time,
         'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
-        traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
       },
-      body: TEST_CLOUD_EVENT.data,
+      body: {
+        ...TEST_CLOUD_EVENT.data,
+      },
       expectedCloudEvent: TEST_CLOUD_EVENT,
     },
     {
@@ -229,6 +230,33 @@ describe('CloudEvent Function', () => {
           },
         },
       },
+    },
+    {
+      name: 'CloudEvents v1.0 traceparent extension – structured',
+      headers: {
+        'Content-Type': 'application/cloudevents+json',
+        ...TEST_EXTENSIONS,
+      },
+      body: TEST_CLOUD_EVENT,
+      expectedCloudEvent: {...TEST_CLOUD_EVENT, ...TEST_EXTENSIONS},
+    },
+    {
+      name: 'CloudEvents v1.0 traceparent extension – binary',
+      headers: {
+        'Content-Type': 'application/json',
+        'ce-specversion': TEST_CLOUD_EVENT.specversion,
+        'ce-type': TEST_CLOUD_EVENT.type,
+        'ce-source': TEST_CLOUD_EVENT.source,
+        'ce-subject': TEST_CLOUD_EVENT.subject,
+        'ce-id': TEST_CLOUD_EVENT.id,
+        'ce-time': TEST_CLOUD_EVENT.time,
+        'ce-datacontenttype': TEST_CLOUD_EVENT.datacontenttype,
+        ...TEST_EXTENSIONS,
+      },
+      body: {
+        ...TEST_CLOUD_EVENT.data,
+      },
+      expectedCloudEvent: {...TEST_CLOUD_EVENT, ...TEST_EXTENSIONS},
     },
   ];
   testData.forEach(test => {
