@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as functions from '../../src/functions';
+import * as functions from '../../src/index';
 import * as sinon from 'sinon';
-import {getServer} from '../../src/server';
+import {getTestServer} from '../../src/testing';
 import * as supertest from 'supertest';
 
 // A structured CloudEvent
@@ -31,12 +31,20 @@ const TEST_CLOUD_EVENT = {
     some: 'payload',
   },
 };
+
 const TEST_EXTENSIONS = {
   traceparent: '00-65088630f09e0a5359677a7429456db7-97f23477fb2bf5ec-01',
 };
 
 describe('CloudEvent Function', () => {
   let clock: sinon.SinonFakeTimers;
+
+  let receivedCloudEvent: functions.CloudEventsContext | null;
+  before(() => {
+    functions.cloudEvent('testCloudEventFunction', ce => {
+      receivedCloudEvent = ce;
+    });
+  });
 
   beforeEach(() => {
     clock = sinon.useFakeTimers();
@@ -256,15 +264,15 @@ describe('CloudEvent Function', () => {
       body: {
         ...TEST_CLOUD_EVENT.data,
       },
-      expectedCloudEvent: {...TEST_CLOUD_EVENT, ...TEST_EXTENSIONS},
+      expectedCloudEvent: {
+        ...TEST_CLOUD_EVENT,
+        ...TEST_EXTENSIONS,
+      },
     },
   ];
   testData.forEach(test => {
     it(`${test.name}`, async () => {
-      let receivedCloudEvent: functions.CloudEventsContext | null = null;
-      const server = getServer((cloudEvent: functions.CloudEventsContext) => {
-        receivedCloudEvent = cloudEvent as functions.CloudEventsContext;
-      }, 'cloudevent');
+      const server = getTestServer('testCloudEventFunction');
       await supertest(server)
         .post('/')
         .set(test.headers)

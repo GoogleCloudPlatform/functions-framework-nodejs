@@ -13,11 +13,26 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
-import {Request, Response} from '../../src/functions';
+
+import * as functions from '../../src/index';
+import {getTestServer} from '../../src/testing';
 
 describe('HTTP Function', () => {
+  let callCount = 0;
+
+  before(() => {
+    functions.http('testHttpFunction', (req, res) => {
+      ++callCount;
+      res.send({
+        result: req.body.text,
+        query: req.query.param,
+      });
+    });
+  });
+
+  beforeEach(() => (callCount = 0));
+
   const testData = [
     {
       name: 'POST to empty path',
@@ -63,15 +78,7 @@ describe('HTTP Function', () => {
 
   testData.forEach(test => {
     it(test.name, async () => {
-      let callCount = 0;
-      const server = getServer((req: Request, res: Response) => {
-        ++callCount;
-        res.send({
-          result: req.body.text,
-          query: req.query.param,
-        });
-      }, 'http');
-      const st = supertest(server);
+      const st = supertest(getTestServer('testHttpFunction'));
       await (test.httpVerb === 'GET'
         ? st.get(test.path)
         : st.post(test.path).send({text: 'hello'})
