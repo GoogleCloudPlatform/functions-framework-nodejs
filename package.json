@@ -8,6 +8,10 @@
   "repository": "GoogleCloudPlatform/functions-framework-nodejs",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
+  "exports": {
+    ".": "./build/src/index.js",
+    "./testing": "./build/src/testing.js"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cloudevents": "^5.0.0",

@@ -30,4 +30,22 @@ describe('function_registry', () => {
     assert.deepStrictEqual('cloudevent', signatureType);
     assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
   });
+
+  it('throws an error if you try to register a function with an invalid URL', () => {
+    // Valid function names
+    const validFunctions = ['httpFunction', 'ceFunction', 'test-func'];
+    validFunctions.forEach(functionName => {
+      assert.doesNotThrow(() => {
+        FunctionRegistry.http(functionName, () => 'OK');
+      });
+    });
+
+    // Invalid function names
+    const invalidFunctions = ['', 'foo bar', 'ស្ថានីយ'];
+    invalidFunctions.forEach(functionName => {
+      assert.throws(() => {
+        FunctionRegistry.http(functionName, () => 'OK');
+      });
+    });
+  });
 });

@@ -33,10 +33,29 @@ const register = (
   signatureType: SignatureType,
   userFunction: HandlerFunction
 ): void => {
+  if (!isValidFunctionName(functionName)) {
+    throw new Error(`Invalid function name: ${functionName}`);
+  }
+
   registrationContainer.set(functionName, {
     signatureType,
     userFunction,
   });
+};
+
+/**
+ * Returns true if the function name is valid
+ * - must contain only alphanumeric, numbers, or dash characters
+ * - must be <= 63 characters
+ * - must start with a letter
+ * - must end with a letter or number
+ * @param functionName the function name
+ * @returns true if the function name is valid
+ */
+export const isValidFunctionName = (functionName: string): boolean => {
+  // Validate function name with alpha characters, and dashes
+  const regex = /^[A-Za-z](?:[-_A-Za-z0-9]{0,61}[A-Za-z0-9])?$/;
+  return regex.test(functionName);
 };
 
 /**
