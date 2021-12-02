@@ -15,7 +15,7 @@ jobs:
         node-version: '16'
     - name: Install dependencies
       run: npm install
-    - name: Build TypeScript project
-      run: npm run build
+    - name: Build docs
+      run: npm run docs
     - name: Ensure there are no changes in docs
       run: git diff --exit-code docs/

@@ -206,7 +206,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface CloudEventFunction "
+              "text": "export declare interface CloudEventFunction "
             }
           ],
           "releaseTag": "Public",
@@ -265,7 +265,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface CloudEventFunctionWithCallback "
+              "text": "export declare interface CloudEventFunctionWithCallback "
             }
           ],
           "releaseTag": "Public",
@@ -340,7 +340,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface CloudFunctionsContext "
+              "text": "export declare interface CloudFunctionsContext "
             }
           ],
           "releaseTag": "Public",
@@ -495,7 +495,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface Data "
+              "text": "export declare interface Data "
             }
           ],
           "releaseTag": "Public",
@@ -537,7 +537,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface EventFunction "
+              "text": "export declare interface EventFunction "
             }
           ],
           "releaseTag": "Public",
@@ -611,7 +611,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface EventFunctionWithCallback "
+              "text": "export declare interface EventFunctionWithCallback "
             }
           ],
           "releaseTag": "Public",
@@ -793,7 +793,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface HttpFunction "
+              "text": "export declare interface HttpFunction "
             }
           ],
           "releaseTag": "Public",
@@ -810,8 +810,8 @@
                 },
                 {
                   "kind": "Reference",
-                  "text": "Request",
-                  "canonicalReference": "@google-cloud/functions-framework!Request:interface"
+                  "text": "Request_2",
+                  "canonicalReference": "@google-cloud/functions-framework!~Request_2:interface"
                 },
                 {
                   "kind": "Content",
@@ -819,8 +819,8 @@
                 },
                 {
                   "kind": "Reference",
-                  "text": "Response",
-                  "canonicalReference": "@google-cloud/functions-framework!Response:type"
+                  "text": "Response_2",
+                  "canonicalReference": "@google-cloud/functions-framework!~Response_2:type"
                 },
                 {
                   "kind": "Content",
@@ -903,7 +903,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface LegacyEvent "
+              "text": "export declare interface LegacyEvent "
             }
           ],
           "releaseTag": "Public",
@@ -972,7 +972,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface Request extends "
+              "text": "declare interface Request_2 extends "
             },
             {
               "kind": "Reference",
@@ -1029,7 +1029,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare type Response = "
+              "text": "declare type Response_2 = "
             },
             {
               "kind": "Reference",
