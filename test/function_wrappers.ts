@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Request, Response} from 'express';
-import {CloudEventsContext, Context} from '../src/functions';
+import {Context, CloudEvent} from '../src/functions';
 import {wrapUserFunction} from '../src/function_wrappers';
 
 describe('wrapUserFunction', () => {
@@ -77,7 +77,7 @@ describe('wrapUserFunction', () => {
   it('correctly wraps an async CloudEvent function', done => {
     const request = createRequest(CLOUD_EVENT);
     const response = createResponse();
-    const func = wrapUserFunction(async (cloudEvent: CloudEventsContext) => {
+    const func = wrapUserFunction(async (cloudEvent: CloudEvent) => {
       assert.deepStrictEqual(cloudEvent, CLOUD_EVENT);
       // await to make sure wrapper handles async code
       await new Promise(resolve => setTimeout(resolve, 20));
@@ -90,7 +90,7 @@ describe('wrapUserFunction', () => {
     const request = createRequest(CLOUD_EVENT);
     const response = createResponse();
     const func = wrapUserFunction(
-      (cloudEvent: CloudEventsContext, callback: Function) => {
+      (cloudEvent: CloudEvent, callback: Function) => {
         // timeout to make sure wrapper waits for callback
         setTimeout(() => {
           assert.deepStrictEqual(cloudEvent, CLOUD_EVENT);

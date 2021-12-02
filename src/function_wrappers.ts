@@ -25,9 +25,9 @@ import {
   Context,
   CloudEventFunction,
   CloudEventFunctionWithCallback,
-  CloudEventsContext,
   HandlerFunction,
 } from './functions';
+import {CloudEvent} from './functions';
 import {SignatureType} from './types';
 
 /**
@@ -60,7 +60,7 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
  * @param req an Express HTTP request
  * @returns a CloudEvent parsed from the request
  */
-const parseCloudEventRequest = (req: Request): CloudEventsContext => {
+const parseCloudEventRequest = (req: Request): CloudEvent => {
   let cloudEvent = req.body;
   if (isBinaryCloudEvent(req)) {
     cloudEvent = getBinaryCloudEventContext(req);
