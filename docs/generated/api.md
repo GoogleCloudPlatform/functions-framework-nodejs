@@ -6,8 +6,10 @@
 
 /// <reference types="node" />
 
-import { CloudEvent } from 'cloudevents';
+import { CloudEventV1 as CloudEvent } from 'cloudevents';
 import * as express from 'express';
+
+export { CloudEvent }
 
 // @public
 export const cloudEvent: (functionName: string, handler: CloudEventFunction) => void;
