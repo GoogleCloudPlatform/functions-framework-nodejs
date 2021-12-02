@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {CloudEvent} from 'cloudevents';
+import {CloudEvent} from './functions';
 
 /**
  * Custom exception class to represent errors durring event conversions.

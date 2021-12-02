@@ -1,8 +1,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Request, Response} from 'express';
-import {Context} from '../src/functions';
-import {CloudEvent} from 'cloudevents';
+import {Context, CloudEvent} from '../src/functions';
 import {wrapUserFunction} from '../src/function_wrappers';
 
 describe('wrapUserFunction', () => {

@@ -17,7 +17,12 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
-import {CloudEvent} from 'cloudevents';
+import {CloudEventV1 as CloudEvent} from 'cloudevents';
+
+/**
+ * @public
+ */
+export {CloudEvent};
 
 /**
  * @public

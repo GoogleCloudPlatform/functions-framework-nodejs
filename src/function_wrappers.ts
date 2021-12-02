@@ -27,7 +27,7 @@ import {
   CloudEventFunctionWithCallback,
   HandlerFunction,
 } from './functions';
-import {CloudEvent} from 'cloudevents';
+import {CloudEvent} from './functions';
 import {SignatureType} from './types';
 
 /**
