@@ -17,12 +17,12 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as express from 'express';
-import {CloudEventsContext} from './cloud_event_types/cloud_events_context';
+import {CloudEventV1 as CloudEvent} from 'cloudevents';
 
 /**
  * @public
  */
-export {CloudEventsContext};
+export {CloudEvent};
 
 /**
  * @public
@@ -65,14 +65,14 @@ export interface EventFunctionWithCallback {
  * @public
  */
 export interface CloudEventFunction {
-  (cloudEvent: CloudEventsContext): any;
+  (cloudEvent: CloudEvent): any;
 }
 /**
  * A CloudEvent function handler with callback.
  * @public
  */
 export interface CloudEventFunctionWithCallback {
-  (cloudEvent: CloudEventsContext, callback: Function): any;
+  (cloudEvent: CloudEvent, callback: Function): any;
 }
 /**
  * A function handler.
@@ -136,4 +136,4 @@ export interface CloudFunctionsContext {
  * The function's context.
  * @public
  */
-export type Context = CloudFunctionsContext | CloudEventsContext;
+export type Context = CloudFunctionsContext | CloudEvent;

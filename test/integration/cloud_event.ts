@@ -39,7 +39,7 @@ const TEST_EXTENSIONS = {
 describe('CloudEvent Function', () => {
   let clock: sinon.SinonFakeTimers;
 
-  let receivedCloudEvent: functions.CloudEventsContext | null;
+  let receivedCloudEvent: functions.CloudEvent | null;
   before(() => {
     functions.cloudEvent('testCloudEventFunction', ce => {
       receivedCloudEvent = ce;
