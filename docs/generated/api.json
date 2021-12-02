@@ -10,7 +10,7 @@
       "tagDefinitions": [
         {
           "tagName": "@alpha",
-          "syntaxKind": "modifierfoo"
+          "syntaxKind": "modifier"
         },
         {
           "tagName": "@beta",
