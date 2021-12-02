@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as express from 'express';
-import {CloudEvent} from 'cloudevents';
+import {CloudEventsContext} from './functions';
 
 /**
  * Custom exception class to represent errors durring event conversions.
@@ -56,11 +56,15 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
  * @param req Express request object.
  * @return CloudEvents context.
  */
-export function getBinaryCloudEventContext(req: express.Request): CloudEvent {
-  const context = {} as CloudEvent;
+export function getBinaryCloudEventContext(
+  req: express.Request
+): CloudEventsContext {
+  const context = {} as CloudEventsContext;
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {
-      const attributeName = name.substr('ce-'.length) as keyof CloudEvent;
+      const attributeName = name.substr(
+        'ce-'.length
+      ) as keyof CloudEventsContext;
       context[attributeName] = req.header(name);
     }
   }

@@ -17,7 +17,6 @@ import * as functions from '../../src/index';
 import * as sinon from 'sinon';
 import {getTestServer} from '../../src/testing';
 import * as supertest from 'supertest';
-import {CloudEvent} from 'cloudevents';
 
 // A structured CloudEvent
 const TEST_CLOUD_EVENT = {
@@ -40,7 +39,7 @@ const TEST_EXTENSIONS = {
 describe('CloudEvent Function', () => {
   let clock: sinon.SinonFakeTimers;
 
-  let receivedCloudEvent: CloudEvent | null;
+  let receivedCloudEvent: functions.CloudEventsContext | null;
   before(() => {
     functions.cloudEvent('testCloudEventFunction', ce => {
       receivedCloudEvent = ce;
