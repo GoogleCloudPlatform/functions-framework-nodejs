@@ -7,23 +7,24 @@
 /// <reference types="node" />
 
 import { CloudEventV1 as CloudEvent } from 'cloudevents';
-import * as express from 'express';
+import { Request as Request_3 } from 'express';
+import { Response as Response_2 } from 'express';
 
 export { CloudEvent }
 
 // @public
-export const cloudEvent: (functionName: string, handler: CloudEventFunction) => void;
+export const cloudEvent: <T = unknown>(functionName: string, handler: CloudEventFunction<T>) => void;
 
 // @public
-export interface CloudEventFunction {
+export interface CloudEventFunction<T = unknown> {
     // (undocumented)
-    (cloudEvent: CloudEvent): any;
+    (cloudEvent: CloudEvent<T>): any;
 }
 
 // @public
-export interface CloudEventFunctionWithCallback {
+export interface CloudEventFunctionWithCallback<T = unknown> {
     // (undocumented)
-    (cloudEvent: CloudEvent, callback: Function): any;
+    (cloudEvent: CloudEvent<T>, callback: Function): any;
 }
 
 // @public
@@ -37,7 +38,7 @@ export interface CloudFunctionsContext {
 }
 
 // @public
-export type Context = CloudFunctionsContext | CloudEvent;
+export type Context = CloudFunctionsContext | CloudEvent<unknown>;
 
 // @public
 export interface Data {
@@ -58,7 +59,7 @@ export interface EventFunctionWithCallback {
 }
 
 // @public
-export type HandlerFunction = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction | CloudEventFunctionWithCallback;
+export type HandlerFunction<T = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T>;
 
 // @public
 export const http: (functionName: string, handler: HttpFunction) => void;
@@ -83,13 +84,11 @@ export interface LegacyEvent {
 }
 
 // @public (undocumented)
-interface Request_2 extends express.Request {
+interface Request_2 extends Request_3 {
     rawBody?: Buffer;
 }
 export { Request_2 as Request }
 
-// @public (undocumented)
-type Response_2 = express.Response;
 export { Response_2 as Response }
 
 // (No @packageDocumentation comment for this package)

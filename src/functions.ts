@@ -16,7 +16,7 @@
 // **If changing files, please change package.json!**
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as express from 'express';
+import {Request as ExpressRequest, Response} from 'express';
 import {CloudEventV1 as CloudEvent} from 'cloudevents';
 
 /**
@@ -27,7 +27,7 @@ export {CloudEvent};
 /**
  * @public
  */
-export interface Request extends express.Request {
+export interface Request extends ExpressRequest {
   /**
    * A buffer which provides access to the request's raw HTTP body.
    */
@@ -37,7 +37,7 @@ export interface Request extends express.Request {
 /**
  * @public
  */
-export type Response = express.Response;
+export {Response};
 
 /**
  * A HTTP function handler.
@@ -64,26 +64,26 @@ export interface EventFunctionWithCallback {
  * A CloudEvent function handler.
  * @public
  */
-export interface CloudEventFunction {
-  (cloudEvent: CloudEvent): any;
+export interface CloudEventFunction<T = unknown> {
+  (cloudEvent: CloudEvent<T>): any;
 }
 /**
  * A CloudEvent function handler with callback.
  * @public
  */
-export interface CloudEventFunctionWithCallback {
-  (cloudEvent: CloudEvent, callback: Function): any;
+export interface CloudEventFunctionWithCallback<T = unknown> {
+  (cloudEvent: CloudEvent<T>, callback: Function): any;
 }
 /**
  * A function handler.
  * @public
  */
-export type HandlerFunction =
+export type HandlerFunction<T = unknown> =
   | HttpFunction
   | EventFunction
   | EventFunctionWithCallback
-  | CloudEventFunction
-  | CloudEventFunctionWithCallback;
+  | CloudEventFunction<T>
+  | CloudEventFunctionWithCallback<T>;
 
 /**
  * A legacy event.
@@ -136,4 +136,4 @@ export interface CloudFunctionsContext {
  * The function's context.
  * @public
  */
-export type Context = CloudFunctionsContext | CloudEvent;
+export type Context = CloudFunctionsContext | CloudEvent<unknown>;

@@ -15,23 +15,24 @@
 import {HttpFunction, CloudEventFunction, HandlerFunction} from './functions';
 import {SignatureType} from './types';
 
-interface RegisteredFunction {
+interface RegisteredFunction<T> {
   signatureType: SignatureType;
-  userFunction: HandlerFunction;
+  userFunction: HandlerFunction<T>;
 }
 
 /**
  * Singleton map to hold the registered functions
  */
-const registrationContainer = new Map<string, RegisteredFunction>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const registrationContainer = new Map<string, RegisteredFunction<any>>();
 
 /**
  * Helper method to store a registered function in the registration container
  */
-const register = (
+const register = <T = unknown>(
   functionName: string,
   signatureType: SignatureType,
-  userFunction: HandlerFunction
+  userFunction: HandlerFunction<T>
 ): void => {
   if (!isValidFunctionName(functionName)) {
     throw new Error(`Invalid function name: ${functionName}`);
@@ -66,7 +67,8 @@ export const isValidFunctionName = (functionName: string): boolean => {
  */
 export const getRegisteredFunction = (
   functionName: string
-): RegisteredFunction | undefined => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): RegisteredFunction<any> | undefined => {
   return registrationContainer.get(functionName);
 };
 
@@ -86,9 +88,9 @@ export const http = (functionName: string, handler: HttpFunction): void => {
  * @param handler - the function to trigger when handling CloudEvents
  * @public
  */
-export const cloudEvent = (
+export const cloudEvent = <T = unknown>(
   functionName: string,
-  handler: CloudEventFunction
+  handler: CloudEventFunction<T>
 ): void => {
   register(functionName, 'cloudevent', handler);
 };
