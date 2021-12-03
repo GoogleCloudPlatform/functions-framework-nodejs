@@ -39,7 +39,7 @@ const TEST_EXTENSIONS = {
 describe('CloudEvent Function', () => {
   let clock: sinon.SinonFakeTimers;
 
-  let receivedCloudEvent: functions.CloudEvent | null;
+  let receivedCloudEvent: functions.CloudEvent<unknown> | null;
   before(() => {
     functions.cloudEvent('testCloudEventFunction', ce => {
       receivedCloudEvent = ce;
@@ -280,5 +280,26 @@ describe('CloudEvent Function', () => {
         .expect(204);
       assert.deepStrictEqual(receivedCloudEvent, test.expectedCloudEvent);
     });
+  });
+
+  it('allows customers to provide a type parameter for the data payload', async () => {
+    const testPayload = 'a test string';
+
+    // register a strongly typed CloudEvent function
+    functions.cloudEvent<string>('testTypedCloudEvent', ce => {
+      assert.deepStrictEqual(ce.data, testPayload);
+      // use a property that proves this is actually typed as a string
+      assert.deepStrictEqual(ce.data.length, testPayload.length);
+    });
+
+    // invoke the function with a CloudEvent with a string payload
+    const server = getTestServer('testTypedCloudEvent');
+    await supertest(server)
+      .post('/')
+      .send({
+        ...TEST_CLOUD_EVENT,
+        data: testPayload,
+      })
+      .expect(204);
   });
 });
