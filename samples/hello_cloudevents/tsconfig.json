@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "src",
+    "paths": {
+      "google-events": ["../google_events"]
+    },
+    "target": "ES6",
+    "moduleResolution": "node",
+    "outDir": "build"
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.js"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "hello_cloudevents",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "../..",
+    "@google/events": "^5.2.0",
+    "cloudevents": "^5.1.0"
+  }
+}
