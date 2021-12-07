@@ -77,12 +77,15 @@ describe('wrapUserFunction', () => {
   it('correctly wraps an async CloudEvent function', done => {
     const request = createRequest(CLOUD_EVENT);
     const response = createResponse();
-    const func = wrapUserFunction(async (cloudEvent: CloudEvent) => {
-      assert.deepStrictEqual(cloudEvent, CLOUD_EVENT);
-      // await to make sure wrapper handles async code
-      await new Promise(resolve => setTimeout(resolve, 20));
-      done();
-    }, 'cloudevent');
+    const func = wrapUserFunction(
+      async (cloudEvent: CloudEvent<typeof CLOUD_EVENT.data>) => {
+        assert.deepStrictEqual(cloudEvent, CLOUD_EVENT);
+        // await to make sure wrapper handles async code
+        await new Promise(resolve => setTimeout(resolve, 20));
+        done();
+      },
+      'cloudevent'
+    );
     func(request, response, () => {});
   });
 
@@ -90,7 +93,7 @@ describe('wrapUserFunction', () => {
     const request = createRequest(CLOUD_EVENT);
     const response = createResponse();
     const func = wrapUserFunction(
-      (cloudEvent: CloudEvent, callback: Function) => {
+      (cloudEvent: CloudEvent<typeof CLOUD_EVENT.data>, callback: Function) => {
         // timeout to make sure wrapper waits for callback
         setTimeout(() => {
           assert.deepStrictEqual(cloudEvent, CLOUD_EVENT);

@@ -60,7 +60,7 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
  * @param req an Express HTTP request
  * @returns a CloudEvent parsed from the request
  */
-const parseCloudEventRequest = (req: Request): CloudEvent => {
+const parseCloudEventRequest = (req: Request): CloudEvent<unknown> => {
   let cloudEvent = req.body;
   if (isBinaryCloudEvent(req)) {
     cloudEvent = getBinaryCloudEventContext(req);
@@ -200,8 +200,8 @@ const wrapEventFunctionWithCallback = (
  * @param userFunction User's function.
  * @return An Express hander function that invokes the user function.
  */
-export const wrapUserFunction = (
-  userFunction: HandlerFunction,
+export const wrapUserFunction = <T = unknown>(
+  userFunction: HandlerFunction<T>,
   signatureType: SignatureType
 ): RequestHandler => {
   switch (signatureType) {
