@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [2.1.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v2.0.0...v2.1.0) (2021-12-07)
+
+
+### Features
+
+* add testing helpers and instructions ([#392](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/392)) ([9c25913](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/9c25913a705a67966ba01b5861729239f57b1ef3))
+* update to latest version of clouevents sdk ([#402](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/402)) ([bd36243](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/bd362430f977739d5bd4db7343f0806509c4e6f0))
+
 ## [2.0.0](https://www.github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v1.10.1...v2.0.0) (2021-11-10)
 
 
