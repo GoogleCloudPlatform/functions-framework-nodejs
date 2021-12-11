@@ -48,9 +48,10 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
     } else {
       res.locals.functionExecutionFinished = true;
       if (err) {
-        console.error(err.stack);
+        sendCrashResponse({err, res});
+      } else {
+        sendResponse(result, err, res);
       }
-      sendResponse(result, err, res);
     }
   });
 };
