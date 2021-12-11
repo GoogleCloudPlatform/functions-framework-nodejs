@@ -47,6 +47,7 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
       console.log('Ignoring extra callback call');
     } else {
       res.locals.functionExecutionFinished = true;
+      // Send crash if there's an error, o.w. send the result.
       if (err) {
         sendCrashResponse({err, res});
       } else {
