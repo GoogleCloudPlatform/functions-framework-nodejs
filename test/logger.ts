@@ -23,22 +23,16 @@ describe('logger', () => {
       res.send('200, OK!');
     });
     const server = getTestServer('myfunc');
-    await supertest(server)
-      .post('/')
-      .send({})
-      .expect(200);
+    await supertest(server).post('/').send({}).expect(200);
   });
 
   // A normal cloudevent function request should return a 200.
   it('200 cloudevent', async () => {
-    functions.cloudEvent('myfunc', (ce) => {
+    functions.cloudEvent('myfunc', ce => {
       return '200, OK! 204 No Content if no response.';
     });
     const server = getTestServer('myfunc');
-    await supertest(server)
-      .post('/')
-      .send({})
-      .expect(200);
+    await supertest(server).post('/').send({}).expect(200);
   });
 
   // A function that throws a runtime error should return a 500.
@@ -47,21 +41,15 @@ describe('logger', () => {
       throw new Error('500, Internal Server Error!');
     });
     const server = getTestServer('myfunc');
-    await supertest(server)
-      .post('/')
-      .send({})
-      .expect(500);
+    await supertest(server).post('/').send({}).expect(500);
   });
 
   // A function that throws a runtime error should return a 500.
   it('500 cloudevent', async () => {
-    functions.cloudEvent('myfunc', (ce) => {
+    functions.cloudEvent('myfunc', ce => {
       throw new Error('500, Internal Server Error!');
     });
     const server = getTestServer('myfunc');
-    await supertest(server)
-      .post('/')
-      .send({})
-      .expect(500);
+    await supertest(server).post('/').send({}).expect(500);
   });
 });
