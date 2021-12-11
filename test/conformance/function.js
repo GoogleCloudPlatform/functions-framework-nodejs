@@ -5,7 +5,7 @@ const fileName = 'function_output.json';
 
 functions.http('writeHttpDeclarative', (req, res) => {
   writeJson(req.body);
-  res.end(200);
+  res.status(200).end();
 });
 
 functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
@@ -15,7 +15,7 @@ functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
 
 function writeHttp(req, res) {
   writeJson(req.body);
-  res.end(200);
+  res.status(200).end();
 }
 
 function writeCloudEvent(cloudEvent) {
