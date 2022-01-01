@@ -11,6 +11,6 @@
     "test": "mocha test/*.test.js --timeout=20000"
   },
   "dependencies": {
-    "@google-cloud/functions-framework": "^1.9.0"
+    "@google-cloud/functions-framework": "^2.0.0"
   }
 }
