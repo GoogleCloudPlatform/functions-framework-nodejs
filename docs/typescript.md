@@ -54,3 +54,22 @@ the Functions Framework.
     Function: helloWorld
     URL: http://localhost:8080/
     ```
+
+## Deploying with gcloud CLI
+
+1. Adjust `main` field in `package.json` to point to the compiled javascript source.
+    
+    ```js
+      "main": "build/src/index.js",
+      ...
+    ```
+
+1. Remove `prepare` script in `package.json` created by [gts](https://github.com/google/gts). This is because the `prepare` script requires typescript to be installed and will cause the function to fail to deploy if not removed.
+
+1. Deploy:
+
+    ```sh
+    gcloud functions deploy helloWorld \
+    --runtime nodejs16 \
+    --trigger-http
+    ```
