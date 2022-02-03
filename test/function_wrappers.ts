@@ -105,4 +105,15 @@ describe('wrapUserFunction', () => {
     );
     func(request, response, () => {});
   });
+
+  it('correctly send a 500 for function crashes', done => {
+    const request = createRequest({foo: 'bar'});
+    const response = createResponse();
+    const func = wrapUserFunction((req: Request, res: Response) => {
+      throw new Error('crash');
+    }, 'http');
+    func(request, response, () => {
+      assert.deepStrictEqual(response.statusCode, 500);
+    });
+  });
 });
