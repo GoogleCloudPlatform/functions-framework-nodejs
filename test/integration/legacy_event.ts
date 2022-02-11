@@ -14,6 +14,7 @@
 
 import * as assert from 'assert';
 import * as functions from '../../src/functions';
+import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
 
@@ -31,6 +32,15 @@ const TEST_CLOUD_EVENT = {
 };
 
 describe('Event Function', () => {
+  beforeEach(() => {
+    // Prevent log spew from the PubSub emulator request.
+    sinon.stub(console, 'error');
+  });
+
+  afterEach(() => {
+    (console.error as sinon.SinonSpy).restore();
+  });
+
   const testData = [
     {
       name: 'GCF event',
@@ -187,5 +197,26 @@ describe('Event Function', () => {
       assert.deepStrictEqual(receivedData, test.expectedData);
       assert.deepStrictEqual(receivedContext, test.expectedContext);
     });
+  });
+
+  it('returns a 500 if the function throws an exception', async () => {
+    const server = getServer(() => {
+      throw 'I crashed';
+    }, 'event');
+    await supertest(server)
+      .post('/')
+      .send({
+        eventId: 'testEventId',
+        timestamp: 'testTimestamp',
+        eventType: 'testEventType',
+        resource: 'testResource',
+        data: {some: 'payload'},
+      })
+      .set({'Content-Type': 'application/json'})
+      .expect(res => {
+        assert.deepStrictEqual(res.headers['x-google-status'], 'error');
+        assert.deepStrictEqual(res.body, {});
+      })
+      .expect(500);
   });
 });

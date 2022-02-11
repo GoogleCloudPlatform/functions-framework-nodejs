@@ -21,7 +21,6 @@
 //     functions with HTTP trigger).
 import * as express from 'express';
 import * as http from 'http';
-import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {sendCrashResponse} from './logger';
 
 /**
@@ -47,10 +46,7 @@ export function sendResponse(
   res: express.Response
 ) {
   if (err) {
-    res.set(FUNCTION_STATUS_HEADER_FIELD, 'error');
-    // Sending error message back is fine for Pub/Sub-based functions as they do
-    // not reach the caller anyway.
-    res.send(err.message);
+    sendCrashResponse({err, res, statusHeader: 'error'});
     return;
   }
   if (typeof result === 'undefined' || result === null) {
