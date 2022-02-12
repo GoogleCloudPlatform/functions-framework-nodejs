@@ -19,7 +19,7 @@ npm install @google-cloud/functions-framework
 3. Run `node`, enable the inspector and run the Functions Framework:
 
 ```sh
-node --inspect node_modules/.bin/functions-framework --target=helloWorld
+npx --node-options=--inspect @google-cloud/functions-framework --target=helloWorld
 ...
 Debugger listening on ws://127.0.0.1:9229/5f57f5e9-ea4b-43ce-be1d-6e9b838ade4a
 For help see https://nodejs.org/en/docs/inspector
