@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "cloudevents": "^5.1.0",
+    "cloudevents": "^5.3.2",
     "express": "^4.16.4",
     "minimist": "^1.2.5",
     "on-finished": "^2.3.0",
