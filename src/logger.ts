@@ -27,12 +27,14 @@ export function sendCrashResponse({
   res,
   callback,
   silent = false,
+  statusHeader = 'crash',
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: Error | any;
   res: express.Response | null;
   callback?: Function;
   silent?: boolean;
+  statusHeader?: string;
 }) {
   if (!silent) {
     console.error(err.stack || err);
@@ -43,8 +45,14 @@ export function sendCrashResponse({
   // right before sending the response, to make sure that no concurrent
   // execution sends the response between the check and 'send' call below.
   if (res && !res.headersSent) {
-    res.set(FUNCTION_STATUS_HEADER_FIELD, 'crash');
-    res.send((err.message || err) + '');
+    res.set(FUNCTION_STATUS_HEADER_FIELD, statusHeader);
+
+    if (process.env.NODE_ENV !== 'production') {
+      res.status(500);
+      res.send((err.message || err) + '');
+    } else {
+      res.sendStatus(500);
+    }
   }
   if (callback) {
     callback();

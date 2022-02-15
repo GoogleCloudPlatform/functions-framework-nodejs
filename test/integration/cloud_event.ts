@@ -50,11 +50,13 @@ describe('CloudEvent Function', () => {
     clock = sinon.useFakeTimers();
     // Prevent log spew from the PubSub emulator request.
     sinon.stub(console, 'warn');
+    sinon.stub(console, 'error');
   });
 
   afterEach(() => {
     clock.restore();
     (console.warn as sinon.SinonSpy).restore();
+    (console.error as sinon.SinonSpy).restore();
   });
 
   const testData = [
@@ -301,5 +303,22 @@ describe('CloudEvent Function', () => {
         data: testPayload,
       })
       .expect(204);
+  });
+
+  it('returns a 500 if the function throws an exception', async () => {
+    functions.cloudEvent('testTypedCloudEvent', () => {
+      throw 'I crashed';
+    });
+
+    // invoke the function with a CloudEvent with a string payload
+    const server = getTestServer('testTypedCloudEvent');
+    await supertest(server)
+      .post('/')
+      .send(TEST_CLOUD_EVENT)
+      .expect(res => {
+        assert.deepStrictEqual(res.headers['x-google-status'], 'error');
+        assert.deepStrictEqual(res.body, {});
+      })
+      .expect(500);
   });
 });
