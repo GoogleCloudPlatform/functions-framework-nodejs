@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
+import * as sinon from 'sinon';
 import * as supertest from 'supertest';
 
 import * as functions from '../../src/index';
@@ -24,6 +25,9 @@ describe('HTTP Function', () => {
   before(() => {
     functions.http('testHttpFunction', (req, res) => {
       ++callCount;
+      if (req.query.crash) {
+        throw 'I crashed';
+      }
       res.send({
         result: req.body.text,
         query: req.query.param,
@@ -31,7 +35,15 @@ describe('HTTP Function', () => {
     });
   });
 
-  beforeEach(() => (callCount = 0));
+  beforeEach(() => {
+    callCount = 0;
+    // Prevent log spew from the PubSub emulator request.
+    sinon.stub(console, 'error');
+  });
+
+  afterEach(() => {
+    (console.error as sinon.SinonSpy).restore();
+  });
 
   const testData = [
     {
@@ -56,6 +68,14 @@ describe('HTTP Function', () => {
       path: '/foo?param=val',
       expectedBody: {query: 'val'},
       expectedStatus: 200,
+      expectedCallCount: 1,
+    },
+    {
+      name: 'GET throws exception',
+      httpVerb: 'GET',
+      path: '/foo?crash=true',
+      expectedBody: {},
+      expectedStatus: 500,
       expectedCallCount: 1,
     },
     {
