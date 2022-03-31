@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.1.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.0.0...v3.1.0) (2022-03-31)
+
+
+### Features
+
+* Disable Express eTag response header for consistent FF behaviour across FF runtimes ([#439](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/439)) ([07668f6](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/07668f696b29f077d4ba9d0463ea994076cdab50))
+
+
+### Bug Fixes
+
+* **deps:** update dependency minimist to v1.2.6 [security] ([#432](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/432)) ([32bb723](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/32bb7236c2f82ca55d44bf564e5a2f3cb3ca494f))
+
 ## [3.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v2.1.1...v3.0.0) (2022-02-15)
 
 
