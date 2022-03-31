@@ -8,6 +8,10 @@
       "automerge": true
     }
   ],
+  "ignorePaths": [
+    "docs/**",
+    "experimental/**"
+  ],
   "pinVersions": false,
   "schedule": [
     "every 3 months on the first day of the month"
