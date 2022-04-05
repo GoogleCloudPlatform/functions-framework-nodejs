@@ -7,6 +7,12 @@
     "description": "Create a PR whenever there is a new major version",
     "matchUpdateTypes": ["major"]
   }],
+  "patch": {
+    "enabled": false
+  },
+  "minor": {
+    "enabled": false
+  },
   "ignorePaths": [
     "docs/**",
     "experimental/**"
