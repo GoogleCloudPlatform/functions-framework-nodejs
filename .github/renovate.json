@@ -3,16 +3,26 @@
   "extends": [
     "config:base"
   ],
-  "packageRules": [{
-    "description": "Create a PR whenever there is a new major version",
-    "matchUpdateTypes": ["major"]
-  }],
-  "patch": {
-    "enabled": false
-  },
-  "minor": {
-    "enabled": false
-  },
+  "packageRules": [
+    {
+      "description": "Create a PR whenever there is a new major version",
+      "matchUpdateTypes": [
+        "major"
+      ]
+    },
+    {
+      "description": "Create a PR grouping all non-major dependencies",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    }
+  ],
   "ignorePaths": [
     "docs/**",
     "experimental/**"
