@@ -1,11 +1,26 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
   ],
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "description": "Create a PR whenever there is a new major version",
+      "matchUpdateTypes": [
+        "major"
+      ]
+    },
+    {
+      "description": "Create a PR grouping all non-major dependencies",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
     }
   ],
   "ignorePaths": [
