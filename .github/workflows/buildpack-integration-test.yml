@@ -1,0 +1,52 @@
+# Validates Functions Framework with GCF buildpacks.
+name: Buildpack Integration Test
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  nodejs10:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs10'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/nodejs10/builder
+      builder-tag: 'nodejs10_20220320_10_24_1_RC00'
+  nodejs12:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs12'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/nodejs12/builder
+      builder-tag: 'nodejs12_20220320_12_22_9_RC00'
+  nodejs14:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs14'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/nodejs16/builder
+      builder-tag: 'nodejs14_20220320_14_18_3_RC00'
+  nodejs16:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs16'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/nodejs16/builder
+      builder-tag: 'nodejs16_20220320_16_13_2_RC00'
