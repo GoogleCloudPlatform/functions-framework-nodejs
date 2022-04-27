@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+### [3.1.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.0...v3.1.1) (2022-04-22)
+
+
+### Bug Fixes
+
+* **deps:** Move `@types/express` to `dependencies` ([#457](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/457)) ([1682e07](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1682e07019f28389def179547505678bd6f982d0))
+* **deps:** update dependency cloudevents to v6 ([#451](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/451)) ([33d6a5b](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/33d6a5bb6ad929cdafc6e146fdcc0a7b477657aa))
+
 ## [3.1.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.0.0...v3.1.0) (2022-03-31)
 
 
