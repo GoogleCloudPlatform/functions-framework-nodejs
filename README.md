@@ -241,18 +241,6 @@ functions.cloudEvent('helloCloudEvents', (cloudevent) => {
 });
 ```
 
-To enable the CloudEvent functions, you must list the Functions Framework as a dependency in your `package.json`:
-
-```json
-{
-  "dependencies": {
-    "@google-cloud/functions-framework": "~2.0.0-beta.1"
-  }
-}
-```
-
-Learn how to use CloudEvents in this [guide](docs/cloudevents.md).
-
 ## Advanced Docs
 
 More advanced guides and docs can be found in the [`docs/` folder](docs/).

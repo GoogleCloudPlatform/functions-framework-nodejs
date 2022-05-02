@@ -10,7 +10,7 @@ This guide shows you how to use the Functions Framework for local testing with:
 Install `@google-cloud/functions-framework` and list it as a dependency in your `package.json`:
 
 ```
-npm install --save @google-cloud/functions-framework
+npm install @google-cloud/functions-framework
 ```
 
 Create an `index.js` file and declare your function:
@@ -48,7 +48,8 @@ npm start
 Your function will be serving at `http://localhost:8080/`, however,
 it is no longer accessible via `HTTP GET` requests from the browser.
 
-### Create and send a cloudevent to the function
+### Create and Send a CloudEvent to the Function
+
 ```
 cloudevents send http://localhost:8080 --specver--id abc-123 --source cloudevents.conformance.tool --type foo.bar
 ```
