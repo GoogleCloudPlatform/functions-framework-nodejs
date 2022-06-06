@@ -9,8 +9,14 @@
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "exports": {
-    ".": "./build/src/index.js",
-    "./testing": "./build/src/testing.js"
+    ".": {
+      "types": "./build/src/index.d.ts",
+      "default": "./build/src/index.js"
+    },
+    "./testing": {
+      "types": "./build/src/testing.d.ts",
+      "default": "./build/src/testing.js"
+    }
   },
   "dependencies": {
     "@types/express": "4.17.13",
