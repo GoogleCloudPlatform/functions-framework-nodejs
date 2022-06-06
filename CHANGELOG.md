@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.1.2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.1...v3.1.2) (2022-06-06)
+
+
+### Bug Fixes
+
+* TypeScript exports in package.json ([#461](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/461)) ([3596068](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/3596068cd3d5822773641f3e8b63acdb087ca55a))
+
 ### [3.1.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.0...v3.1.1) (2022-04-22)
 
 
