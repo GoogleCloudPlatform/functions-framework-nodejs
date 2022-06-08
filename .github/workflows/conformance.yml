@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16']
+        runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16', 'nodejs18']
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
