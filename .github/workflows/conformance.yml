@@ -12,9 +12,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Go
-      uses: actions/setup-go@v3
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -27,47 +24,60 @@ jobs:
       working-directory: ./test/conformance
       run: npm install
 
-    - name: Run HTTP conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.4.1
+    - name: Install conformance client
+      uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@v1.7.0
       with:
-        functionType: 'http'
-        useBuildpacks: false
-        validateMapping: false
-        workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeHttp --signature-type=http'"
+        client-version: v1.7.0
+        cache-path: ~/client
+        cache-key: conformance-client-v1.7.0
+
+    - name: Run HTTP conformance tests using legacy API
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=http \
+            -buildpacks=false \
+            -cmd="npm start -- --target=writeHttp --signature-type=http"
 
     - name: Run event conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.4.1
-      with:
-        functionType: 'legacyevent'
-        useBuildpacks: false
-        validateMapping: true
-        workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeLegacyEvent --signature-type=event'"
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=legacyevent \
+            -buildpacks=false \
+            -cmd="npm start -- --target=writeLegacyEvent --signature-type=event"
 
     - name: Run cloudevent conformance tests using legacy API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.4.1
-      with:
-        functionType: 'cloudevent'
-        useBuildpacks: false
-        validateMapping: true
-        workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeCloudEvent --signature-type=cloudevent'"
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=cloudevent \
+            -buildpacks=false \
+            -cmd="npm start -- --target=writeCloudEvent --signature-type=cloudevent"
 
     - name: Run HTTP conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.4.1
-      with:
-        functionType: 'http'
-        useBuildpacks: false
-        validateMapping: false
-        workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeHttpDeclarative'"
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=http \
+            -buildpacks=false \
+            -validate-mapping=false \
+            -cmd="npm start -- --target=writeHttpDeclarative"
 
     - name: Run cloudevent conformance tests using declarative API
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.4.1
-      with:
-        functionType: 'cloudevent'
-        useBuildpacks: false
-        validateMapping: true
-        workingDirectory: 'test/conformance'
-        cmd: "'npm start -- --target=writeCloudEventDeclarative'"
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=cloudevent \
+            -buildpacks=false \
+            -validate-mapping=true \
+            -cmd="npm start -- --target=writeCloudEventDeclarative"
+
+    - name: Run HTTP concurrency test
+      working-directory: 'test/conformance'
+      run: |
+        ~/client \
+            -type=http \
+            -buildpacks=false \
+            -validate-concurrency=true \
+            -cmd="npm start -- --target=sleepHttpDeclarative"
