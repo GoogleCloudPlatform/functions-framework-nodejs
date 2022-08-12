@@ -13,6 +13,10 @@ functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
   writeJson(cloudEvent);
 });
 
+functions.http('concurrentHttp', (req, res) => {
+  setTimeout(() => res.send('done'), 1000);
+});
+
 function writeHttp(req, res) {
   writeJson(req.body);
   res.sendStatus(200);
