@@ -14,7 +14,7 @@ functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
 });
 
 functions.http('concurrentHttp', (req, res) => {
-  setTimeout(() =>   res.send("done"), 1000);
+  setTimeout(() => res.send('done'), 1000);
 });
 
 function writeHttp(req, res) {
