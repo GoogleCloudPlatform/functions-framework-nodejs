@@ -34,7 +34,7 @@ Add a `package.json` script to start the Functions Framework and pass the name o
 ```sh
 {
   "scripts": {
-    "start": "functions-framework --target=helloCloudEvents"
+    "start": "functions-framework --target=helloCloudEvents --signature-type=cloudevent"
   }
 }
 ```
@@ -51,5 +51,5 @@ it is no longer accessible via `HTTP GET` requests from the browser.
 ### Create and Send a CloudEvent to the Function
 
 ```
-cloudevents send http://localhost:8080 --specver--id abc-123 --source cloudevents.conformance.tool --type foo.bar
+cloudevents send http://localhost:8080 --id abc-123 --source cloudevents.conformance.tool --type foo.bar
 ```
