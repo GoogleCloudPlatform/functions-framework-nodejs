@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.1.3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.2...v3.1.3) (2022-11-17)
+
+
+### Bug Fixes
+
+* **deps:** bump minimist from 1.2.5 to 1.2.7 ([#486](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/486)) ([df1e2ed](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/df1e2edda86ab90ab5f44bf244df84450221b31b))
+
 ## [3.1.2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.1...v3.1.2) (2022-06-06)
 
 
