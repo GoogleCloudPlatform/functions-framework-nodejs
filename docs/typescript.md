@@ -3,73 +3,102 @@
 This guide is an example of how to develop a function in Typescript with
 the Functions Framework.
 
-1. Use [gts](https://github.com/google/gts) to configure Typescript.
+1. Create a new Node.js project using the npm CLI.
 
-    ```sh
-    npx gts init
-    ```
+   ```sh
+   mkdir typescript-function && cd typescript-function
+   npm init -y
+   ```
 
-2. Install the required packages:
+1. Install the required packages:
 
-    ```sh
-    npm install @google-cloud/functions-framework
-    npm install @types/express concurrently nodemon --save-dev
-    ```
+   ```sh
+   npm install @google-cloud/functions-framework
+   npm install --save-dev typescript
+   ```
 
-3. Add a `start` script to `package.json`, passing in the `--source` flag to
-   point to the compiled code directory (configured by `gts` in this example).
-   Also add a `watch` script to use for development:
+1. Create a `tsconfig.json` in the root directory of your project with the following contents:
 
-    ```js
-      "scripts": {
-        "start": "functions-framework --source=build/src/ --target=helloWorld",
-        "watch": "concurrently \"tsc -w\" \"nodemon --watch ./build/ --exec npm run start\"",
-        ...
-      }
-    ```
+   ```json
+   {
+     "compilerOptions": {
+       "target": "es2016",
+       "module": "commonjs",
+       "esModuleInterop": true,
+       "strict": true,
+       "outDir": "dist"
+     },
+     "include": ["src/**/*"],
+     "exclude": ["node_modules"]
+   }
+   ```
 
-4. Replace the contents of `src/index.ts` with:
+1. Update your `package.json` with scripts for building and running your application:
 
-    ```ts
-    import type { HttpFunction } from '@google-cloud/functions-framework/build/src/functions';
+   ```json
+   {
+     "main": "dist/index.js",
+     "scripts": {
+       "build": "tsc",
+       "start": "functions-framework --target=TypescriptFunction",
+       "prestart": "npm run build",
+       "gcp-build": "npm run build"
+     },
+     ...
+   }
+   ```
 
-    export const helloWorld: HttpFunction = (req, res) => {
-      res.send('Hello, World');
-    };
-    ```
+   - The `main` field must be configured to the compiled source code file that contains your function source.
+   - The [`gcp-build` script](https://cloud.google.com/functions/docs/writing/specifying-dependencies-nodejs#executing_custom_build_steps_during_deployment) is run when deploying your application Google Cloud Functions. It allows you to configure build steps that depend on `devDependencies`.
 
-5. Start the built-in local development server in watch mode:
+1. Create a `.gitignore` that ensures your `node_modules` and compiled code are not checked into source control and are not uploaded when you deploy to Google Cloud Functions.
 
-    ```sh
-    npm run watch
-    ```
+   ```
+   node_modules/
+   dist/
+   ```
 
-    This will continuously watch changes to your TypeScript project and recompile when changes are detected:
+1. Create a `src/index.ts` file with your function source code.
 
-    ```sh
-    [12:34:56 AM] Starting compilation in watch mode...
-    [12:34:57 AM] Found 0 errors. Watching for file changes.
-    ...
-    Serving function...
-    Function: helloWorld
-    URL: http://localhost:8080/
-    ```
+   **Example Typescript HTTP Function**
 
-## Deploying with gcloud CLI
+   ```typescript
+   import * as ff from '@google-cloud/functions-framework';
 
-1. Adjust `main` field in `package.json` to point to the compiled javascript source.
-    
-    ```js
-      "main": "build/src/index.js",
-      ...
-    ```
+   ff.http('TypescriptFunction', (req: ff.Request, res: ff.Response) => {
+     res.send('OK');
+   });
+   ```
 
-1. Remove `prepare` script in `package.json` created by [gts](https://github.com/google/gts). This is because the `prepare` script requires typescript to be installed and will cause the function to fail to deploy if not removed.
+   **Example Typescript CloudEvent Function**
 
-1. Deploy:
+   The `cloudEvent` function registration method accepts a template type that can be used to
+   annotate the event payload type you expect.
 
-    ```sh
-    gcloud functions deploy helloWorld \
-    --runtime nodejs16 \
-    --trigger-http
-    ```
+   ```typescript
+   import ff from '@google-cloud/functions-framework';
+
+   interface PubSubData {
+     subscription: string;
+     message: {
+       messageId: string;
+       publishTime: string;
+       data: string;
+       attributes?: {[key: string]: string};
+     };
+   }
+
+   ff.cloudEvent<PubSubData>('TypescriptFunction', ce => {
+     console.log(ce.data?.message.messageId);
+   });
+   ```
+
+## Deploying with the gcloud CLI
+
+If you correctly configured the `main` field and `gcp-build` script in your `package.json` you can deploy to Google Cloud Functions as you would any other Javascript function:
+
+```sh
+gcloud functions deploy TypescriptFunction \
+--runtime nodejs16 \
+--trigger-http
+```
