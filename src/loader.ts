@@ -121,7 +121,7 @@ export async function getUserFunction(
       return registeredFunction;
     }
 
-    let userFunction = functionTarget
+    const userFunction = functionTarget
       .split('.')
       .reduce((code, functionTargetPart) => {
         if (typeof code === 'undefined') {
@@ -131,18 +131,12 @@ export async function getUserFunction(
         }
       }, functionModule);
 
-    // TODO: do we want 'function' fallback?
     if (typeof userFunction === 'undefined') {
-      // eslint-disable-next-line no-prototype-builtins
-      if (functionModule.hasOwnProperty('function')) {
-        userFunction = functionModule['function'];
-      } else {
-        console.error(
-          `Function '${functionTarget}' is not defined in the provided ` +
-            'module.\nDid you specify the correct target function to execute?'
-        );
-        return null;
-      }
+      console.error(
+        `Function '${functionTarget}' is not defined in the provided ` +
+          'module.\nDid you specify the correct target function to execute?'
+      );
+      return null;
     }
 
     if (typeof userFunction !== 'function') {

@@ -93,6 +93,20 @@ describe('loading function', () => {
     }
   }
 
+  it('fails to load a function that does not exist', async () => {
+    FunctionRegistry.http('function', () => {
+      return 'PASS';
+    });
+
+    const loadedFunction = await loader.getUserFunction(
+      process.cwd() + '/test/data/with_main',
+      'functionDoesNotExist',
+      'http'
+    );
+
+    assert.strictEqual(loadedFunction, null);
+  });
+
   it('loads a declaratively registered function', async () => {
     FunctionRegistry.http('registeredFunction', () => {
       return 'PASS';
