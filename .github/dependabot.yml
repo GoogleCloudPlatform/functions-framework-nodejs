@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    # Disable version updates for npm dependencies
+    open-pull-requests-limit: 0
