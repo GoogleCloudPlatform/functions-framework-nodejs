@@ -47,9 +47,6 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
       console.log('Ignoring extra callback call');
     } else {
       res.locals.functionExecutionFinished = true;
-      if (err) {
-        console.error(err.stack);
-      }
       sendResponse(result, err, res);
     }
   });
