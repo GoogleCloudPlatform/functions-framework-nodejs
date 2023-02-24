@@ -9,11 +9,16 @@ jobs:
       matrix:
         runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16']
     steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -25,7 +30,7 @@ jobs:
       run: npm install
 
     - name: Install conformance client
-      uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@v1.7.0
+      uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@42e1d91749b9c9d59fe405c254dc5de4b3b801ca # v1.7.0
       with:
         client-version: v1.7.0
         cache-path: ~/client
