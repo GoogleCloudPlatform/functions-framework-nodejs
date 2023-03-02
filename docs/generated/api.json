@@ -1,8 +1,8 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.18.20",
-    "schemaVersion": 1004,
+    "toolVersion": "7.34.4",
+    "schemaVersion": 1011,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
       "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
@@ -156,18 +156,21 @@
         "@betaDocumentation": true,
         "@internalRemarks": true,
         "@preapproved": true
-      }
+      },
+      "reportUnsupportedHtmlElements": false
     }
   },
   "kind": "Package",
   "canonicalReference": "@google-cloud/functions-framework!",
   "docComment": "",
   "name": "@google-cloud/functions-framework",
+  "preserveMemberOrder": false,
   "members": [
     {
       "kind": "EntryPoint",
       "canonicalReference": "@google-cloud/functions-framework!",
       "name": "",
+      "preserveMemberOrder": false,
       "members": [
         {
           "kind": "Variable",
@@ -192,6 +195,8 @@
               "text": "<T>) => void"
             }
           ],
+          "fileUrlPath": "src/function_registry.ts",
+          "isReadonly": true,
           "releaseTag": "Public",
           "name": "cloudEvent",
           "variableTypeTokenRange": {
@@ -217,6 +222,7 @@
               "text": "> "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "typeParameters": [
             {
@@ -232,6 +238,7 @@
             }
           ],
           "name": "CloudEventFunction",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "CallSignature",
@@ -276,7 +283,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 3
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -301,6 +309,7 @@
               "text": "> "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "typeParameters": [
             {
@@ -316,6 +325,7 @@
             }
           ],
           "name": "CloudEventFunctionWithCallback",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "CallSignature",
@@ -369,14 +379,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 3
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "callback",
                   "parameterTypeTokenRange": {
                     "startIndex": 4,
                     "endIndex": 5
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -393,8 +405,10 @@
               "text": "export interface CloudFunctionsContext "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "CloudFunctionsContext",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "PropertySignature",
@@ -414,6 +428,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
               "name": "eventId",
@@ -440,6 +455,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
               "name": "eventType",
@@ -466,6 +482,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
               "name": "resource",
@@ -492,6 +509,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
               "name": "timestamp",
@@ -535,6 +553,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Context",
           "typeTokenRange": {
@@ -552,8 +571,10 @@
               "text": "export interface Data "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Data",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "PropertySignature",
@@ -573,6 +594,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": false,
               "releaseTag": "Public",
               "name": "data",
@@ -594,8 +616,10 @@
               "text": "export interface EventFunction "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "EventFunction",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "CallSignature",
@@ -644,14 +668,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "context",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -668,8 +694,10 @@
               "text": "export interface EventFunctionWithCallback "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "EventFunctionWithCallback",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "CallSignature",
@@ -727,21 +755,24 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "context",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "callback",
                   "parameterTypeTokenRange": {
                     "startIndex": 5,
                     "endIndex": 6
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -815,6 +846,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "HandlerFunction",
           "typeParameters": [
@@ -858,6 +890,8 @@
               "text": ") => void"
             }
           ],
+          "fileUrlPath": "src/function_registry.ts",
+          "isReadonly": true,
           "releaseTag": "Public",
           "name": "http",
           "variableTypeTokenRange": {
@@ -875,8 +909,10 @@
               "text": "export interface HttpFunction "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "HttpFunction",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "CallSignature",
@@ -890,7 +926,7 @@
                 {
                   "kind": "Reference",
                   "text": "Request",
-                  "canonicalReference": "@google-cloud/functions-framework!Request:interface"
+                  "canonicalReference": "@google-cloud/functions-framework!Request_2:interface"
                 },
                 {
                   "kind": "Content",
@@ -899,7 +935,7 @@
                 {
                   "kind": "Reference",
                   "text": "Response",
-                  "canonicalReference": "@types/express!~e.Response:interface"
+                  "canonicalReference": "@types/express!e.Response:interface"
                 },
                 {
                   "kind": "Content",
@@ -926,14 +962,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "res",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -968,6 +1006,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "LegacyCloudFunctionsContext",
           "typeTokenRange": {
@@ -985,8 +1024,10 @@
               "text": "export interface LegacyEvent "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "LegacyEvent",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "PropertySignature",
@@ -1007,6 +1048,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": false,
               "releaseTag": "Public",
               "name": "context",
@@ -1033,6 +1075,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": false,
               "releaseTag": "Public",
               "name": "data",
@@ -1056,15 +1099,17 @@
             {
               "kind": "Reference",
               "text": "ExpressRequest",
-              "canonicalReference": "@types/express!~e.Request:interface"
+              "canonicalReference": "@types/express!e.Request:interface"
             },
             {
               "kind": "Content",
               "text": " "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Request_2",
+          "preserveMemberOrder": false,
           "members": [
             {
               "kind": "PropertySignature",
@@ -1085,6 +1130,7 @@
                   "text": ";"
                 }
               ],
+              "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
               "name": "rawBody",
@@ -1097,7 +1143,7 @@
           "extendsTokenRanges": [
             {
               "startIndex": 1,
-              "endIndex": 3
+              "endIndex": 2
             }
           ]
         }
