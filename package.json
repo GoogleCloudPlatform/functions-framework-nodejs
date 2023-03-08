@@ -25,7 +25,7 @@
     "express": "^4.16.4",
     "minimist": "^1.2.7",
     "on-finished": "^2.3.0",
-    "read-pkg-up": "^7.0.1",
+    "read-pkg-up": "^9.0.0",
     "semver": "^7.3.5"
   },
   "scripts": {
