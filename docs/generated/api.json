@@ -528,7 +528,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare type Context = "
+              "text": "export type Context = "
             },
             {
               "kind": "Reference",
@@ -786,7 +786,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare type HandlerFunction<T = "
+              "text": "export type HandlerFunction<T = "
             },
             {
               "kind": "Content",
@@ -985,7 +985,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare type LegacyCloudFunctionsContext = "
+              "text": "export type LegacyCloudFunctionsContext = "
             },
             {
               "kind": "Reference",
