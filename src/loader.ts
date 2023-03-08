@@ -20,7 +20,7 @@
 
 import * as path from 'path';
 import * as semver from 'semver';
-import * as readPkgUp from 'read-pkg-up';
+import {readPackageUp} from 'read-pkg-up';
 import {pathToFileURL} from 'url';
 import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
@@ -56,7 +56,7 @@ async function isEsModule(modulePath: string): Promise<boolean> {
     return false;
   }
 
-  const pkg = await readPkgUp({
+  const pkg = await readPackageUp({
     cwd: path.dirname(modulePath),
     normalize: false,
   });
