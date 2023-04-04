@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16']
+        node-version: [10, 12, 14, 16]
     steps:
     - name: Harden Runner
       uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
