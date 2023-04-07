@@ -5,6 +5,10 @@ on:
     branches:
       - master
   workflow_dispatch:
+
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   nodejs10:
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0

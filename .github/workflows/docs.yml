@@ -2,28 +2,28 @@ name: Node.js Docs CI
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
 permissions:
   contents: read
 
 jobs:
   docs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Harden Runner
-      uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
-      with:
-        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - name: Harden Runner
+        uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
 
-    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-    - name: Setup Node.js
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
-      with:
-        node-version: '14'
-    - name: Install dependencies
-      run: npm ci
-    - name: Build docs
-      run: npm run docs
-    - name: Ensure there are no changes in docs
-      run: git diff --exit-code docs/
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - name: Setup Node.js
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build docs
+        run: npm run docs
+      - name: Ensure there are no changes in docs
+        run: git diff --exit-code docs/
