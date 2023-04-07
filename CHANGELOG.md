@@ -4,6 +4,19 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.2.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.3...v3.2.0) (2023-04-07)
+
+
+### Features
+
+* configure security score card action ([#509](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/509)) ([1e63fd0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1e63fd04c12a3f4f7307deda2810f64dd56fc390))
+
+
+### Bug Fixes
+
+* make renovatebot's ignorePath and grouping of non-major updates work correctly ([#505](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/505)) ([e4f3c57](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/e4f3c571ecdfde583bb035341cceeb0aa508d29b))
+* remove default fallback when target function does not exist ([#497](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/497)) ([f3325d3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/f3325d3e16ab3a43a1fd54fc08388c114e4fe2d7))
+
 ## [3.1.3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.2...v3.1.3) (2022-11-17)
 
 

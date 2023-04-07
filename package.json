@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/functions-framework",
-  "version": "3.1.3",
+  "version": "3.2.0",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=10.0.0"
