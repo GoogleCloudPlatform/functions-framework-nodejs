@@ -66,6 +66,6 @@
     "pack-n-play": "^1.0.0-2",
     "sinon": "^15.0.0",
     "supertest": "6.3.3",
-    "typescript": "4.9.5"
+    "typescript": "5.0.4"
   }
 }
