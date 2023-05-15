@@ -46,3 +46,21 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs16'
+  nodejs18:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs18'
+  nodejs20:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs20'
