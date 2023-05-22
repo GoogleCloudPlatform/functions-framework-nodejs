@@ -174,16 +174,17 @@ export async function getUserFunction(
  * @return Resolved path or null.
  */
 function getFunctionModulePath(codeLocation: string): string | null {
-  let path: string | null = null;
   try {
-    path = require.resolve(codeLocation);
+    return require.resolve(codeLocation);
   } catch (ex) {
-    try {
-      // TODO: Decide if we want to keep this fallback.
-      path = require.resolve(codeLocation + '/function.js');
-    } catch (ex) {
-      return path;
-    }
+    // Ignore exception, this means the function was not found here.
   }
-  return path;
+
+  try {
+    return require.resolve(codeLocation + '/function.js');
+  } catch (ex) {
+    // Ignore exception, this means the function was not found here.
+  }
+
+  return null;
 }
