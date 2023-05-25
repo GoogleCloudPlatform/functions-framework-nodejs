@@ -37,6 +37,7 @@ jobs:
             github.com:443
             oss-fuzz-build-logs.storage.googleapis.com:443
             sigstore-tuf-root.storage.googleapis.com:443
+            rekor.sigstore.dev:443
 
       - name: 'Checkout code'
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
