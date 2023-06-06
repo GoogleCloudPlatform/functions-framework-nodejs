@@ -1,88 +1,101 @@
 name: Node.js Conformance CI
-on: 
+on:
   push:
   pull_request:
+
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        runtime: ['nodejs10', 'nodejs12', 'nodejs14', 'nodejs16']
+        node-version: [10, 12, 14, 16, 18, 20]
     steps:
-    - name: Harden Runner
-      uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
-      with:
-        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - name: Harden Runner
+        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            objects.githubusercontent.com:443
+            proxy.golang.org:443
+            registry.npmjs.org:443
+            storage.googleapis.com:443
+            sum.golang.org:443
 
-    - name: Checkout code
-      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - name: Checkout code
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build Functions Framework
-      run: npm ci
+      - name: Build Functions Framework
+        run: npm ci
 
-    - name: Build test project
-      working-directory: ./test/conformance
-      run: npm install
+      - name: Build test project
+        working-directory: ./test/conformance
+        run: npm install
 
-    - name: Install conformance client
-      uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@42e1d91749b9c9d59fe405c254dc5de4b3b801ca # v1.7.0
-      with:
-        client-version: v1.7.0
-        cache-path: ~/client
-        cache-key: conformance-client-v1.7.0
+      - name: Install conformance client
+        uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@1975792fb34ebbfa058d690666186d669d3a5977 # v1.8.0
+        with:
+          client-version: v1.7.0
+          cache-path: ~/client
+          cache-key: conformance-client-v1.7.0
 
-    - name: Run HTTP conformance tests using legacy API
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=http \
-            -buildpacks=false \
-            -cmd="npm start -- --target=writeHttp --signature-type=http"
+      - name: Run HTTP conformance tests using legacy API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=http \
+              -buildpacks=false \
+              -cmd="npm start -- --target=writeHttp --signature-type=http"
 
-    - name: Run event conformance tests using legacy API
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=legacyevent \
-            -buildpacks=false \
-            -cmd="npm start -- --target=writeLegacyEvent --signature-type=event"
+      - name: Run event conformance tests using legacy API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=legacyevent \
+              -buildpacks=false \
+              -cmd="npm start -- --target=writeLegacyEvent --signature-type=event"
 
-    - name: Run cloudevent conformance tests using legacy API
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=cloudevent \
-            -buildpacks=false \
-            -cmd="npm start -- --target=writeCloudEvent --signature-type=cloudevent"
+      - name: Run cloudevent conformance tests using legacy API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=cloudevent \
+              -buildpacks=false \
+              -cmd="npm start -- --target=writeCloudEvent --signature-type=cloudevent"
 
-    - name: Run HTTP conformance tests using declarative API
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=http \
-            -buildpacks=false \
-            -validate-mapping=false \
-            -cmd="npm start -- --target=writeHttpDeclarative"
+      - name: Run HTTP conformance tests using declarative API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=http \
+              -buildpacks=false \
+              -validate-mapping=false \
+              -cmd="npm start -- --target=writeHttpDeclarative"
 
-    - name: Run cloudevent conformance tests using declarative API
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=cloudevent \
-            -buildpacks=false \
-            -validate-mapping=true \
-            -cmd="npm start -- --target=writeCloudEventDeclarative"
+      - name: Run cloudevent conformance tests using declarative API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=cloudevent \
+              -buildpacks=false \
+              -validate-mapping=true \
+              -cmd="npm start -- --target=writeCloudEventDeclarative"
 
-    - name: Run HTTP concurrency test
-      working-directory: 'test/conformance'
-      run: |
-        ~/client \
-            -type=http \
-            -buildpacks=false \
-            -validate-concurrency=true \
-            -cmd="npm start -- --target=concurrentHttp"
+      - name: Run HTTP concurrency test
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=http \
+              -buildpacks=false \
+              -validate-concurrency=true \
+              -cmd="npm start -- --target=concurrentHttp"
