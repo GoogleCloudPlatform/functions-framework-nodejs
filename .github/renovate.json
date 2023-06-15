@@ -17,6 +17,5 @@
     "experimental/**"
   ],
   "pinVersions": false,
-  // Cannot update typescript after version 5.0.4 because of https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-1.html#breaking-changes
   "ignoreDeps": ["typescript"]
 }
