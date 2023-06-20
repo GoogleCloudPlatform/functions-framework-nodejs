@@ -93,11 +93,17 @@ describe('loading function', () => {
     }
   }
 
-  it('fails to load a function that does not exist', async () => {
-    FunctionRegistry.http('function', () => {
-      return 'PASS';
-    });
+  it('fails to load a module that does not exist', async () => {
+    const loadedFunction = await loader.getUserFunction(
+      process.cwd() + '/test/data/does_not_exist',
+      'functionDoesNotExist',
+      'http'
+    );
 
+    assert.strictEqual(loadedFunction, null);
+  });
+
+  it('fails to load a function that does not exist', async () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'functionDoesNotExist',
