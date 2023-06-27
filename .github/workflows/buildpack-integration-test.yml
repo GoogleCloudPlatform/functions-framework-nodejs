@@ -11,7 +11,7 @@ permissions: read-all
 
 jobs:
   nodejs10:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -20,7 +20,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs10'
   nodejs12:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -29,7 +29,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs12'
   nodejs14:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -38,7 +38,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs14'
   nodejs16:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -47,7 +47,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs16'
   nodejs18:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -56,7 +56,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs18'
   nodejs20:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.0
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
