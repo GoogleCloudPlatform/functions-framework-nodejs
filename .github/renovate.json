@@ -16,5 +16,6 @@
     "docs/**",
     "experimental/**"
   ],
-  "pinVersions": false
+  "pinVersions": false,
+  "ignoreDeps": ["typescript"]
 }
