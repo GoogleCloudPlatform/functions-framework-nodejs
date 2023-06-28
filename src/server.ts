@@ -85,8 +85,17 @@ export function getServer(
   };
 
   // Apply middleware
-  app.use(bodyParser.json(cloudEventsBodySavingOptions));
-  app.use(bodyParser.json(defaultBodySavingOptions));
+  if (functionSignatureType !== 'typed') {
+    // If the function is not typed then JSON parsing can be done automatically, otherwise the
+    // functions format must determine deserialization.
+    app.use(bodyParser.json(cloudEventsBodySavingOptions));
+    app.use(bodyParser.json(defaultBodySavingOptions));
+  } else {
+    const jsonParserOptions = Object.assign({}, defaultBodySavingOptions, {
+      type: 'application/json',
+    });
+    app.use(bodyParser.text(jsonParserOptions));
+  }
   app.use(bodyParser.text(defaultBodySavingOptions));
   app.use(bodyParser.urlencoded(urlEncodedOptions));
   // The parser will process ALL content types so MUST come last.

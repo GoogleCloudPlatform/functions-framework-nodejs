@@ -45,9 +45,9 @@ jobs:
       - name: Install conformance client
         uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
         with:
-          client-version: v1.7.0
+          client-version: v1.8.3
           cache-path: ~/client
-          cache-key: conformance-client-v1.7.0
+          cache-key: conformance-client-v1.8.3
 
       - name: Run HTTP conformance tests using legacy API
         working-directory: 'test/conformance'
@@ -81,6 +81,16 @@ jobs:
               -buildpacks=false \
               -validate-mapping=false \
               -cmd="npm start -- --target=writeHttpDeclarative"
+
+      - name: Run Typed conformance tests using declarative API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=http \
+              -declarative-type=typed \
+              -buildpacks=false \
+              -validate-mapping=false \
+              -cmd="npm start -- --target=writeTypedDeclarative"
 
       - name: Run cloudevent conformance tests using declarative API
         working-directory: 'test/conformance'
