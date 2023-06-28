@@ -8,6 +8,12 @@ functions.http('writeHttpDeclarative', (req, res) => {
   res.sendStatus(200);
 });
 
+functions.typed('writeTypedDeclarative', req => {
+  return {
+    payload: req,
+  };
+});
+
 functions.cloudEvent('writeCloudEventDeclarative', cloudEvent => {
   cloudEvent.datacontenttype = 'application/json';
   writeJson(cloudEvent);
