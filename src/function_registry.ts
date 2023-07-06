@@ -12,27 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {HttpFunction, CloudEventFunction, HandlerFunction} from './functions';
+import {
+  HttpFunction,
+  CloudEventFunction,
+  HandlerFunction,
+  TypedFunction,
+  JsonInvocationFormat,
+} from './functions';
 import {SignatureType} from './types';
 
-interface RegisteredFunction<T> {
+interface RegisteredFunction<T, U> {
   signatureType: SignatureType;
-  userFunction: HandlerFunction<T>;
+  userFunction: HandlerFunction<T, U>;
 }
 
 /**
  * Singleton map to hold the registered functions
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const registrationContainer = new Map<string, RegisteredFunction<any>>();
+const registrationContainer = new Map<string, RegisteredFunction<any, any>>();
 
 /**
  * Helper method to store a registered function in the registration container
  */
-const register = <T = unknown>(
+const register = <T = unknown, U = unknown>(
   functionName: string,
   signatureType: SignatureType,
-  userFunction: HandlerFunction<T>
+  userFunction: HandlerFunction<T, U>
 ): void => {
   if (!isValidFunctionName(functionName)) {
     throw new Error(`Invalid function name: ${functionName}`);
@@ -68,7 +74,7 @@ export const isValidFunctionName = (functionName: string): boolean => {
 export const getRegisteredFunction = (
   functionName: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): RegisteredFunction<any> | undefined => {
+): RegisteredFunction<any, any> | undefined => {
   return registrationContainer.get(functionName);
 };
 
@@ -93,4 +99,22 @@ export const cloudEvent = <T = unknown>(
   handler: CloudEventFunction<T>
 ): void => {
   register(functionName, 'cloudevent', handler);
+};
+
+/**
+ * Register a function that handles strongly typed invocations.
+ * @param functionName - the name of the function
+ * @param handler - the function to trigger
+ */
+export const typed = <T, U>(
+  functionName: string,
+  handler: TypedFunction<T, U>['handler'] | TypedFunction<T, U>
+): void => {
+  if (handler instanceof Function) {
+    handler = {
+      handler,
+      format: new JsonInvocationFormat<T, U>(),
+    };
+  }
+  register(functionName, 'typed', handler);
 };

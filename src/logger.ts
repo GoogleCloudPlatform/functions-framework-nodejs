@@ -28,6 +28,7 @@ export function sendCrashResponse({
   callback,
   silent = false,
   statusHeader = 'crash',
+  statusOverride = 500,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: Error | any;
@@ -35,6 +36,7 @@ export function sendCrashResponse({
   callback?: Function;
   silent?: boolean;
   statusHeader?: string;
+  statusOverride?: number;
 }) {
   if (!silent) {
     console.error(err.stack || err);
@@ -48,10 +50,10 @@ export function sendCrashResponse({
     res.set(FUNCTION_STATUS_HEADER_FIELD, statusHeader);
 
     if (process.env.NODE_ENV !== 'production') {
-      res.status(500);
+      res.status(statusOverride);
       res.send((err.message || err) + '');
     } else {
-      res.sendStatus(500);
+      res.sendStatus(statusOverride);
     }
   }
   if (callback) {

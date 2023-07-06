@@ -76,7 +76,7 @@ the Functions Framework.
    annotate the event payload type you expect.
 
    ```typescript
-   import ff from '@google-cloud/functions-framework';
+   import * as ff from '@google-cloud/functions-framework';
 
    interface PubSubData {
      subscription: string;

@@ -4,6 +4,20 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.3.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.2.1...v3.3.0) (2023-06-28)
+
+
+### Features
+
+* introduce strongly typed function signature ([#525](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/525)) ([65f3f34](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/65f3f348b8dc323021272bac49d9d57ab36ec1dd))
+
+## [3.2.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.2.0...v3.2.1) (2023-06-20)
+
+
+### Bug Fixes
+
+* module resolution returns early and accurate error messages on failure ([#534](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/534)) ([51f20a4](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/51f20a48b2c120715301c70c91c6e22443f545ff))
+
 ## [3.2.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.1.3...v3.2.0) (2023-04-07)
 
 

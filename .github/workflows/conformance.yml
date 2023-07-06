@@ -14,12 +14,21 @@ jobs:
         node-version: [10, 12, 14, 16, 18, 20]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@6b3083af2869dc3314a0257a42f4af696cc79ba3 # v2.3.1
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            objects.githubusercontent.com:443
+            proxy.golang.org:443
+            registry.npmjs.org:443
+            storage.googleapis.com:443
+            sum.golang.org:443
 
       - name: Checkout code
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
@@ -34,11 +43,11 @@ jobs:
         run: npm install
 
       - name: Install conformance client
-        uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@1975792fb34ebbfa058d690666186d669d3a5977 # v1.8.0
+        uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
         with:
-          client-version: v1.7.0
+          client-version: v1.8.3
           cache-path: ~/client
-          cache-key: conformance-client-v1.7.0
+          cache-key: conformance-client-v1.8.3
 
       - name: Run HTTP conformance tests using legacy API
         working-directory: 'test/conformance'
@@ -72,6 +81,16 @@ jobs:
               -buildpacks=false \
               -validate-mapping=false \
               -cmd="npm start -- --target=writeHttpDeclarative"
+
+      - name: Run Typed conformance tests using declarative API
+        working-directory: 'test/conformance'
+        run: |
+          ~/client \
+              -type=http \
+              -declarative-type=typed \
+              -buildpacks=false \
+              -validate-mapping=false \
+              -cmd="npm start -- --target=writeTypedDeclarative"
 
       - name: Run cloudevent conformance tests using declarative API
         working-directory: 'test/conformance'

@@ -26,6 +26,9 @@ import {
   CloudEventFunction,
   CloudEventFunctionWithCallback,
   HandlerFunction,
+  TypedFunction,
+  InvocationRequest,
+  InvocationResponse,
 } from './functions';
 import {CloudEvent} from './functions';
 import {SignatureType} from './types';
@@ -102,18 +105,25 @@ const parseBackgroundEvent = (req: Request): {data: {}; context: Context} => {
 const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
   return (req: Request, res: Response) => {
     const d = domain.create();
-    // Catch unhandled errors originating from this request.
-    d.on('error', err => {
+    const errorHandler = (err: Error) => {
       if (res.locals.functionExecutionFinished) {
         console.error(`Exception from a finished function: ${err}`);
       } else {
         res.locals.functionExecutionFinished = true;
         sendCrashResponse({err, res});
       }
-    });
+    };
+
+    // Catch unhandled errors originating from this request.
+    d.on('error', errorHandler);
+
     d.run(() => {
       process.nextTick(() => {
-        execute(req, res);
+        const ret = execute(req, res);
+        // Catch rejected promises if the function is async.
+        if (ret instanceof Promise) {
+          ret.catch(errorHandler);
+        }
       });
     });
   };
@@ -176,7 +186,7 @@ const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
 };
 
 /**
- * Wraps an callback style event function in an express RequestHandler.
+ * Wraps a callback style event function in an express RequestHandler.
  * @param userFunction User's function.
  * @return An Express hander function that invokes the user function.
  */
@@ -189,6 +199,44 @@ const wrapEventFunctionWithCallback = (
     return userFunction(data, context, callback);
   };
   return wrapHttpFunction(httpHandler);
+};
+
+/**
+ * Wraps a typed function in an express style RequestHandler.
+ * @param userFunction User's function
+ * @return An Express handler function that invokes the user function
+ */
+const wrapTypedFunction = (typedFunction: TypedFunction): RequestHandler => {
+  const typedHandlerWrapper: HttpFunction = async (
+    req: Request,
+    res: Response
+  ) => {
+    let reqTyped: unknown;
+    try {
+      reqTyped = typedFunction.format.deserializeRequest(
+        new InvocationRequestImpl(req)
+      );
+    } catch (err) {
+      sendCrashResponse({
+        err,
+        res,
+        statusOverride: 400, // 400 Bad Request
+      });
+      return;
+    }
+
+    let resTyped: unknown = typedFunction.handler(reqTyped);
+    if (resTyped instanceof Promise) {
+      resTyped = await resTyped;
+    }
+
+    typedFunction.format.serializeResponse(
+      new InvocationResponseImpl(res),
+      resTyped
+    );
+  };
+
+  return wrapHttpFunction(typedHandlerWrapper);
 };
 
 /**
@@ -206,19 +254,53 @@ export const wrapUserFunction = <T = unknown>(
       return wrapHttpFunction(userFunction as HttpFunction);
     case 'event':
       // Callback style if user function has more than 2 arguments.
-      if (userFunction!.length > 2) {
+      if (userFunction instanceof Function && userFunction!.length > 2) {
         return wrapEventFunctionWithCallback(
           userFunction as EventFunctionWithCallback
         );
       }
       return wrapEventFunction(userFunction as EventFunction);
     case 'cloudevent':
-      if (userFunction!.length > 1) {
+      if (userFunction instanceof Function && userFunction!.length > 1) {
         // Callback style if user function has more than 1 argument.
         return wrapCloudEventFunctionWithCallback(
           userFunction as CloudEventFunctionWithCallback
         );
       }
       return wrapCloudEventFunction(userFunction as CloudEventFunction);
+    case 'typed':
+      return wrapTypedFunction(userFunction as TypedFunction);
   }
 };
+
+/**
+ * @private
+ */
+class InvocationRequestImpl implements InvocationRequest {
+  constructor(private req: Request) {}
+
+  body(): string | Buffer {
+    return this.req.body;
+  }
+
+  header(header: string): string | undefined {
+    return this.req.header(header);
+  }
+}
+
+/**
+ * @private
+ */
+class InvocationResponseImpl implements InvocationResponse {
+  constructor(private res: Response) {}
+
+  setHeader(key: string, value: string): void {
+    this.res.set(key, value);
+  }
+  write(data: string | Buffer): void {
+    this.res.write(data);
+  }
+  end(data: string | Buffer): void {
+    this.res.end(data);
+  }
+}
