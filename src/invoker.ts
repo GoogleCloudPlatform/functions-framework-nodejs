@@ -100,7 +100,10 @@ export class ErrorHandler {
       sendCrashResponse({err, res: latestRes, callback: killInstance});
     });
 
-    process.on('exit', code => {
+    process.on('exit', (code: number | string) => {
+      if (typeof code === 'string') {
+        code = parseInt(code);
+      }
       sendCrashResponse({
         err: new Error(`Process exited with code ${code}`),
         res: latestRes,
