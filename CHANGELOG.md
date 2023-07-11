@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.3.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.3.0...v3.3.1) (2023-07-11)
+
+
+### Bug Fixes
+
+* framework fails to shutdown gracefully when exit code is a string ([#545](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/545)) ([5355069](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/53550694b56c80cf326d21198cd65d641cfbbc17))
+
 ## [3.3.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.2.1...v3.3.0) (2023-06-28)
 
 
