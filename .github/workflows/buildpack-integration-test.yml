@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+  pull_request:
+  # Runs every day on 12:00 AM PST
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 # Declare default permissions as read only.
@@ -11,7 +15,7 @@ permissions: read-all
 
 jobs:
   nodejs10:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -19,8 +23,9 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs10'
+      builder-runtime-version: '10'
   nodejs12:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -28,8 +33,9 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs12'
+      builder-runtime-version: '12'
   nodejs14:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -37,8 +43,9 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs14'
+      builder-runtime-version: '14'
   nodejs16:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -46,8 +53,9 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs16'
+      builder-runtime-version: '16'
   nodejs18:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -55,8 +63,9 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs18'
+      builder-runtime-version: '18'
   nodejs20:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.3
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.8.4
     with:
       http-builder-source: 'test/conformance'
       http-builder-target: 'writeHttpDeclarative'
@@ -64,3 +73,4 @@ jobs:
       cloudevent-builder-target: 'writeCloudEventDeclarative'
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs20'
+      builder-runtime-version: '20'

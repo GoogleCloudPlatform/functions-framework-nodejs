@@ -18,4 +18,5 @@ npm pack --pack-destination $SCRIPT_DIR
 cd $SCRIPT_DIR
 
 npm install google-cloud-functions-framework-0.0.0.tgz
+rm package-lock.json
 cat package.json
