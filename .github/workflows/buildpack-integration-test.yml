@@ -3,7 +3,7 @@ name: Buildpack Integration Test
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
   # Runs every day on 12:00 AM PST
   schedule:

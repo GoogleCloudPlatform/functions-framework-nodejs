@@ -2,7 +2,7 @@ name: Node.js Conformance CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 # Declare default permissions as read only.
