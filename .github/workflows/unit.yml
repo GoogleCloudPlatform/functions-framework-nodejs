@@ -2,7 +2,7 @@ name: Node.js Unit CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 permissions:
   contents: read
