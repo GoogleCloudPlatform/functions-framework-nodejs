@@ -38,11 +38,6 @@ export const main = async () => {
       options.target,
       options.signatureType
     );
-    if (!loadedFunction) {
-      console.error('Could not load the function, shutting down.');
-      // eslint-disable-next-line no-process-exit
-      process.exit(1);
-    }
     const {userFunction, signatureType} = loadedFunction;
     const server = getServer(userFunction!, signatureType);
     const errorHandler = new ErrorHandler(server);
@@ -58,8 +53,8 @@ export const main = async () => {
       })
       .setTimeout(0); // Disable automatic timeout on incoming connections.
   } catch (e) {
-    if (e instanceof OptionsError) {
-      console.error(e.message);
+    if (e instanceof OptionsError || e instanceof LoaderError) {
+      console.error(e);
       // eslint-disable-next-line no-process-exit
       process.exit(1);
     }
