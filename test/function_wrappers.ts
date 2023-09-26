@@ -32,7 +32,7 @@ describe('wrapUserFunction', () => {
       header: (h: string) => {
         return headers === undefined ? '' : headers[h];
       },
-    } as Request);
+    }) as Request;
 
   class ResponseMock extends EventEmitter {
     public headers: {[key: string]: string} = {};

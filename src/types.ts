@@ -24,7 +24,7 @@ export const SignatureType = ['http', 'event', 'cloudevent', 'typed'] as const;
 /**
  * Union type of all valid function SignatureType values.
  */
-export type SignatureType = typeof SignatureType[number];
+export type SignatureType = (typeof SignatureType)[number];
 
 /**
  * Type guard to test if a provided value is valid SignatureType
