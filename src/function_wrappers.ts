@@ -45,7 +45,8 @@ type OnDoneCallback = (err: Error | null, result: any) => void;
  * @returns an OnDoneCallback for the provided request.
  */
 const getOnDoneCallback = (res: Response): OnDoneCallback => {
-  return process.domain.bind<OnDoneCallback>((err, result) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (process as any).domain.bind((err: Error | null, result: any) => {
     if (res.locals.functionExecutionFinished) {
       console.log('Ignoring extra callback call');
     } else {
