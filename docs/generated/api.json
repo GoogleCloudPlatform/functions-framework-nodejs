@@ -1205,7 +1205,7 @@
                 {
                   "kind": "Reference",
                   "text": "Buffer",
-                  "canonicalReference": "!Buffer:class"
+                  "canonicalReference": "!\"\\\"buffer\\\"\".__global.Buffer:interface"
                 },
                 {
                   "kind": "Content",
@@ -1301,7 +1301,7 @@
                 {
                   "kind": "Reference",
                   "text": "Buffer",
-                  "canonicalReference": "!Buffer:class"
+                  "canonicalReference": "!\"\\\"buffer\\\"\".__global.Buffer:interface"
                 },
                 {
                   "kind": "Content",
@@ -1412,7 +1412,7 @@
                 {
                   "kind": "Reference",
                   "text": "Buffer",
-                  "canonicalReference": "!Buffer:class"
+                  "canonicalReference": "!\"\\\"buffer\\\"\".__global.Buffer:interface"
                 },
                 {
                   "kind": "Content",
@@ -1769,7 +1769,7 @@
                 {
                   "kind": "Reference",
                   "text": "Buffer",
-                  "canonicalReference": "!Buffer:class"
+                  "canonicalReference": "!\"\\\"buffer\\\"\".__global.Buffer:interface"
                 },
                 {
                   "kind": "Content",
