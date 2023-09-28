@@ -105,7 +105,8 @@ describe('HTTP Function', () => {
       )
         .set('Content-Type', 'application/json')
         .expect(test.expectedBody)
-        .expect(test.expectedStatus);
+        .expect(test.expectedStatus)
+        .expect(res => assert(!res.get('etag')));
       assert.strictEqual(callCount, test.expectedCallCount);
     });
   });

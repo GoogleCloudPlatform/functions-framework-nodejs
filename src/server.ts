@@ -108,7 +108,7 @@ export function getServer(
   app.disable('x-powered-by');
 
   // Disable Express eTag response header
-  app.disable('etag');
+  app.set('etag', false);
 
   if (
     functionSignatureType === 'event' ||
