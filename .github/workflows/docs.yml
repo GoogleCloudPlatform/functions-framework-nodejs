@@ -19,6 +19,7 @@ jobs:
           allowed-endpoints: >
             github.com:443
             registry.npmjs.org:443
+            nodejs.org:443
 
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Setup Node.js
