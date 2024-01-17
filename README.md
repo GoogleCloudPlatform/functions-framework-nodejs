@@ -252,9 +252,9 @@ More advanced guides and docs can be found in the [`docs/` folder](docs/).
 Contributions to this library are welcome and encouraged. See
 [CONTRIBUTING](CONTRIBUTING.md) for more information on how to get started.
 
-[ff_node_unit_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Unit%20CI/badge.svg
-[ff_node_unit_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Unit+CI"
-[ff_node_lint_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Lint%20CI/badge.svg
-[ff_node_lint_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Lint+CI"
-[ff_node_conformance_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/workflows/Node.js%20Conformance%20CI/badge.svg
-[ff_node_conformance_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Conformance+CI"
+[ff_node_unit_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/unit.yml/badge.svg
+[ff_node_unit_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/unit.yml
+[ff_node_lint_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/lint.yml/badge.svg
+[ff_node_lint_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/lint.yml
+[ff_node_conformance_img]: https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/conformance.yml/badge.svg
+[ff_node_conformance_link]:  https://github.com/GoogleCloudPlatform/functions-framework-nodejs/actions/workflows/conformance.yml
