@@ -14,6 +14,8 @@
 
 import * as express from 'express';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
+import {getCurrentContext, ExeuctionContext} from './execution_context';
+import {Buffer} from 'buffer';
 
 /**
  * Logs an error message and sends back an error response to the incoming
@@ -58,5 +60,81 @@ export function sendCrashResponse({
   }
   if (callback) {
     callback();
+  }
+}
+
+export function loggingHandlerAddExecutionContext() {
+  const originalStdoutWrite = process.stdout.write;
+  process.stdout.write = (data, ...args) => {
+    const {encoding, cb} = splitArgs(args);
+    const modifiedData = getModifiedData(data, encoding);
+    return originalStdoutWrite.apply(process.stdout, [modifiedData, cb]);
+  };
+
+  const originalStderrWrite = process.stderr.write;
+  process.stderr.write = (data, ...args) => {
+    const {encoding, cb} = splitArgs(args);
+    const modifiedData = getModifiedData(data, encoding, true);
+    return originalStderrWrite.apply(process.stderr, [modifiedData, cb]);
+  };
+}
+
+export function splitArgs(args: any) {
+  let encoding, cb;
+  if (
+    args.length > 0 &&
+    (Buffer.isEncoding(args[0]) || typeof args[0] === 'undefined')
+  ) {
+    encoding = args[0];
+    args.shift();
+  }
+  if (args.length > 0 && typeof args[0] === 'function') {
+    cb = args[0];
+  }
+  return {encoding: encoding, cb: cb};
+}
+
+export function getModifiedData(
+  data: Uint8Array | string,
+  encoding?: BufferEncoding,
+  stderr: boolean = false
+) {
+  let modifiedData = data;
+  if (getCurrentContext()) {
+    const exeuctionContext = getCurrentContext() as ExeuctionContext;
+    const {isJSON, processdData} = processData(data, encoding);
+    let dataWithContext;
+    if (isJSON) {
+      dataWithContext = {...exeuctionContext, ...processdData};
+    } else {
+      dataWithContext = {...exeuctionContext, message: processdData};
+    }
+    if (stderr) {
+      dataWithContext['severity'] = 'ERROR';
+    }
+
+    modifiedData = JSON.stringify(dataWithContext) + '\n';
+  }
+  return modifiedData;
+}
+
+function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
+  let decodedData;
+  try {
+    if (data instanceof Uint8Array) {
+      const textDecoder = new TextDecoder('utf-8');
+      decodedData = textDecoder.decode(data);
+    } else {
+      decodedData = Buffer.from(data, encoding).toString('utf-8');
+    }
+  } catch (e) {
+    // Failed to decode, treat it as simple text.
+    return {isJSON: false, processdData: data};
+  }
+
+  try {
+    return {isJSON: true, processdData: JSON.parse(decodedData)};
+  } catch (e) {
+    return {isJSON: false, processdData: decodedData};
   }
 }

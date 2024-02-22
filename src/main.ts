@@ -20,6 +20,7 @@ import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
 import {parseOptions, helpText, OptionsError} from './options';
+import {loggingHandlerAddExecutionContext} from './logger';
 
 /**
  * Main entrypoint for the functions framework that loads the user's function
@@ -27,6 +28,8 @@ import {parseOptions, helpText, OptionsError} from './options';
  */
 export const main = async () => {
   try {
+    loggingHandlerAddExecutionContext();
+
     const options = parseOptions();
 
     if (options.printHelp) {
