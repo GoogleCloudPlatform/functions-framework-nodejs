@@ -47,6 +47,10 @@ export interface FrameworkOptions {
    * Whether or not the --help CLI flag was provided.
    */
   printHelp: boolean;
+  /**
+   * Whether or not to enable execution id support.
+   */
+  enableExecutionId: boolean;
 }
 
 /**
@@ -107,6 +111,17 @@ const SignatureOption = new ConfigurableOption(
     );
   }
 );
+const EnableExecutionIdOption = new ConfigurableOption(
+  'enable-execution-id',
+  'ENABLE_EXECUTION_ID',
+  false,
+  x => {
+    return (
+      (typeof x === 'boolean' && x) ||
+      (typeof x === 'string' && x.toLowerCase() === 'true')
+    );
+  }
+);
 
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
@@ -131,6 +146,7 @@ export const parseOptions = (
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
     ],
+    boolean: [EnableExecutionIdOption.cliOption,],
   });
   return {
     port: PortOption.parse(argv, envVars),
@@ -138,5 +154,6 @@ export const parseOptions = (
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
+    enableExecutionId: EnableExecutionIdOption.parse(argv, envVars),
   };
 };

@@ -28,14 +28,17 @@ import {loggingHandlerAddExecutionContext} from './logger';
  */
 export const main = async () => {
   try {
-    loggingHandlerAddExecutionContext();
-
     const options = parseOptions();
 
     if (options.printHelp) {
       console.error(helpText);
       return;
     }
+
+    if (options.enableExecutionId) {
+      loggingHandlerAddExecutionContext();
+    }
+
     const loadedFunction = await getUserFunction(
       options.sourceLocation,
       options.target,

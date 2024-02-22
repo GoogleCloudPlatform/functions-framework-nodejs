@@ -190,6 +190,7 @@ ignored.
 | `--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`                                                                                                                     |
 | `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` or `cloudevent` |
 | `--source`         | `FUNCTION_SOURCE`         | The path to the directory of your function. Default: `cwd` (the current working directory)                                                                                                                       |
+| `--enable-execution-id`         | `ENABLE_EXECUTION_ID`         | Whether or not to enable execution id support. When enable, exeuction id will be added to log.                                                                                                                     |
 
 You can set command-line flags in your `package.json` via the `start` script.
 For example:

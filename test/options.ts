@@ -51,6 +51,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve(''),
         signatureType: 'http',
         printHelp: false,
+        enableExecutionId: false
       },
     },
     {
@@ -64,6 +65,7 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
+        '--enable-execution-id'
       ],
       envVars: {},
       expectedOptions: {
@@ -72,6 +74,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: true
       },
     },
     {
@@ -82,6 +85,7 @@ describe('parseOptions', () => {
         FUNCTION_TARGET: 'helloWorld',
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
+        ENABLE_EXECUTION_ID: 'True'
       },
       expectedOptions: {
         port: '1234',
@@ -89,6 +93,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: true
       },
     },
     {
@@ -102,12 +107,14 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
+        '--enable-execution-id'
       ],
       envVars: {
         PORT: '4567',
         FUNCTION_TARGET: 'fooBar',
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
+        ENABLE_EXECUTION_ID: 'false'
       },
       expectedOptions: {
         port: '1234',
@@ -115,6 +122,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: true
       },
     },
   ];
