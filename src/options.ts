@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as minimist from 'minimist';
+import * as semver from 'semver';
 import {resolve} from 'path';
 import {SignatureType, isValidSignatureType} from './types';
 
@@ -111,11 +112,19 @@ const SignatureOption = new ConfigurableOption(
     );
   }
 );
+
+export const requriedNodeJsVersion = '12.17.0';
 const EnableExecutionIdOption = new ConfigurableOption(
   'enable-execution-id',
   'ENABLE_EXECUTION_ID',
   false,
   x => {
+    const nodeVersion = process.versions.node;
+    if (semver.lt(nodeVersion, requriedNodeJsVersion)) {
+      throw new OptionsError(
+        `Execution id is only supported with Node.js versions ${requriedNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      );
+    }
     return (
       (typeof x === 'boolean' && x) ||
       (typeof x === 'string' && x.toLowerCase() === 'true')
@@ -146,7 +155,7 @@ export const parseOptions = (
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
     ],
-    boolean: [EnableExecutionIdOption.cliOption,],
+    boolean: [EnableExecutionIdOption.cliOption],
   });
   return {
     port: PortOption.parse(argv, envVars),

@@ -97,7 +97,7 @@ export function splitArgs(args: any) {
 export function getModifiedData(
   data: Uint8Array | string,
   encoding?: BufferEncoding,
-  stderr: boolean = false
+  stderr = false
 ) {
   let modifiedData = data;
   if (getCurrentContext()) {

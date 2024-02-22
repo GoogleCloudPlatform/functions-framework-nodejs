@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import * as assert from 'assert';
+import * as semver from 'semver';
 import {resolve} from 'path';
-import {parseOptions, FrameworkOptions} from '../src/options';
+import {parseOptions, FrameworkOptions, requriedNodeJsVersion} from '../src/options';
 
 describe('parseOptions', () => {
   interface TestData {
@@ -51,7 +52,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve(''),
         signatureType: 'http',
         printHelp: false,
-        enableExecutionId: false
+        enableExecutionId: false,
       },
     },
     {
@@ -65,7 +66,7 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
-        '--enable-execution-id'
+        '--enable-execution-id',
       ],
       envVars: {},
       expectedOptions: {
@@ -74,7 +75,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true
+        enableExecutionId: true,
       },
     },
     {
@@ -85,7 +86,7 @@ describe('parseOptions', () => {
         FUNCTION_TARGET: 'helloWorld',
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
-        ENABLE_EXECUTION_ID: 'True'
+        ENABLE_EXECUTION_ID: 'True',
       },
       expectedOptions: {
         port: '1234',
@@ -93,7 +94,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true
+        enableExecutionId: true,
       },
     },
     {
@@ -107,14 +108,14 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
-        '--enable-execution-id'
+        '--enable-execution-id',
       ],
       envVars: {
         PORT: '4567',
         FUNCTION_TARGET: 'fooBar',
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
-        ENABLE_EXECUTION_ID: 'false'
+        ENABLE_EXECUTION_ID: 'false',
       },
       expectedOptions: {
         port: '1234',
@@ -122,7 +123,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true
+        enableExecutionId: true,
       },
     },
   ];
@@ -142,5 +143,13 @@ describe('parseOptions', () => {
     assert.throws(() => {
       parseOptions(['bin/node', 'index.js', '--signature-type=monkey']);
     });
+  });
+
+  it('throws an exception for outdated nodejs version', () => {
+    if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
+      assert.throws(() => {
+        parseOptions(['bin/node', 'index.js', '--enable-execution-id']);
+      });
+    }
   });
 });
