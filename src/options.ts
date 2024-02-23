@@ -119,16 +119,16 @@ const EnableExecutionIdOption = new ConfigurableOption(
   'ENABLE_EXECUTION_ID',
   false,
   x => {
+    const shouldEnable =
+      (typeof x === 'boolean' && x) ||
+      (typeof x === 'string' && x.toLowerCase() === 'true');
     const nodeVersion = process.versions.node;
-    if (semver.lt(nodeVersion, requriedNodeJsVersion)) {
+    if (shouldEnable && semver.lt(nodeVersion, requriedNodeJsVersion)) {
       throw new OptionsError(
         `Execution id is only supported with Node.js versions ${requriedNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
       );
     }
-    return (
-      (typeof x === 'boolean' && x) ||
-      (typeof x === 'string' && x.toLowerCase() === 'true')
-    );
+    return shouldEnable;
   }
 );
 
