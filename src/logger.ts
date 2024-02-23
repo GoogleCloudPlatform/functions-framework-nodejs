@@ -16,7 +16,6 @@ import * as express from 'express';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
 import {getCurrentContext, ExeuctionContext} from './execution_context';
 import {Buffer} from 'buffer';
-import {TextDecoder} from 'text-encoding';
 
 /**
  * Logs an error message and sends back an error response to the incoming
@@ -123,10 +122,9 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
   let decodedData;
   try {
     if (data instanceof Uint8Array) {
-      const textDecoder = new TextDecoder('utf-8');
-      decodedData = textDecoder.decode(data);
+      decodedData = Buffer.from(data.buffer).toString();
     } else {
-      decodedData = Buffer.from(data, encoding).toString('utf-8');
+      decodedData = Buffer.from(data, encoding).toString();
     }
   } catch (e) {
     // Failed to decode, treat it as simple text.

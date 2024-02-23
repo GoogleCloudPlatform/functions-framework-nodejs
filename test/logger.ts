@@ -44,6 +44,7 @@ describe('getModifiedData', () => {
     text: 'default text.',
     component: 'arbitrary-property',
   });
+  const sampleUint8Arr = new Uint8Array(Buffer.from(sampleText));
   const expectedExecutionContext = {
     'logging.googleapis.com/labels': {
       executionId: 'testExecutionId',
@@ -87,7 +88,7 @@ describe('getModifiedData', () => {
   });
 
   it('uint8array', () => {
-    const modifiedData = getModifiedData(Buffer.from(sampleText));
+    const modifiedData = getModifiedData(sampleUint8Arr);
     assert.equal(modifiedData, expectedTextOutput);
   });
 
@@ -104,7 +105,7 @@ describe('getModifiedData', () => {
   it('uint8Array with encoding', () => {
     // Encoding will be ignored when the first parameter is Uint8Array.
     // This behavious is the same as process.stdout[/stderr].write.
-    const modifiedData = getModifiedData(Buffer.from(sampleText), 'hex');
+    const modifiedData = getModifiedData(sampleUint8Arr, 'hex');
     assert.equal(modifiedData, expectedTextOutput);
   });
 
