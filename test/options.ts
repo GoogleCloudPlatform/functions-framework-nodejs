@@ -70,7 +70,6 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
-        '--enable-execution-id',
       ],
       envVars: {},
       expectedOptions: {
@@ -79,7 +78,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true,
+        enableExecutionId: false,
       },
     },
     {
@@ -90,7 +89,6 @@ describe('parseOptions', () => {
         FUNCTION_TARGET: 'helloWorld',
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
-        ENABLE_EXECUTION_ID: 'True',
       },
       expectedOptions: {
         port: '1234',
@@ -98,7 +96,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true,
+        enableExecutionId: false,
       },
     },
     {
@@ -112,14 +110,12 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
-        '--enable-execution-id',
       ],
       envVars: {
         PORT: '4567',
         FUNCTION_TARGET: 'fooBar',
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
-        ENABLE_EXECUTION_ID: 'false',
       },
       expectedOptions: {
         port: '1234',
@@ -127,7 +123,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: true,
+        enableExecutionId: false,
       },
     },
   ];
@@ -143,17 +139,72 @@ describe('parseOptions', () => {
     });
   });
 
+  const executionIdTestData: TestData[] = [
+    {
+      name: 'enable by cli flag:',
+      cliOpts: ['bin/node', '/index.js', '--enable-execution-id'],
+      envVars: {},
+      expectedOptions: {
+        port: '8080',
+        target: 'function',
+        sourceLocation: resolve(''),
+        signatureType: 'http',
+        printHelp: false,
+        enableExecutionId: true,
+      },
+    },
+    {
+      name: 'enbale by env vars:',
+      cliOpts: ['bin/node', '/index.js'],
+      envVars: {
+        ENABLE_EXECUTION_ID: 'True',
+      },
+      expectedOptions: {
+        port: '8080',
+        target: 'function',
+        sourceLocation: resolve(''),
+        signatureType: 'http',
+        printHelp: false,
+        enableExecutionId: true,
+      },
+    },
+    {
+      name: 'prioritizes cli flags over env vars:',
+      cliOpts: ['bin/node', '/index.js', '--enable-execution-id'],
+      envVars: {
+        ENABLE_EXECUTION_ID: 'False',
+      },
+      expectedOptions: {
+        port: '8080',
+        target: 'function',
+        sourceLocation: resolve(''),
+        signatureType: 'http',
+        printHelp: false,
+        enableExecutionId: true,
+      },
+    },
+  ];
+
+  executionIdTestData.forEach(testCase => {
+    it(testCase.name, () => {
+      if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
+        assert.throws(() => {
+          parseOptions(['bin/node', 'index.js', '--enable-execution-id']);
+        });
+      } else {
+        const options = parseOptions(testCase.cliOpts, testCase.envVars);
+        const {expectedOptions} = testCase;
+        let opt: keyof FrameworkOptions;
+        for (opt in expectedOptions) {
+          assert.deepStrictEqual(expectedOptions[opt], options[opt]);
+        }
+      }
+    });
+  });
+
   it('throws an exception for invalid signature types', () => {
     assert.throws(() => {
       parseOptions(['bin/node', 'index.js', '--signature-type=monkey']);
     });
-  });
-
-  it('throws an exception for outdated nodejs version', () => {
-    if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
-      assert.throws(() => {
-        parseOptions(['bin/node', 'index.js', '--enable-execution-id']);
-      });
-    }
   });
 });
