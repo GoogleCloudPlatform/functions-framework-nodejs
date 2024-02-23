@@ -50,24 +50,24 @@ describe('executionContextMiddleware', () => {
     let exeuctionContext;
     const next = () => {
       exeuctionContext = getCurrentContext() as ExeuctionContext;
+      assert(exeuctionContext);
+      assert.deepEqual(exeuctionContext['logging.googleapis.com/labels'], {
+        executionId: validExecutionId,
+      });
+      assert.strictEqual(
+        exeuctionContext['logging.googleapis.com/spanId'],
+        testSpanId
+      );
+      assert.strictEqual(
+        exeuctionContext['logging.googleapis.com/trace'],
+        testTrace
+      );
     };
 
     executionContextMiddleware(
       request as Request,
       {} as Response,
       next as NextFunction
-    );
-    assert(exeuctionContext);
-    assert.deepEqual(exeuctionContext['logging.googleapis.com/labels'], {
-      executionId: validExecutionId,
-    });
-    assert.strictEqual(
-      exeuctionContext['logging.googleapis.com/spanId'],
-      testSpanId
-    );
-    assert.strictEqual(
-      exeuctionContext['logging.googleapis.com/trace'],
-      testTrace
     );
   });
 
@@ -79,6 +79,7 @@ describe('executionContextMiddleware', () => {
     let exeuctionContext;
     const next = () => {
       exeuctionContext = getCurrentContext() as ExeuctionContext;
+      assertExecutionContext(exeuctionContext);
     };
 
     executionContextMiddleware(
@@ -86,8 +87,6 @@ describe('executionContextMiddleware', () => {
       {} as Response,
       next as NextFunction
     );
-
-    assertExecutionContext(exeuctionContext);
   });
 
   it('generates execution ID if header is malformed', () => {
@@ -101,6 +100,7 @@ describe('executionContextMiddleware', () => {
     let exeuctionContext;
     const next = () => {
       exeuctionContext = getCurrentContext() as ExeuctionContext;
+      assertExecutionContext(exeuctionContext);
     };
 
     executionContextMiddleware(
@@ -108,7 +108,5 @@ describe('executionContextMiddleware', () => {
       {} as Response,
       next as NextFunction
     );
-
-    assertExecutionContext(exeuctionContext);
   });
 });

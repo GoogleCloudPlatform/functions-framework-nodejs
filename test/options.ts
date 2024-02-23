@@ -15,7 +15,11 @@
 import * as assert from 'assert';
 import * as semver from 'semver';
 import {resolve} from 'path';
-import {parseOptions, FrameworkOptions, requriedNodeJsVersion} from '../src/options';
+import {
+  parseOptions,
+  FrameworkOptions,
+  requriedNodeJsVersion,
+} from '../src/options';
 
 describe('parseOptions', () => {
   interface TestData {

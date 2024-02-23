@@ -27,7 +27,6 @@ import {wrapUserFunction} from './function_wrappers';
 import {executionContextMiddleware} from './execution_context';
 import {requriedNodeJsVersion} from './options';
 
-
 /**
  * Creates and configures an Express application and returns an HTTP server
  * which will run it.
@@ -119,7 +118,6 @@ export function getServer(
   if (semver.gte(process.versions.node, requriedNodeJsVersion)) {
     app.use(executionContextMiddleware);
   }
-  
 
   if (
     functionSignatureType === 'event' ||
