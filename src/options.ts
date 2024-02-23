@@ -113,7 +113,7 @@ const SignatureOption = new ConfigurableOption(
   }
 );
 
-export const requriedNodeJsVersion = '12.17.0';
+export const requriedNodeJsVersion = '13.0.0';
 const EnableExecutionIdOption = new ConfigurableOption(
   'enable-execution-id',
   'ENABLE_EXECUTION_ID',

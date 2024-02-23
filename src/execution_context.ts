@@ -23,7 +23,6 @@ export async function executionContextMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log(`**** current node version ${process.versions.node}`);
   if (semver.gte(process.versions.node, requriedNodeJsVersion)) {
     const asyncHooks = await import('node:async_hooks');
     if (!asyncLocalStorage) {
