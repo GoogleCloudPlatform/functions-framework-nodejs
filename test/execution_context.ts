@@ -2,6 +2,11 @@ import {
   executionContextMiddleware,
   getCurrentContext,
   ExeuctionContext,
+  EXECUTION_CONTEXT_LABELS_KEY,
+  EXECUTION_CONTEXT_TRACE_KEY,
+  EXECUTION_CONTEXT_SPAN_ID_KEY,
+  TRACE_CONTEXT_HEADER_KEY,
+  FUNCTION_EXECUTION_ID_HEADER_KEY
 } from '../src/execution_context';
 import {Request, Response, NextFunction} from 'express';
 import * as assert from 'assert';
@@ -25,16 +30,16 @@ describe('executionContextMiddleware', () => {
   function assertExecutionContext(exeuctionContext?: ExeuctionContext) {
     assert(exeuctionContext);
     assert.strictEqual(
-      (exeuctionContext as ExeuctionContext)['logging.googleapis.com/labels']
+      (exeuctionContext as ExeuctionContext)[EXECUTION_CONTEXT_LABELS_KEY]
         ?.executionId.length,
       12
     );
     assert.strictEqual(
-      exeuctionContext['logging.googleapis.com/spanId'],
+      exeuctionContext[EXECUTION_CONTEXT_SPAN_ID_KEY],
       testSpanId
     );
     assert.strictEqual(
-      exeuctionContext['logging.googleapis.com/trace'],
+      exeuctionContext[EXECUTION_CONTEXT_TRACE_KEY],
       testTrace
     );
   }
@@ -43,23 +48,23 @@ describe('executionContextMiddleware', () => {
     const request = createRequest(
       {},
       {
-        'X-Cloud-Trace-Context': cloudTraceContext,
-        'function-execution-id': validExecutionId,
+        TRACE_CONTEXT_HEADER_KEY: cloudTraceContext,
+        FUNCTION_EXECUTION_ID_HEADER_KEY: validExecutionId,
       }
     );
     let exeuctionContext;
     const next = () => {
       exeuctionContext = getCurrentContext() as ExeuctionContext;
       assert(exeuctionContext);
-      assert.deepEqual(exeuctionContext['logging.googleapis.com/labels'], {
+      assert.deepEqual(exeuctionContext[EXECUTION_CONTEXT_LABELS_KEY], {
         executionId: validExecutionId,
       });
       assert.strictEqual(
-        exeuctionContext['logging.googleapis.com/spanId'],
+        exeuctionContext[EXECUTION_CONTEXT_SPAN_ID_KEY],
         testSpanId
       );
       assert.strictEqual(
-        exeuctionContext['logging.googleapis.com/trace'],
+        exeuctionContext[EXECUTION_CONTEXT_TRACE_KEY],
         testTrace
       );
     };
@@ -74,7 +79,7 @@ describe('executionContextMiddleware', () => {
   it('generates execution ID if not in header', () => {
     const request = createRequest(
       {},
-      {'X-Cloud-Trace-Context': cloudTraceContext}
+      {TRACE_CONTEXT_HEADER_KEY: cloudTraceContext}
     );
     let exeuctionContext;
     const next = () => {
@@ -93,8 +98,8 @@ describe('executionContextMiddleware', () => {
     const request = createRequest(
       {},
       {
-        'X-Cloud-Trace-Context': cloudTraceContext,
-        'function-execution-id': 'abcde',
+        TRACE_CONTEXT_HEADER_KEY: cloudTraceContext,
+        FUNCTION_EXECUTION_ID_HEADER_KEY: 'abcde',
       }
     );
     let exeuctionContext;

@@ -79,7 +79,7 @@ export function loggingHandlerAddExecutionContext() {
   };
 }
 
-export function splitArgs(args: any) {
+export function splitArgs(args: any[]) {
   let encoding, cb;
   if (
     args.length > 0 &&
@@ -99,23 +99,22 @@ export function getModifiedData(
   encoding?: BufferEncoding,
   stderr = false
 ) {
-  let modifiedData = data;
-  if (getCurrentContext()) {
-    const exeuctionContext = getCurrentContext() as ExeuctionContext;
-    const {isJSON, processdData} = processData(data, encoding);
-    let dataWithContext;
-    if (isJSON) {
-      dataWithContext = {...exeuctionContext, ...processdData};
-    } else {
-      dataWithContext = {...exeuctionContext, message: processdData};
-    }
-    if (stderr) {
-      dataWithContext['severity'] = 'ERROR';
-    }
-
-    modifiedData = JSON.stringify(dataWithContext) + '\n';
+  const currentContext = getCurrentContext();
+  if (!currentContext) {
+    return data;
   }
-  return modifiedData;
+  const {isJSON, processdData} = processData(data, encoding);
+  let dataWithContext;
+  if (isJSON) {
+    dataWithContext = {...currentContext, ...processdData};
+  } else {
+    dataWithContext = {...currentContext, message: processdData};
+  }
+  if (stderr) {
+    dataWithContext['severity'] = 'ERROR';
+  }
+
+  return JSON.stringify(dataWithContext) + '\n';;
 }
 
 function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
