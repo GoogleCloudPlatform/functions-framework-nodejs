@@ -3,7 +3,8 @@ import {Request, Response, NextFunction} from 'express';
 import {requriedNodeJsVersion} from './options';
 
 const EXECUTION_ID_LENGTH = 12;
-const TRACE_CONTEXT_PATTERN = /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
+const TRACE_CONTEXT_PATTERN =
+  /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
 export const TRACE_CONTEXT_HEADER_KEY = 'X-Cloud-Trace-Context';
 export const FUNCTION_EXECUTION_ID_HEADER_KEY = 'function-execution-id';
 export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';

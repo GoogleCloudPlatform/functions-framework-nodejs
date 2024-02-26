@@ -14,7 +14,7 @@
 
 import * as express from 'express';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
-import {getCurrentContext, ExeuctionContext} from './execution_context';
+import {getCurrentContext} from './execution_context';
 import {Buffer} from 'buffer';
 
 /**
@@ -114,7 +114,7 @@ export function getModifiedData(
     dataWithContext['severity'] = 'ERROR';
   }
 
-  return JSON.stringify(dataWithContext) + '\n';;
+  return JSON.stringify(dataWithContext) + '\n';
 }
 
 function processData(data: Uint8Array | string, encoding?: BufferEncoding) {

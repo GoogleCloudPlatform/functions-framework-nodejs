@@ -5,8 +5,6 @@ import {
   EXECUTION_CONTEXT_LABELS_KEY,
   EXECUTION_CONTEXT_TRACE_KEY,
   EXECUTION_CONTEXT_SPAN_ID_KEY,
-  TRACE_CONTEXT_HEADER_KEY,
-  FUNCTION_EXECUTION_ID_HEADER_KEY
 } from '../src/execution_context';
 import {Request, Response, NextFunction} from 'express';
 import * as assert from 'assert';
