@@ -56,7 +56,6 @@ describe('parseOptions', () => {
         sourceLocation: resolve(''),
         signatureType: 'http',
         printHelp: false,
-        enableExecutionId: false,
       },
     },
     {
@@ -78,7 +77,6 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: false,
       },
     },
     {
@@ -96,7 +94,6 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: false,
       },
     },
     {
@@ -123,7 +120,6 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
-        enableExecutionId: false,
       },
     },
   ];
@@ -139,67 +135,36 @@ describe('parseOptions', () => {
     });
   });
 
-  const executionIdTestData: TestData[] = [
-    {
-      name: 'enable by cli flag:',
-      cliOpts: ['bin/node', '/index.js', '--enable-execution-id'],
-      envVars: {},
-      expectedOptions: {
-        port: '8080',
-        target: 'function',
-        sourceLocation: resolve(''),
-        signatureType: 'http',
-        printHelp: false,
-        enableExecutionId: true,
-      },
-    },
-    {
-      name: 'enbale by env vars:',
-      cliOpts: ['bin/node', '/index.js'],
-      envVars: {
-        ENABLE_EXECUTION_ID: 'True',
-      },
-      expectedOptions: {
-        port: '8080',
-        target: 'function',
-        sourceLocation: resolve(''),
-        signatureType: 'http',
-        printHelp: false,
-        enableExecutionId: true,
-      },
-    },
-    {
-      name: 'prioritizes cli flags over env vars:',
-      cliOpts: ['bin/node', '/index.js', '--enable-execution-id'],
-      envVars: {
-        ENABLE_EXECUTION_ID: 'False',
-      },
-      expectedOptions: {
-        port: '8080',
-        target: 'function',
-        sourceLocation: resolve(''),
-        signatureType: 'http',
-        printHelp: false,
-        enableExecutionId: true,
-      },
-    },
-  ];
+  const cliOpts = ['bin/node', '/index.js'];
+  it('default execution id support', () => {
+    const options = parseOptions(cliOpts, {});
+    if (semver.gte(process.versions.node, requriedNodeJsVersion)) {
+      assert.strictEqual(options.enableExecutionId, true);
+    } else {
+      assert.strictEqual(options.enableExecutionId, false);
+    }
+  });
 
-  executionIdTestData.forEach(testCase => {
-    it(testCase.name, () => {
-      if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
-        assert.throws(() => {
-          parseOptions(['bin/node', 'index.js', '--enable-execution-id']);
-        });
-      } else {
-        const options = parseOptions(testCase.cliOpts, testCase.envVars);
-        const {expectedOptions} = testCase;
-        let opt: keyof FrameworkOptions;
-        for (opt in expectedOptions) {
-          assert.deepStrictEqual(expectedOptions[opt], options[opt]);
-        }
-      }
-    });
+  it('disable execution id support', () => {
+    const envVars = {
+      LOG_EXECUTION_ID: 'False',
+    };
+    const options = parseOptions(cliOpts, envVars);
+    assert.strictEqual(options.enableExecutionId, false);
+  });
+
+  it('enable execution id support', () => {
+    const envVars = {
+      LOG_EXECUTION_ID: 'TRUE',
+    };
+    if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
+      assert.throws(() => {
+        parseOptions(cliOpts, envVars);
+      });
+    } else {
+      const options = parseOptions(cliOpts, envVars);
+      assert.strictEqual(options.enableExecutionId, true);
+    }
   });
 
   it('throws an exception for invalid signature types', () => {

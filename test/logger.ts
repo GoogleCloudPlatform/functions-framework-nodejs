@@ -92,18 +92,19 @@ describe('getModifiedData', () => {
     const data = JSON.stringify({
       text: 'default text.',
       component: 'arbitrary-property',
-      'logging.googleapis.com/labels': {'user_label_1': 'value_1'},
+      'logging.googleapis.com/labels': {user_label_1: 'value_1'},
     });
-    const expectedOutput = JSON.stringify({
-      text: 'default text.',
-      component: 'arbitrary-property',
-      'logging.googleapis.com/labels': {
-        'user_label_1': 'value_1',
-        'execution_id': 'testExecutionId',
-      },
-      'logging.googleapis.com/trace': 'testTraceId',
-      'logging.googleapis.com/spanId': 'testSpanId',
-    }) + '\n';
+    const expectedOutput =
+      JSON.stringify({
+        text: 'default text.',
+        component: 'arbitrary-property',
+        'logging.googleapis.com/labels': {
+          user_label_1: 'value_1',
+          execution_id: 'testExecutionId',
+        },
+        'logging.googleapis.com/trace': 'testTraceId',
+        'logging.googleapis.com/spanId': 'testSpanId',
+      }) + '\n';
     const modifiedData = getModifiedData(data);
     assert.equal(modifiedData, expectedOutput);
   });

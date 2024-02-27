@@ -69,10 +69,10 @@ export const isValidFunctionName = (functionName: string): boolean => {
 /**
  * Gets the request-specific execution id
  * @public
-*/
+ */
 export const getExecutionId = (): string | undefined => {
   return getCurrentExecutionId();
-}
+};
 
 /**
  * Get a declaratively registered function

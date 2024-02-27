@@ -114,23 +114,25 @@ const SignatureOption = new ConfigurableOption(
 );
 
 export const requriedNodeJsVersion = '13.0.0';
-const EnableExecutionIdOption = new ConfigurableOption(
-  'enable-execution-id',
-  'ENABLE_EXECUTION_ID',
-  false,
-  x => {
-    const shouldEnable =
-      (typeof x === 'boolean' && x) ||
-      (typeof x === 'string' && x.toLowerCase() === 'true');
-    const nodeVersion = process.versions.node;
-    if (shouldEnable && semver.lt(nodeVersion, requriedNodeJsVersion)) {
-      throw new OptionsError(
-        `Execution id is only supported with Node.js versions ${requriedNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
-      );
-    }
-    return shouldEnable;
+function enableExecutionId(envVars: NodeJS.ProcessEnv): boolean {
+  const logExecutionID = envVars['LOG_EXECUTION_ID'];
+  const nodeVersion = process.versions.node;
+  const isVersionSatisfied = semver.gte(nodeVersion, requriedNodeJsVersion);
+  // If not specified, default to true with constraint of supported nodejs version.
+  if (typeof logExecutionID === 'undefined') {
+    return isVersionSatisfied;
   }
-);
+  const isTrue =
+    (typeof logExecutionID === 'boolean' && logExecutionID) ||
+    (typeof logExecutionID === 'string' &&
+      logExecutionID.toLowerCase() === 'true');
+  if (isTrue && !isVersionSatisfied) {
+    throw new OptionsError(
+      `Execution id is only supported with Node.js versions ${requriedNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
+    );
+  }
+  return isTrue;
+}
 
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
@@ -155,7 +157,6 @@ export const parseOptions = (
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
     ],
-    boolean: [EnableExecutionIdOption.cliOption],
   });
   return {
     port: PortOption.parse(argv, envVars),
@@ -163,6 +164,6 @@ export const parseOptions = (
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
-    enableExecutionId: EnableExecutionIdOption.parse(argv, envVars),
+    enableExecutionId: enableExecutionId(envVars),
   };
 };
