@@ -780,6 +780,29 @@
           "extendsTokenRanges": []
         },
         {
+          "kind": "Variable",
+          "canonicalReference": "@google-cloud/functions-framework!getExecutionId:var",
+          "docComment": "/**\n * Gets the request-specific execution id\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "getExecutionId: "
+            },
+            {
+              "kind": "Content",
+              "text": "() => string | undefined"
+            }
+          ],
+          "fileUrlPath": "src/function_registry.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "getExecutionId",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
           "kind": "TypeAlias",
           "canonicalReference": "@google-cloud/functions-framework!HandlerFunction:type",
           "docComment": "/**\n * A function handler.\n *\n * @public\n */\n",
