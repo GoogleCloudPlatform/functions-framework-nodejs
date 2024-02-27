@@ -68,13 +68,20 @@ export function sendCrashResponse({
 }
 
 export function loggingHandlerAddExecutionContext() {
+  interceptStdoutWrite();
+  interceptStderrWrite();
+}
+
+function interceptStdoutWrite() {
   const originalStdoutWrite = process.stdout.write;
   process.stdout.write = (data, ...args) => {
     const {encoding, cb} = splitArgs(args);
     const modifiedData = getModifiedData(data, encoding);
     return originalStdoutWrite.apply(process.stdout, [modifiedData, cb]);
   };
+}
 
+function interceptStderrWrite() {
   const originalStderrWrite = process.stderr.write;
   process.stderr.write = (data, ...args) => {
     const {encoding, cb} = splitArgs(args);
@@ -82,6 +89,17 @@ export function loggingHandlerAddExecutionContext() {
     return originalStderrWrite.apply(process.stderr, [modifiedData, cb]);
   };
 }
+
+export const errorHandler = (
+  err: Error | any,
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  interceptStderrWrite();
+  res.status(500);
+  res.render('error', {error: err});
+};
 
 export function splitArgs(args: any[]) {
   let encoding, cb;

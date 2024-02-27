@@ -16,7 +16,6 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
-import * as semver from 'semver';
 import {HandlerFunction, Request, Response} from './functions';
 import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
@@ -25,7 +24,7 @@ import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
 import {executionContextMiddleware} from './execution_context';
-import {requriedNodeJsVersion} from './options';
+import {errorHandler} from './logger';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -113,11 +112,8 @@ export function getServer(
   // Disable Express eTag response header
   app.set('etag', false);
 
-  // Stores execution context to asyncLocalStorage.
-  // asyncLocalStorage is introduced to Node.js on 12.17.0
-  if (semver.gte(process.versions.node, requriedNodeJsVersion)) {
-    app.use(executionContextMiddleware);
-  }
+  // Get execution context.
+  app.use(executionContextMiddleware);
 
   if (
     functionSignatureType === 'event' ||
@@ -158,6 +154,9 @@ export function getServer(
   } else {
     app.post('/*', requestHandler);
   }
+
+  // Error Handler
+  app.use(errorHandler);
 
   return http.createServer(app);
 }
