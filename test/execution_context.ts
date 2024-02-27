@@ -1,10 +1,8 @@
 import {
   executionContextMiddleware,
   getCurrentContext,
-  ExeuctionContext,
-  EXECUTION_CONTEXT_LABELS_KEY,
-  EXECUTION_CONTEXT_TRACE_KEY,
-  EXECUTION_CONTEXT_SPAN_ID_KEY,
+  ExecutionContext,
+  EXECUTION_ID_LENGTH,
 } from '../src/execution_context';
 import {Request, Response, NextFunction} from 'express';
 import * as assert from 'assert';
@@ -25,21 +23,14 @@ describe('executionContextMiddleware', () => {
   const testTrace = 'testtrace';
   const cloudTraceContext = `${testTrace}/${testSpanId};o=1`;
   const validExecutionId = 'xn1h9xdgv6zw';
-  function assertExecutionContext(exeuctionContext?: ExeuctionContext) {
-    assert(exeuctionContext);
+  function assertExecutionContext(executionContext?: ExecutionContext) {
+    assert(executionContext);
     assert.strictEqual(
-      (exeuctionContext as ExeuctionContext)[EXECUTION_CONTEXT_LABELS_KEY]
-        ?.executionId.length,
-      12
+      (executionContext as ExecutionContext).executionId.length,
+      EXECUTION_ID_LENGTH
     );
-    assert.strictEqual(
-      exeuctionContext[EXECUTION_CONTEXT_SPAN_ID_KEY],
-      testSpanId
-    );
-    assert.strictEqual(
-      exeuctionContext[EXECUTION_CONTEXT_TRACE_KEY],
-      testTrace
-    );
+    assert.strictEqual(executionContext.spanId, testSpanId);
+    assert.strictEqual(executionContext.traceId, testTrace);
   }
 
   it('uses execution ID in header', () => {
@@ -50,21 +41,13 @@ describe('executionContextMiddleware', () => {
         FUNCTION_EXECUTION_ID_HEADER_KEY: validExecutionId,
       }
     );
-    let exeuctionContext;
+    let executionContext;
     const next = () => {
-      exeuctionContext = getCurrentContext() as ExeuctionContext;
-      assert(exeuctionContext);
-      assert.deepEqual(exeuctionContext[EXECUTION_CONTEXT_LABELS_KEY], {
-        executionId: validExecutionId,
-      });
-      assert.strictEqual(
-        exeuctionContext[EXECUTION_CONTEXT_SPAN_ID_KEY],
-        testSpanId
-      );
-      assert.strictEqual(
-        exeuctionContext[EXECUTION_CONTEXT_TRACE_KEY],
-        testTrace
-      );
+      executionContext = getCurrentContext() as ExecutionContext;
+      assert(executionContext);
+      assert.strictEqual(executionContext.executionId, validExecutionId);
+      assert.strictEqual(executionContext.spanId, testSpanId);
+      assert.strictEqual(executionContext.traceId, testTrace);
     };
 
     executionContextMiddleware(
@@ -79,10 +62,10 @@ describe('executionContextMiddleware', () => {
       {},
       {TRACE_CONTEXT_HEADER_KEY: cloudTraceContext}
     );
-    let exeuctionContext;
+    let executionContext;
     const next = () => {
-      exeuctionContext = getCurrentContext() as ExeuctionContext;
-      assertExecutionContext(exeuctionContext);
+      executionContext = getCurrentContext() as ExecutionContext;
+      assertExecutionContext(executionContext);
     };
 
     executionContextMiddleware(
@@ -100,10 +83,10 @@ describe('executionContextMiddleware', () => {
         FUNCTION_EXECUTION_ID_HEADER_KEY: 'abcde',
       }
     );
-    let exeuctionContext;
+    let executionContext;
     const next = () => {
-      exeuctionContext = getCurrentContext() as ExeuctionContext;
-      assertExecutionContext(exeuctionContext);
+      executionContext = getCurrentContext() as ExecutionContext;
+      assertExecutionContext(executionContext);
     };
 
     executionContextMiddleware(

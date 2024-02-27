@@ -2,22 +2,18 @@ import * as semver from 'semver';
 import {Request, Response, NextFunction} from 'express';
 import {requriedNodeJsVersion} from './options';
 
-const EXECUTION_ID_LENGTH = 12;
-const TRACE_CONTEXT_PATTERN =
-  /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
+export const EXECUTION_ID_LENGTH = 12;
 export const TRACE_CONTEXT_HEADER_KEY = 'X-Cloud-Trace-Context';
 export const FUNCTION_EXECUTION_ID_HEADER_KEY = 'function-execution-id';
-export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';
-export const EXECUTION_CONTEXT_TRACE_KEY = 'logging.googleapis.com/trace';
-export const EXECUTION_CONTEXT_SPAN_ID_KEY = 'logging.googleapis.com/spanId';
 
-export interface ExeuctionContext {
-  [EXECUTION_CONTEXT_LABELS_KEY]: {
-    executionId: string;
-  };
-  [EXECUTION_CONTEXT_TRACE_KEY]?: string;
-  [EXECUTION_CONTEXT_SPAN_ID_KEY]?: string;
+export interface ExecutionContext {
+  executionId: string;
+  traceId?: string;
+  spanId?: string;
 }
+
+const TRACE_CONTEXT_PATTERN =
+  /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
 
 function generateExecutionId() {
   const timestampPart = Date.now().toString(36).slice(-6);
@@ -57,12 +53,10 @@ export async function executionContextMiddleware(
     }
   }
 
-  const executionContext = <ExeuctionContext>{
-    [EXECUTION_CONTEXT_LABELS_KEY]: {
-      executionId: executionId,
-    },
-    [EXECUTION_CONTEXT_TRACE_KEY]: traceId,
-    [EXECUTION_CONTEXT_SPAN_ID_KEY]: spanId,
+  const executionContext = <ExecutionContext>{
+    executionId: executionId,
+    traceId: traceId,
+    spanId: spanId,
   };
 
   asyncLocalStorage.run(executionContext, () => {
@@ -70,9 +64,13 @@ export async function executionContextMiddleware(
   });
 }
 
-export function getCurrentContext() {
+export function getCurrentContext(): ExecutionContext | undefined {
   if (!asyncLocalStorage) {
     return undefined;
   }
   return asyncLocalStorage.getStore();
 }
+
+export const getCurrentExecutionId = (): string | undefined => {
+  return getCurrentContext()?.executionId;
+};

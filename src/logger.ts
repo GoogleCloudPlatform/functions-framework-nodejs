@@ -14,8 +14,12 @@
 
 import * as express from 'express';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
-import {getCurrentContext} from './execution_context';
+import {getCurrentContext, ExecutionContext} from './execution_context';
 import {Buffer} from 'buffer';
+
+export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';
+export const EXECUTION_CONTEXT_TRACE_KEY = 'logging.googleapis.com/trace';
+export const EXECUTION_CONTEXT_SPAN_ID_KEY = 'logging.googleapis.com/spanId';
 
 /**
  * Logs an error message and sends back an error response to the incoming
@@ -106,15 +110,40 @@ export function getModifiedData(
   const {isJSON, processdData} = processData(data, encoding);
   let dataWithContext;
   if (isJSON) {
-    dataWithContext = {...currentContext, ...processdData};
+    dataWithContext = getJSONWithContext(processdData, currentContext);
   } else {
-    dataWithContext = {...currentContext, message: processdData};
+    dataWithContext = getTextWithContext(processdData, currentContext);
   }
   if (stderr) {
     dataWithContext['severity'] = 'ERROR';
   }
 
   return JSON.stringify(dataWithContext) + '\n';
+}
+
+function getTextWithContext(
+  data: Uint8Array | string,
+  context: ExecutionContext
+) {
+  return {
+    message: data,
+    [EXECUTION_CONTEXT_LABELS_KEY]: {execution_id: context.executionId},
+    [EXECUTION_CONTEXT_TRACE_KEY]: context.traceId,
+    [EXECUTION_CONTEXT_SPAN_ID_KEY]: context.spanId,
+  };
+}
+
+function getJSONWithContext(json: any, context: ExecutionContext) {
+  if (EXECUTION_CONTEXT_LABELS_KEY in json) {
+    json[EXECUTION_CONTEXT_LABELS_KEY]['execution_id'] = context.executionId;
+  } else {
+    json[EXECUTION_CONTEXT_LABELS_KEY] = {execution_id: context.executionId};
+  }
+  return {
+    ...json,
+    [EXECUTION_CONTEXT_TRACE_KEY]: context.traceId,
+    [EXECUTION_CONTEXT_SPAN_ID_KEY]: context.spanId,
+  };
 }
 
 function processData(data: Uint8Array | string, encoding?: BufferEncoding) {

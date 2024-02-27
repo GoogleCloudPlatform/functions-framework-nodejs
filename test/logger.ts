@@ -46,22 +46,23 @@ describe('getModifiedData', () => {
   });
   const sampleUint8Arr = new Uint8Array(Buffer.from(sampleText));
   const expectedExecutionContext = {
+    executionId: 'testExecutionId',
+    traceId: 'testTraceId',
+    spanId: 'testSpanId',
+  };
+  const expectedMetadata = {
     'logging.googleapis.com/labels': {
-      executionId: 'testExecutionId',
+      execution_id: 'testExecutionId',
     },
     'logging.googleapis.com/trace': 'testTraceId',
     'logging.googleapis.com/spanId': 'testSpanId',
   };
   const expectedTextOutput =
-    JSON.stringify({
-      ...expectedExecutionContext,
-      message: sampleText,
-    }) + '\n';
+    JSON.stringify(Object.assign({message: sampleText}, expectedMetadata)) +
+    '\n';
   const expectedJSONOutput =
-    JSON.stringify({
-      ...expectedExecutionContext,
-      ...JSON.parse(sampleJSON),
-    }) + '\n';
+    JSON.stringify(Object.assign(JSON.parse(sampleJSON), expectedMetadata)) +
+    '\n';
 
   function utf8ToHex(data: string) {
     return Buffer.from(data, 'utf-8').toString('hex');
@@ -85,6 +86,26 @@ describe('getModifiedData', () => {
   it('json', () => {
     const modifiedData = getModifiedData(sampleJSON);
     assert.equal(modifiedData, expectedJSONOutput);
+  });
+
+  it('json with user label', () => {
+    const data = JSON.stringify({
+      text: 'default text.',
+      component: 'arbitrary-property',
+      'logging.googleapis.com/labels': {'user_label_1': 'value_1'},
+    });
+    const expectedOutput = JSON.stringify({
+      text: 'default text.',
+      component: 'arbitrary-property',
+      'logging.googleapis.com/labels': {
+        'user_label_1': 'value_1',
+        'execution_id': 'testExecutionId',
+      },
+      'logging.googleapis.com/trace': 'testTraceId',
+      'logging.googleapis.com/spanId': 'testSpanId',
+    }) + '\n';
+    const modifiedData = getModifiedData(data);
+    assert.equal(modifiedData, expectedOutput);
   });
 
   it('uint8array', () => {
@@ -112,22 +133,18 @@ describe('getModifiedData', () => {
   it('simple text with error', () => {
     const modifiedData = getModifiedData(sampleText, undefined, true);
     const expectedOutput =
-      JSON.stringify({
-        ...expectedExecutionContext,
-        message: sampleText,
-        severity: 'ERROR',
-      }) + '\n';
+      JSON.stringify(
+        Object.assign(JSON.parse(expectedTextOutput), {severity: 'ERROR'})
+      ) + '\n';
     assert.equal(modifiedData, expectedOutput);
   });
 
   it('json with error', () => {
     const modifiedData = getModifiedData(sampleJSON, undefined, true);
     const expectedOutput =
-      JSON.stringify({
-        ...expectedExecutionContext,
-        ...JSON.parse(sampleJSON),
-        severity: 'ERROR',
-      }) + '\n';
+      JSON.stringify(
+        Object.assign(JSON.parse(expectedJSONOutput), {severity: 'ERROR'})
+      ) + '\n';
     assert.equal(modifiedData, expectedOutput);
   });
 });

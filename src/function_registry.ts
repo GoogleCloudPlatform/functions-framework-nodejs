@@ -20,6 +20,7 @@ import {
   JsonInvocationFormat,
 } from './functions';
 import {SignatureType} from './types';
+import {getCurrentExecutionId} from './execution_context';
 
 interface RegisteredFunction<T, U> {
   signatureType: SignatureType;
@@ -64,6 +65,14 @@ export const isValidFunctionName = (functionName: string): boolean => {
   const regex = /^[A-Za-z](?:[-_A-Za-z0-9]{0,61}[A-Za-z0-9])?$/;
   return regex.test(functionName);
 };
+
+/**
+ * Gets the request-specific execution id
+ * @public
+*/
+export const getExecutionId = (): string | undefined => {
+  return getCurrentExecutionId();
+}
 
 /**
  * Get a declaratively registered function
