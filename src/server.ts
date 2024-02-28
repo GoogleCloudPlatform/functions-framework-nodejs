@@ -160,7 +160,6 @@ export function getServer(
   if (enableExecutionId) {
     app.use(errorHandler);
   }
-  
 
   return http.createServer(app);
 }
