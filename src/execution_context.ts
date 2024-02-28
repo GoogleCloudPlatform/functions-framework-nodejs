@@ -1,8 +1,7 @@
 import * as semver from 'semver';
 import {Request, Response, NextFunction} from 'express';
-import {requriedNodeJsVersion} from './options';
+import {requiredNodeJsVersion} from './options';
 
-export const EXECUTION_ID_LENGTH = 12;
 export const TRACE_CONTEXT_HEADER_KEY = 'X-Cloud-Trace-Context';
 export const FUNCTION_EXECUTION_ID_HEADER_KEY = 'function-execution-id';
 
@@ -28,7 +27,7 @@ export async function executionContextMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
+  if (semver.lt(process.versions.node, requiredNodeJsVersion)) {
     // Skip for unsupported Node.js version.
     next();
     return;
@@ -39,15 +38,14 @@ export async function executionContextMiddleware(
   }
 
   let executionId = req.header(FUNCTION_EXECUTION_ID_HEADER_KEY);
-  if (!executionId || executionId.length !== EXECUTION_ID_LENGTH) {
+  if (!executionId) {
     executionId = generateExecutionId();
   }
 
   let traceId, spanId, options;
   const cloudTraceContext = req.header(TRACE_CONTEXT_HEADER_KEY);
-  const regex = TRACE_CONTEXT_PATTERN;
   if (cloudTraceContext) {
-    const match = cloudTraceContext.match(regex);
+    const match = cloudTraceContext.match(TRACE_CONTEXT_PATTERN);
     if (match?.groups) {
       ({traceId, spanId, options} = match.groups);
     }

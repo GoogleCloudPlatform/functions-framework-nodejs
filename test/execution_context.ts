@@ -2,7 +2,6 @@ import {
   executionContextMiddleware,
   getCurrentContext,
   ExecutionContext,
-  EXECUTION_ID_LENGTH,
 } from '../src/execution_context';
 import {Request, Response, NextFunction} from 'express';
 import * as assert from 'assert';
@@ -25,10 +24,7 @@ describe('executionContextMiddleware', () => {
   const validExecutionId = 'xn1h9xdgv6zw';
   function assertExecutionContext(executionContext?: ExecutionContext) {
     assert(executionContext);
-    assert.strictEqual(
-      (executionContext as ExecutionContext).executionId.length,
-      EXECUTION_ID_LENGTH
-    );
+    assert((executionContext as ExecutionContext).executionId);
     assert.strictEqual(executionContext.spanId, testSpanId);
     assert.strictEqual(executionContext.traceId, testTrace);
   }
@@ -73,26 +69,7 @@ describe('executionContextMiddleware', () => {
       {} as Response,
       next as NextFunction
     );
-  });
 
-  it('generates execution ID if header is malformed', () => {
-    const request = createRequest(
-      {},
-      {
-        TRACE_CONTEXT_HEADER_KEY: cloudTraceContext,
-        FUNCTION_EXECUTION_ID_HEADER_KEY: 'abcde',
-      }
-    );
-    let executionContext;
-    const next = () => {
-      executionContext = getCurrentContext() as ExecutionContext;
-      assertExecutionContext(executionContext);
-    };
-
-    executionContextMiddleware(
-      request as Request,
-      {} as Response,
-      next as NextFunction
-    );
+    assert(typeof getCurrentContext() === 'undefined');
   });
 });

@@ -50,7 +50,11 @@ export const main = async () => {
       process.exit(1);
     }
     const {userFunction, signatureType} = loadedFunction;
-    const server = getServer(userFunction!, signatureType);
+    const server = getServer(
+      userFunction!,
+      signatureType,
+      options.enableExecutionId
+    );
     const errorHandler = new ErrorHandler(server);
     server
       .listen(options.port, () => {

@@ -50,6 +50,7 @@ export const getTestServer = (functionName: string): Server => {
   }
   return getServer(
     registeredFunction.userFunction,
-    registeredFunction.signatureType
+    registeredFunction.signatureType,
+    /*enableExecutionId=*/ false
   );
 };

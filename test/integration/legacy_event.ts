@@ -181,10 +181,14 @@ describe('Event Function', () => {
     it(test.name, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudFunctionsContext | null = null;
-      const server = getServer((data: {}, context: functions.Context) => {
-        receivedData = data;
-        receivedContext = context as functions.CloudFunctionsContext;
-      }, 'event');
+      const server = getServer(
+        (data: {}, context: functions.Context) => {
+          receivedData = data;
+          receivedContext = context as functions.CloudFunctionsContext;
+        },
+        'event',
+        /*enableExecutionId=*/ false
+      );
       const requestHeaders = {
         'Content-Type': 'application/json',
         ...test.headers,
@@ -200,9 +204,13 @@ describe('Event Function', () => {
   });
 
   it('returns a 500 if the function throws an exception', async () => {
-    const server = getServer(() => {
-      throw 'I crashed';
-    }, 'event');
+    const server = getServer(
+      () => {
+        throw 'I crashed';
+      },
+      'event',
+      /*enableExecutionId=*/ false
+    );
     await supertest(server)
       .post('/')
       .send({

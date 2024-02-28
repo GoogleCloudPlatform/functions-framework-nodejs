@@ -113,14 +113,15 @@ const SignatureOption = new ConfigurableOption(
   }
 );
 
-export const requriedNodeJsVersion = '13.0.0';
+export const requiredNodeJsVersion = '13.0.0';
+export const logExecutionIDEnvVar = 'LOG_EXECUTION_ID';
 function enableExecutionId(envVars: NodeJS.ProcessEnv): boolean {
-  const logExecutionID = envVars['LOG_EXECUTION_ID'];
+  const logExecutionID = envVars[logExecutionIDEnvVar];
   const nodeVersion = process.versions.node;
-  const isVersionSatisfied = semver.gte(nodeVersion, requriedNodeJsVersion);
-  // If not specified, default to true with constraint of supported nodejs version.
+  const isVersionSatisfied = semver.gte(nodeVersion, requiredNodeJsVersion);
+  // If not specified, default to false.
   if (typeof logExecutionID === 'undefined') {
-    return isVersionSatisfied;
+    return false;
   }
   const isTrue =
     (typeof logExecutionID === 'boolean' && logExecutionID) ||
@@ -128,7 +129,7 @@ function enableExecutionId(envVars: NodeJS.ProcessEnv): boolean {
       logExecutionID.toLowerCase() === 'true');
   if (isTrue && !isVersionSatisfied) {
     throw new OptionsError(
-      `Execution id is only supported with Node.js versions ${requriedNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      `Execution id is only supported with Node.js versions ${requiredNodeJsVersion} and above. Your current version is ${nodeVersion}. Please upgrade.`
     );
   }
   return isTrue;

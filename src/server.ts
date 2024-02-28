@@ -35,7 +35,8 @@ import {errorHandler} from './logger';
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
+  functionSignatureType: SignatureType,
+  enableExecutionId: boolean
 ): http.Server {
   // App to use for function executions.
   const app = express();
@@ -156,7 +157,10 @@ export function getServer(
   }
 
   // Error Handler
-  app.use(errorHandler);
+  if (enableExecutionId) {
+    app.use(errorHandler);
+  }
+  
 
   return http.createServer(app);
 }

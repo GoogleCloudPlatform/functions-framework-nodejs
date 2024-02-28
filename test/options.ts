@@ -18,7 +18,7 @@ import {resolve} from 'path';
 import {
   parseOptions,
   FrameworkOptions,
-  requriedNodeJsVersion,
+  requiredNodeJsVersion,
 } from '../src/options';
 
 describe('parseOptions', () => {
@@ -36,6 +36,7 @@ describe('parseOptions', () => {
       envVars: {},
       expectedOptions: {
         printHelp: true,
+        enableExecutionId: false,
       },
     },
     {
@@ -44,6 +45,7 @@ describe('parseOptions', () => {
       envVars: {},
       expectedOptions: {
         printHelp: true,
+        enableExecutionId: false,
       },
     },
     {
@@ -56,6 +58,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve(''),
         signatureType: 'http',
         printHelp: false,
+        enableExecutionId: false,
       },
     },
     {
@@ -77,6 +80,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: false,
       },
     },
     {
@@ -94,6 +98,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: false,
       },
     },
     {
@@ -120,6 +125,7 @@ describe('parseOptions', () => {
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
         printHelp: false,
+        enableExecutionId: false,
       },
     },
   ];
@@ -138,11 +144,7 @@ describe('parseOptions', () => {
   const cliOpts = ['bin/node', '/index.js'];
   it('default execution id support', () => {
     const options = parseOptions(cliOpts, {});
-    if (semver.gte(process.versions.node, requriedNodeJsVersion)) {
-      assert.strictEqual(options.enableExecutionId, true);
-    } else {
-      assert.strictEqual(options.enableExecutionId, false);
-    }
+    assert.strictEqual(options.enableExecutionId, false);
   });
 
   it('disable execution id support', () => {
@@ -157,7 +159,7 @@ describe('parseOptions', () => {
     const envVars = {
       LOG_EXECUTION_ID: 'TRUE',
     };
-    if (semver.lt(process.versions.node, requriedNodeJsVersion)) {
+    if (semver.lt(process.versions.node, requiredNodeJsVersion)) {
       assert.throws(() => {
         parseOptions(cliOpts, envVars);
       });

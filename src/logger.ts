@@ -20,6 +20,7 @@ import {Buffer} from 'buffer';
 export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';
 export const EXECUTION_CONTEXT_TRACE_KEY = 'logging.googleapis.com/trace';
 export const EXECUTION_CONTEXT_SPAN_ID_KEY = 'logging.googleapis.com/spanId';
+const SEVERITY = 'severity';
 
 /**
  * Logs an error message and sends back an error response to the incoming
@@ -125,15 +126,15 @@ export function getModifiedData(
   if (!currentContext) {
     return data;
   }
-  const {isJSON, processdData} = processData(data, encoding);
+  const {isJSON, processedData} = processData(data, encoding);
   let dataWithContext;
   if (isJSON) {
-    dataWithContext = getJSONWithContext(processdData, currentContext);
+    dataWithContext = getJSONWithContext(processedData, currentContext);
   } else {
-    dataWithContext = getTextWithContext(processdData, currentContext);
+    dataWithContext = getTextWithContext(processedData, currentContext);
   }
   if (stderr) {
-    dataWithContext['severity'] = 'ERROR';
+    dataWithContext[SEVERITY] = 'ERROR';
   }
 
   return JSON.stringify(dataWithContext) + '\n';
@@ -174,12 +175,12 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
     }
   } catch (e) {
     // Failed to decode, treat it as simple text.
-    return {isJSON: false, processdData: data};
+    return {isJSON: false, processedData: data};
   }
 
   try {
-    return {isJSON: true, processdData: JSON.parse(decodedData)};
+    return {isJSON: true, processedData: JSON.parse(decodedData)};
   } catch (e) {
-    return {isJSON: false, processdData: decodedData};
+    return {isJSON: false, processedData: decodedData};
   }
 }
