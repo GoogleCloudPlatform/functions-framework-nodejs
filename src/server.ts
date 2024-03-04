@@ -23,6 +23,7 @@ import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
+import {asyncLocalStorageMiddleware} from './async_local_storage';
 import {executionContextMiddleware} from './execution_context';
 import {errorHandler} from './logger';
 
@@ -115,6 +116,8 @@ export function getServer(
 
   // Get execution context.
   app.use(executionContextMiddleware);
+  // Store execution context to async local storge.
+  app.use(asyncLocalStorageMiddleware);
 
   if (
     functionSignatureType === 'event' ||

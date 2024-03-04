@@ -14,7 +14,7 @@
 
 import * as express from 'express';
 import {FUNCTION_STATUS_HEADER_FIELD} from './types';
-import {getCurrentContext, ExecutionContext} from './execution_context';
+import {getCurrentContext, ExecutionContext} from './async_local_storage';
 import {Buffer} from 'buffer';
 
 export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';

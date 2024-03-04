@@ -32,6 +32,9 @@ export interface Request extends ExpressRequest {
    * A buffer which provides access to the request's raw HTTP body.
    */
   rawBody?: Buffer;
+  executionId?: string;
+  traceId?: string;
+  spanId?: string;
 }
 
 /**

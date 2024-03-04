@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import * as assert from 'assert';
 import {splitArgs, getModifiedData} from '../src/logger';
-import * as executionContext from '../src/execution_context';
+import * as executionContext from '../src/async_local_storage';
 
 describe('splitArgs', () => {
   const expectedCallback = () => {};

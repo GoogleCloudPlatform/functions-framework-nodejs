@@ -20,7 +20,7 @@ import {
   JsonInvocationFormat,
 } from './functions';
 import {SignatureType} from './types';
-import {getCurrentExecutionId} from './execution_context';
+import {getCurrentExecutionId} from './async_local_storage';
 
 interface RegisteredFunction<T, U> {
   signatureType: SignatureType;
