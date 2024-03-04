@@ -46,7 +46,3 @@ export function getCurrentContext(): ExecutionContext | undefined {
   }
   return asyncLocalStorage.getStore();
 }
-
-export const getCurrentExecutionId = (): string | undefined => {
-  return getCurrentContext()?.executionId;
-};
