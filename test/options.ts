@@ -159,7 +159,9 @@ describe('parseOptions', () => {
     const envVars = {
       LOG_EXECUTION_ID: 'TRUE',
     };
-    if (semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)) {
+    if (
+      semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
+    ) {
       assert.throws(() => {
         parseOptions(cliOpts, envVars);
       });
