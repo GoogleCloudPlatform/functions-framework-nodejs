@@ -18,7 +18,7 @@ import {resolve} from 'path';
 import {
   parseOptions,
   FrameworkOptions,
-  requiredNodeJsVersion,
+  requiredNodeJsVersionForLogExecutionID,
 } from '../src/options';
 
 describe('parseOptions', () => {
@@ -159,7 +159,7 @@ describe('parseOptions', () => {
     const envVars = {
       LOG_EXECUTION_ID: 'TRUE',
     };
-    if (semver.lt(process.versions.node, requiredNodeJsVersion)) {
+    if (semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)) {
       assert.throws(() => {
         parseOptions(cliOpts, envVars);
       });

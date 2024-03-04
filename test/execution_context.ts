@@ -22,12 +22,6 @@ describe('executionContextMiddleware', () => {
   const testTrace = 'testtrace';
   const cloudTraceContext = `${testTrace}/${testSpanId};o=1`;
   const validExecutionId = 'xn1h9xdgv6zw';
-  function assertExecutionContext(executionContext?: ExecutionContext) {
-    assert(executionContext);
-    assert((executionContext as ExecutionContext).executionId);
-    assert.strictEqual(executionContext.spanId, testSpanId);
-    assert.strictEqual(executionContext.traceId, testTrace);
-  }
 
   it('uses execution ID in header', () => {
     const request = createRequest(
@@ -61,7 +55,10 @@ describe('executionContextMiddleware', () => {
     let executionContext;
     const next = () => {
       executionContext = getCurrentContext() as ExecutionContext;
-      assertExecutionContext(executionContext);
+      assert(executionContext);
+      assert((executionContext as ExecutionContext).executionId);
+      assert.strictEqual(executionContext.spanId, testSpanId);
+      assert.strictEqual(executionContext.traceId, testTrace);
     };
 
     executionContextMiddleware(

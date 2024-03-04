@@ -1,6 +1,7 @@
 import * as semver from 'semver';
 import {Request, Response, NextFunction} from 'express';
-import {requiredNodeJsVersion} from './options';
+import {requiredNodeJsVersionForLogExecutionID} from './options';
+import {randomUUID} from 'node:crypto';
 
 export const TRACE_CONTEXT_HEADER_KEY = 'X-Cloud-Trace-Context';
 export const FUNCTION_EXECUTION_ID_HEADER_KEY = 'function-execution-id';
@@ -15,9 +16,7 @@ const TRACE_CONTEXT_PATTERN =
   /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
 
 function generateExecutionId() {
-  const timestampPart = Date.now().toString(36).slice(-6);
-  const randomPart = Math.random().toString(36).slice(-6);
-  return timestampPart + randomPart;
+  return randomUUID().slice(-12);
 }
 
 let asyncLocalStorage: any;
@@ -27,7 +26,9 @@ export async function executionContextMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (semver.lt(process.versions.node, requiredNodeJsVersion)) {
+  if (
+    semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
+  ) {
     // Skip for unsupported Node.js version.
     next();
     return;
@@ -37,29 +38,27 @@ export async function executionContextMiddleware(
     asyncLocalStorage = new asyncHooks.AsyncLocalStorage();
   }
 
+  asyncLocalStorage.run(getContextFromHeader(req), () => {
+    next();
+  });
+}
+
+function getContextFromHeader(req: Request): ExecutionContext {
   let executionId = req.header(FUNCTION_EXECUTION_ID_HEADER_KEY);
   if (!executionId) {
     executionId = generateExecutionId();
   }
 
-  let traceId, spanId, options;
+  let traceId, spanId;
   const cloudTraceContext = req.header(TRACE_CONTEXT_HEADER_KEY);
   if (cloudTraceContext) {
     const match = cloudTraceContext.match(TRACE_CONTEXT_PATTERN);
     if (match?.groups) {
-      ({traceId, spanId, options} = match.groups);
+      ({traceId, spanId} = match.groups);
     }
   }
 
-  const executionContext = <ExecutionContext>{
-    executionId: executionId,
-    traceId: traceId,
-    spanId: spanId,
-  };
-
-  asyncLocalStorage.run(executionContext, () => {
-    next();
-  });
+  return {executionId, traceId, spanId};
 }
 
 export function getCurrentContext(): ExecutionContext | undefined {
