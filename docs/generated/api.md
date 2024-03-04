@@ -115,7 +115,13 @@ export interface LegacyEvent {
 
 // @public (undocumented)
 interface Request_2 extends Request_3 {
+    // (undocumented)
+    executionId?: string;
     rawBody?: Buffer;
+    // (undocumented)
+    spanId?: string;
+    // (undocumented)
+    traceId?: string;
 }
 export { Request_2 as Request }
 
