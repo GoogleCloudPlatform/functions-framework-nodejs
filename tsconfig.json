@@ -4,8 +4,7 @@
     "rootDir": ".",
     "outDir": "build",
     "declaration": true,
-    "declarationMap": true,
-    "types": [ "node" ]
+    "declarationMap": true
   },
   "include": [
     "src/**/*.ts",
