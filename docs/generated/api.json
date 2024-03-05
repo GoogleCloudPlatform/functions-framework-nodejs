@@ -1783,7 +1783,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "@google-cloud/functions-framework!Request_2#executionId:member",
-              "docComment": "",
+              "docComment": "/**\n * Request-specified execution ID.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -1838,7 +1838,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "@google-cloud/functions-framework!Request_2#spanId:member",
-              "docComment": "",
+              "docComment": "/**\n * Cloud Trace span ID.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -1865,7 +1865,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "@google-cloud/functions-framework!Request_2#traceId:member",
-              "docComment": "",
+              "docComment": "/**\n * Cloud Trace trace ID.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",

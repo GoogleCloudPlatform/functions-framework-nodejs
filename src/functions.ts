@@ -33,10 +33,16 @@ export interface Request extends ExpressRequest {
    */
   rawBody?: Buffer;
   /**
-   * Request-specified execution id.
+   * Request-specified execution ID.
    */
   executionId?: string;
+  /**
+   * Cloud Trace trace ID.
+   */
   traceId?: string;
+  /**
+   * Cloud Trace span ID.
+   */
   spanId?: string;
 }
 
