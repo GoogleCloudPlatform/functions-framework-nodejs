@@ -20,4 +20,4 @@ export * from './functions';
 /**
  * @public
  */
-export {http, cloudEvent, typed} from './function_registry';
+export {http, cloudEvent, typed, getExecutionId} from './function_registry';

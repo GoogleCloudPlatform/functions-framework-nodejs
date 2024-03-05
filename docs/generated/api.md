@@ -59,6 +59,9 @@ export interface EventFunctionWithCallback {
 }
 
 // @public
+export const getExecutionId: () => string | undefined;
+
+// @public
 export type HandlerFunction<T = unknown, U = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T> | TypedFunction<T, U>;
 
 // @public
