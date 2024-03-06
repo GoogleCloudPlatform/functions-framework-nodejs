@@ -23,6 +23,9 @@ import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
+import {asyncLocalStorageMiddleware} from './async_local_storage';
+import {executionContextMiddleware} from './execution_context';
+import {errorHandler} from './logger';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -33,7 +36,8 @@ import {wrapUserFunction} from './function_wrappers';
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType
+  functionSignatureType: SignatureType,
+  enableExecutionId: boolean
 ): http.Server {
   // App to use for function executions.
   const app = express();
@@ -110,6 +114,11 @@ export function getServer(
   // Disable Express eTag response header
   app.set('etag', false);
 
+  // Get execution context.
+  app.use(executionContextMiddleware);
+  // Store execution context to async local storge.
+  app.use(asyncLocalStorageMiddleware);
+
   if (
     functionSignatureType === 'event' ||
     functionSignatureType === 'cloudevent'
@@ -148,6 +157,11 @@ export function getServer(
     app.all('/*', requestHandler);
   } else {
     app.post('/*', requestHandler);
+  }
+
+  // Error Handler
+  if (enableExecutionId) {
+    app.use(errorHandler);
   }
 
   return http.createServer(app);

@@ -20,6 +20,7 @@ import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
 import {parseOptions, helpText, OptionsError} from './options';
+import {loggingHandlerAddExecutionContext} from './logger';
 
 /**
  * Main entrypoint for the functions framework that loads the user's function
@@ -33,6 +34,11 @@ export const main = async () => {
       console.error(helpText);
       return;
     }
+
+    if (options.enableExecutionId) {
+      loggingHandlerAddExecutionContext();
+    }
+
     const loadedFunction = await getUserFunction(
       options.sourceLocation,
       options.target,
@@ -44,7 +50,11 @@ export const main = async () => {
       process.exit(1);
     }
     const {userFunction, signatureType} = loadedFunction;
-    const server = getServer(userFunction!, signatureType);
+    const server = getServer(
+      userFunction!,
+      signatureType,
+      options.enableExecutionId
+    );
     const errorHandler = new ErrorHandler(server);
     server
       .listen(options.port, () => {

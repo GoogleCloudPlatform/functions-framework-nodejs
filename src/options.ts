@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as minimist from 'minimist';
+import * as semver from 'semver';
 import {resolve} from 'path';
 import {SignatureType, isValidSignatureType} from './types';
 
@@ -47,6 +48,10 @@ export interface FrameworkOptions {
    * Whether or not the --help CLI flag was provided.
    */
   printHelp: boolean;
+  /**
+   * Whether or not to enable execution id support.
+   */
+  enableExecutionId: boolean;
 }
 
 /**
@@ -108,6 +113,29 @@ const SignatureOption = new ConfigurableOption(
   }
 );
 
+export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
+const ExecutionIdOption = new ConfigurableOption(
+  'log-execution-id',
+  'LOG_EXECUTION_ID',
+  false,
+  x => {
+    const nodeVersion = process.versions.node;
+    const isVersionSatisfied = semver.gte(
+      nodeVersion,
+      requiredNodeJsVersionForLogExecutionID
+    );
+    const isTrue =
+      (typeof x === 'boolean' && x) ||
+      (typeof x === 'string' && x.toLowerCase() === 'true');
+    if (isTrue && !isVersionSatisfied) {
+      throw new OptionsError(
+        `Execution id is only supported with Node.js versions ${requiredNodeJsVersionForLogExecutionID} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      );
+    }
+    return isTrue;
+  }
+);
+
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
 Documentation:
@@ -138,5 +166,6 @@ export const parseOptions = (
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
+    enableExecutionId: ExecutionIdOption.parse(argv, envVars),
   };
 };
