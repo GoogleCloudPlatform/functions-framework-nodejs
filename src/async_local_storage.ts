@@ -2,6 +2,7 @@ import * as semver from 'semver';
 import {Request, Response} from './functions';
 import {NextFunction} from 'express';
 import {requiredNodeJsVersionForLogExecutionID} from './options';
+import type {AsyncLocalStorage} from 'node:async_hooks';
 
 export interface ExecutionContext {
   executionId?: string;
@@ -9,7 +10,7 @@ export interface ExecutionContext {
   spanId?: string;
 }
 
-let asyncLocalStorage: any;
+let asyncLocalStorage: AsyncLocalStorage<ExecutionContext> | undefined;
 
 export async function asyncLocalStorageMiddleware(
   req: Request,
