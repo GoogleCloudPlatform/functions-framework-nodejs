@@ -20,7 +20,6 @@ import {
   JsonInvocationFormat,
 } from './functions';
 import {SignatureType} from './types';
-import {getCurrentExecutionId} from './async_local_storage';
 
 interface RegisteredFunction<T, U> {
   signatureType: SignatureType;
@@ -64,14 +63,6 @@ export const isValidFunctionName = (functionName: string): boolean => {
   // Validate function name with alpha characters, and dashes
   const regex = /^[A-Za-z](?:[-_A-Za-z0-9]{0,61}[A-Za-z0-9])?$/;
   return regex.test(functionName);
-};
-
-/**
- * Gets the request-specific execution id
- * @public
- */
-export const getExecutionId = (): string | undefined => {
-  return getCurrentExecutionId();
 };
 
 /**

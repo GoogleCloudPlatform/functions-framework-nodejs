@@ -114,29 +114,27 @@ const SignatureOption = new ConfigurableOption(
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
-const logExecutionIDEnvVar = 'LOG_EXECUTION_ID';
-function enableExecutionId(envVars: NodeJS.ProcessEnv): boolean {
-  const logExecutionID = envVars[logExecutionIDEnvVar];
-  const nodeVersion = process.versions.node;
-  const isVersionSatisfied = semver.gte(
-    nodeVersion,
-    requiredNodeJsVersionForLogExecutionID
-  );
-  // If not specified, default to false.
-  if (typeof logExecutionID === 'undefined') {
-    return false;
-  }
-  const isTrue =
-    (typeof logExecutionID === 'boolean' && logExecutionID) ||
-    (typeof logExecutionID === 'string' &&
-      logExecutionID.toLowerCase() === 'true');
-  if (isTrue && !isVersionSatisfied) {
-    throw new OptionsError(
-      `Execution id is only supported with Node.js versions ${requiredNodeJsVersionForLogExecutionID} and above. Your current version is ${nodeVersion}. Please upgrade.`
+const ExecutionIdOption = new ConfigurableOption(
+  'log-execution-id',
+  'LOG_EXECUTION_ID',
+  false,
+  x => {
+    const nodeVersion = process.versions.node;
+    const isVersionSatisfied = semver.gte(
+      nodeVersion,
+      requiredNodeJsVersionForLogExecutionID
     );
+    const isTrue =
+      (typeof x === 'boolean' && x) ||
+      (typeof x === 'string' && x.toLowerCase() === 'true');
+    if (isTrue && !isVersionSatisfied) {
+      throw new OptionsError(
+        `Execution id is only supported with Node.js versions ${requiredNodeJsVersionForLogExecutionID} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      );
+    }
+    return isTrue;
   }
-  return isTrue;
-}
+);
 
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
@@ -168,6 +166,6 @@ export const parseOptions = (
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
-    enableExecutionId: enableExecutionId(envVars),
+    enableExecutionId: ExecutionIdOption.parse(argv, envVars),
   };
 };

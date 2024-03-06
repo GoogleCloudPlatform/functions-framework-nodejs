@@ -26,7 +26,7 @@ describe('parseOptions', () => {
     name: string;
     cliOpts: string[];
     envVars: {[key: string]: string};
-    expectedOptions: Partial<FrameworkOptions>;
+    expectedOptions?: Partial<FrameworkOptions>;
   }
 
   const testData: TestData[] = [
@@ -134,6 +134,7 @@ describe('parseOptions', () => {
     it(testCase.name, () => {
       const options = parseOptions(testCase.cliOpts, testCase.envVars);
       const {expectedOptions} = testCase;
+      assert(expectedOptions);
       let opt: keyof FrameworkOptions;
       for (opt in expectedOptions) {
         assert.deepStrictEqual(expectedOptions[opt], options[opt]);
@@ -142,12 +143,20 @@ describe('parseOptions', () => {
   });
 
   const cliOpts = ['bin/node', '/index.js'];
-  it('default execution id support', () => {
+  it('default disable execution id support', () => {
     const options = parseOptions(cliOpts, {});
     assert.strictEqual(options.enableExecutionId, false);
   });
 
-  it('disable execution id support', () => {
+  it('disable execution id support by cli flag', () => {
+    const options = parseOptions(
+      ['bin/node', '/index.js', '--log-execution-id=false'],
+      {}
+    );
+    assert.strictEqual(options.enableExecutionId, false);
+  });
+
+  it('disable execution id support by env var', () => {
     const envVars = {
       LOG_EXECUTION_ID: 'False',
     };
@@ -155,20 +164,37 @@ describe('parseOptions', () => {
     assert.strictEqual(options.enableExecutionId, false);
   });
 
-  it('enable execution id support', () => {
-    const envVars = {
-      LOG_EXECUTION_ID: 'TRUE',
-    };
-    if (
-      semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
-    ) {
-      assert.throws(() => {
-        parseOptions(cliOpts, envVars);
-      });
-    } else {
-      const options = parseOptions(cliOpts, envVars);
-      assert.strictEqual(options.enableExecutionId, true);
-    }
+  const executionIdTestData: TestData[] = [
+    {
+      name: 'enable execution id support by cli flag',
+      cliOpts: ['bin/node', '/index.js', '--log-execution-id'],
+      envVars: {},
+    },
+    {
+      name: 'enable execution id support by env var',
+      cliOpts: ['bin/node', '/index.js'],
+      envVars: {LOG_EXECUTION_ID: 'True'},
+    },
+    {
+      name: 'execution id prioritizes cli flag over env var',
+      cliOpts: ['bin/node', '/index.js', '--log-execution-id=true'],
+      envVars: {LOG_EXECUTION_ID: 'False'},
+    },
+  ];
+
+  executionIdTestData.forEach(testCase => {
+    it(testCase.name, () => {
+      if (
+        semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
+      ) {
+        assert.throws(() => {
+          parseOptions(testCase.cliOpts, testCase.envVars);
+        });
+      } else {
+        const options = parseOptions(testCase.cliOpts, testCase.envVars);
+        assert.strictEqual(options.enableExecutionId, true);
+      }
+    });
   });
 
   it('throws an exception for invalid signature types', () => {

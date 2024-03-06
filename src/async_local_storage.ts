@@ -23,8 +23,8 @@ export async function asyncLocalStorageMiddleware(
     next();
     return;
   }
-  const asyncHooks = await import('node:async_hooks');
   if (!asyncLocalStorage) {
+    const asyncHooks = await import('node:async_hooks');
     asyncLocalStorage = new asyncHooks.AsyncLocalStorage();
   }
 
@@ -46,7 +46,3 @@ export function getCurrentContext(): ExecutionContext | undefined {
   }
   return asyncLocalStorage.getStore();
 }
-
-export const getCurrentExecutionId = (): string | undefined => {
-  return getCurrentContext()?.executionId;
-};
