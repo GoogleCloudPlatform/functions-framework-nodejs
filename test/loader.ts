@@ -94,23 +94,19 @@ describe('loading function', () => {
   }
 
   it('fails to load a module that does not exist', async () => {
-    const loadedFunction = await loader.getUserFunction(
+    expect(await loader.getUserFunction(
       process.cwd() + '/test/data/does_not_exist',
       'functionDoesNotExist',
       'http'
-    );
-
-    assert.strictEqual(loadedFunction, null);
+    )).toThrowErrorOfType(LoaderError);
   });
 
   it('fails to load a function that does not exist', async () => {
-    const loadedFunction = await loader.getUserFunction(
+    expect(await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'functionDoesNotExist',
       'http'
-    );
-
-    assert.strictEqual(loadedFunction, null);
+    )).toThrowErrorOfType(LoaderError);
   });
 
   it('loads a declaratively registered function', async () => {

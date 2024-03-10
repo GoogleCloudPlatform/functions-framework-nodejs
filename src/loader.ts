@@ -26,6 +26,13 @@ import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
 import {getRegisteredFunction} from './function_registry';
 
+export class LoaderError extends Error {
+  constructor(message) {
+    super('Could not load the function: ' + message)
+    this.name = 'LoaderError'
+  }
+}
+
 // Dynamic import function required to load user code packaged as an
 // ES module is only available on Node.js v13.2.0 and up.
 //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
@@ -93,23 +100,21 @@ export async function getUserFunction(
   try {
     const functionModulePath = getFunctionModulePath(codeLocation);
     if (functionModulePath === null) {
-      console.error(
+      throw new LoaderError(
         `Provided code location '${codeLocation}' is not a loadable module.` +
           '\nDid you specify the correct location for the module defining ' +
           'your function?'
       );
-      return null;
     }
 
     let functionModule;
     const esModule = await isEsModule(functionModulePath);
     if (esModule) {
       if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
-        console.error(
+        throw new LoaderError(
           `Cannot load ES Module on Node.js ${process.version}. ` +
             `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`
         );
-        return null;
       }
       // Resolve module path to file:// URL. Required for windows support.
       const fpath = pathToFileURL(functionModulePath);
@@ -136,19 +141,17 @@ export async function getUserFunction(
       }, functionModule);
 
     if (typeof userFunction === 'undefined') {
-      console.error(
+      throw new LoaderError(
         `Function '${functionTarget}' is not defined in the provided ` +
           'module.\nDid you specify the correct target function to execute?'
       );
-      return null;
     }
 
     if (typeof userFunction !== 'function') {
-      console.error(
+      throw new LoaderError(
         `'${functionTarget}' needs to be of type function. Got: ` +
           `${typeof userFunction}`
       );
-      return null;
     }
 
     return {userFunction: userFunction as HandlerFunction, signatureType};
@@ -163,11 +166,10 @@ export async function getUserFunction(
     } else {
       additionalHint = 'Is there a syntax error in your code?\n';
     }
-    console.error(
+    throw new LoaderError(
       `Provided module can't be loaded.\n${additionalHint}` +
         `Detailed stack trace: ${err.stack}`
     );
-    return null;
   }
 }
 
