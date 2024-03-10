@@ -86,6 +86,7 @@ npm install @google-cloud/functions-framework
 
 1. Create an `index.js` file with the following contents:
 
+    ***Using CommonJS (`require`) Syntax:***
     ```js
     const functions = require('@google-cloud/functions-framework');
 
@@ -93,7 +94,14 @@ npm install @google-cloud/functions-framework
       res.send('Hello, World');
     });
     ```
+    ***Using ECMAScript Modules (ESM) Syntax:***
+    ```js
+    import { http } from '@google-cloud/functions-framework';
 
+    http('helloWorld', (req, res) => {
+      res.send('Hello, World!');
+    });
+    ```
 1. Now install the Functions Framework:
 
     ```sh
