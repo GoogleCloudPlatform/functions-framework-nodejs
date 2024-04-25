@@ -59,6 +59,7 @@ describe('parseOptions', () => {
         signatureType: 'http',
         printHelp: false,
         enableExecutionId: false,
+        timeoutMilliseconds: 0,
       },
     },
     {
@@ -72,6 +73,8 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
+        '--timeout',
+        '6',
       ],
       envVars: {},
       expectedOptions: {
@@ -81,6 +84,7 @@ describe('parseOptions', () => {
         signatureType: 'cloudevent',
         printHelp: false,
         enableExecutionId: false,
+        timeoutMilliseconds: 6000,
       },
     },
     {
@@ -91,6 +95,7 @@ describe('parseOptions', () => {
         FUNCTION_TARGET: 'helloWorld',
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
+        CLOUD_RUN_TIMEOUT_SECONDS: '2',
       },
       expectedOptions: {
         port: '1234',
@@ -99,6 +104,7 @@ describe('parseOptions', () => {
         signatureType: 'cloudevent',
         printHelp: false,
         enableExecutionId: false,
+        timeoutMilliseconds: 2000,
       },
     },
     {
@@ -112,12 +118,14 @@ describe('parseOptions', () => {
         '--signature-type',
         'cloudevent',
         '--source=/source',
+        '--timeout=3',
       ],
       envVars: {
         PORT: '4567',
         FUNCTION_TARGET: 'fooBar',
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
+        CLOUD_RUN_TIMEOUT_SECONDS: '5',
       },
       expectedOptions: {
         port: '1234',
@@ -126,6 +134,7 @@ describe('parseOptions', () => {
         signatureType: 'cloudevent',
         printHelp: false,
         enableExecutionId: false,
+        timeoutMilliseconds: 3000,
       },
     },
   ];
@@ -197,9 +206,28 @@ describe('parseOptions', () => {
     });
   });
 
-  it('throws an exception for invalid signature types', () => {
-    assert.throws(() => {
-      parseOptions(['bin/node', 'index.js', '--signature-type=monkey']);
+  const validationErrorTestCases: TestData[] = [
+    {
+      name: 'signature type is invalid',
+      cliOpts: ['bin/node', 'index.js', '--signature-type=monkey'],
+      envVars: {},
+    },
+    {
+      name: 'timeout is not a number',
+      cliOpts: ['bin/node', '/index.js', '--timeout=foobar'],
+      envVars: {},
+    },
+    {
+      name: 'timeout is a negative number',
+      cliOpts: ['bin/node', '/index.js', '--timeout=-10'],
+      envVars: {},
+    },
+  ];
+  validationErrorTestCases.forEach(testCase => {
+    it('throws an exception when ' + testCase.name, () => {
+      assert.throws(() => {
+        parseOptions(testCase.cliOpts, testCase.envVars);
+      });
     });
   });
 });

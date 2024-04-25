@@ -112,6 +112,7 @@ export interface LegacyEvent {
 
 // @public (undocumented)
 interface Request_2 extends Request_3 {
+    abortController?: AbortController;
     executionId?: string;
     rawBody?: Buffer;
     spanId?: string;
@@ -121,7 +122,9 @@ export { Request_2 as Request }
 
 export { Response_2 as Response }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "typed" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export const typed: <T, U>(functionName: string, handler: TypedFunction<T, U> | ((req: T) => U | Promise<U>)) => void;
 
 // @public

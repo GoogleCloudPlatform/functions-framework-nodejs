@@ -17,6 +17,7 @@ import * as functions from '../../src/functions';
 import * as sinon from 'sinon';
 import {getServer} from '../../src/server';
 import * as supertest from 'supertest';
+import {SignatureType} from '../../src/types';
 
 const TEST_CLOUD_EVENT = {
   specversion: '1.0',
@@ -29,6 +30,16 @@ const TEST_CLOUD_EVENT = {
   data: {
     some: 'payload',
   },
+};
+
+const testOptions = {
+  signatureType: 'event' as SignatureType,
+  enableExecutionId: false,
+  timeoutMilliseconds: 0,
+  port: '0',
+  target: '',
+  sourceLocation: '',
+  printHelp: false,
 };
 
 describe('Event Function', () => {
@@ -181,14 +192,10 @@ describe('Event Function', () => {
     it(test.name, async () => {
       let receivedData: {} | null = null;
       let receivedContext: functions.CloudFunctionsContext | null = null;
-      const server = getServer(
-        (data: {}, context: functions.Context) => {
-          receivedData = data;
-          receivedContext = context as functions.CloudFunctionsContext;
-        },
-        'event',
-        /*enableExecutionId=*/ false
-      );
+      const server = getServer((data: {}, context: functions.Context) => {
+        receivedData = data;
+        receivedContext = context as functions.CloudFunctionsContext;
+      }, testOptions);
       const requestHeaders = {
         'Content-Type': 'application/json',
         ...test.headers,
@@ -204,13 +211,9 @@ describe('Event Function', () => {
   });
 
   it('returns a 500 if the function throws an exception', async () => {
-    const server = getServer(
-      () => {
-        throw 'I crashed';
-      },
-      'event',
-      /*enableExecutionId=*/ false
-    );
+    const server = getServer(() => {
+      throw 'I crashed';
+    }, testOptions);
     await supertest(server)
       .post('/')
       .send({

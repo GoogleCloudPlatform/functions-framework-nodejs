@@ -105,6 +105,7 @@ export const cloudEvent = <T = unknown>(
  * Register a function that handles strongly typed invocations.
  * @param functionName - the name of the function
  * @param handler - the function to trigger
+ * @internal
  */
 export const typed = <T, U>(
   functionName: string,
