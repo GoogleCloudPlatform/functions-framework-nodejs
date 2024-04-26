@@ -17,27 +17,27 @@ import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
 import {HandlerFunction, Request, Response} from './functions';
-import {SignatureType} from './types';
 import {setLatestRes} from './invoker';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
+import {timeoutMiddleware} from './middleware/timeout';
 import {wrapUserFunction} from './function_wrappers';
 import {asyncLocalStorageMiddleware} from './async_local_storage';
 import {executionContextMiddleware} from './execution_context';
 import {errorHandler} from './logger';
+import {FrameworkOptions} from './options';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
  * which will run it.
  * @param userFunction User's function.
- * @param functionSignatureType Type of user's function signature.
+ * @param options the configured Function Framework options.
  * @return HTTP server.
  */
 export function getServer(
   userFunction: HandlerFunction,
-  functionSignatureType: SignatureType,
-  enableExecutionId: boolean
+  options: FrameworkOptions
 ): http.Server {
   // App to use for function executions.
   const app = express();
@@ -89,7 +89,7 @@ export function getServer(
   };
 
   // Apply middleware
-  if (functionSignatureType !== 'typed') {
+  if (options.signatureType !== 'typed') {
     // If the function is not typed then JSON parsing can be done automatically, otherwise the
     // functions format must determine deserialization.
     app.use(bodyParser.json(cloudEventsBodySavingOptions));
@@ -120,8 +120,8 @@ export function getServer(
   app.use(asyncLocalStorageMiddleware);
 
   if (
-    functionSignatureType === 'event' ||
-    functionSignatureType === 'cloudevent'
+    options.signatureType === 'event' ||
+    options.signatureType === 'cloudevent'
   ) {
     // If a Pub/Sub subscription is configured to invoke a user's function directly, the request body
     // needs to be marshalled into the structure that wrapEventFunction expects. This unblocks local
@@ -129,14 +129,14 @@ export function getServer(
     app.use(legacyPubSubEventMiddleware);
   }
 
-  if (functionSignatureType === 'event') {
+  if (options.signatureType === 'event') {
     app.use(cloudEventToBackgroundEventMiddleware);
   }
-  if (functionSignatureType === 'cloudevent') {
+  if (options.signatureType === 'cloudevent') {
     app.use(backgroundEventToCloudEventMiddleware);
   }
 
-  if (functionSignatureType === 'http') {
+  if (options.signatureType === 'http') {
     app.use('/favicon.ico|/robots.txt', (req, res) => {
       // Neither crawlers nor browsers attempting to pull the icon find the body
       // contents particularly useful, so we send nothing in the response body.
@@ -151,16 +151,18 @@ export function getServer(
     });
   }
 
+  app.use(timeoutMiddleware(options.timeoutMilliseconds));
+
   // Set up the routes for the user's function
-  const requestHandler = wrapUserFunction(userFunction, functionSignatureType);
-  if (functionSignatureType === 'http') {
+  const requestHandler = wrapUserFunction(userFunction, options.signatureType);
+  if (options.signatureType === 'http') {
     app.all('/*', requestHandler);
   } else {
     app.post('/*', requestHandler);
   }
 
   // Error Handler
-  if (enableExecutionId) {
+  if (options.enableExecutionId) {
     app.use(errorHandler);
   }
 

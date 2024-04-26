@@ -1,7 +1,7 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.34.4",
+    "toolVersion": "7.43.1",
     "schemaVersion": 1011,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
@@ -173,17 +173,29 @@
       "preserveMemberOrder": false,
       "members": [
         {
-          "kind": "Variable",
-          "canonicalReference": "@google-cloud/functions-framework!cloudEvent:var",
+          "kind": "Function",
+          "canonicalReference": "@google-cloud/functions-framework!cloudEvent:function(1)",
           "docComment": "/**\n * Register a function that handles CloudEvents.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to trigger when handling CloudEvents\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "cloudEvent: "
+              "text": "cloudEvent: <T = "
             },
             {
               "kind": "Content",
-              "text": "<T = unknown>(functionName: string, handler: "
+              "text": "unknown"
+            },
+            {
+              "kind": "Content",
+              "text": ">(functionName: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": ", handler: "
             },
             {
               "kind": "Reference",
@@ -192,17 +204,56 @@
             },
             {
               "kind": "Content",
-              "text": "<T>) => void"
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": ") => "
+            },
+            {
+              "kind": "Content",
+              "text": "void"
             }
           ],
           "fileUrlPath": "src/function_registry.ts",
-          "isReadonly": true,
+          "returnTypeTokenRange": {
+            "startIndex": 8,
+            "endIndex": 9
+          },
           "releaseTag": "Public",
-          "name": "cloudEvent",
-          "variableTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 4
-          }
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "functionName",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "isOptional": false
+            },
+            {
+              "parameterName": "handler",
+              "parameterTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 7
+              },
+              "isOptional": false
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "cloudEvent"
         },
         {
           "kind": "Interface",
@@ -896,17 +947,21 @@
           }
         },
         {
-          "kind": "Variable",
-          "canonicalReference": "@google-cloud/functions-framework!http:var",
+          "kind": "Function",
+          "canonicalReference": "@google-cloud/functions-framework!http:function(1)",
           "docComment": "/**\n * Register a function that responds to HTTP requests.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to invoke when handling HTTP requests\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "http: "
+              "text": "http: (functionName: "
             },
             {
               "kind": "Content",
-              "text": "(functionName: string, handler: "
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": ", handler: "
             },
             {
               "kind": "Reference",
@@ -915,17 +970,39 @@
             },
             {
               "kind": "Content",
-              "text": ") => void"
+              "text": ") => "
+            },
+            {
+              "kind": "Content",
+              "text": "void"
             }
           ],
           "fileUrlPath": "src/function_registry.ts",
-          "isReadonly": true,
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
           "releaseTag": "Public",
-          "name": "http",
-          "variableTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 4
-          }
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "functionName",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isOptional": false
+            },
+            {
+              "parameterName": "handler",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "isOptional": false
+            }
+          ],
+          "name": "http"
         },
         {
           "kind": "Interface",
@@ -1759,6 +1836,34 @@
           "members": [
             {
               "kind": "PropertySignature",
+              "canonicalReference": "@google-cloud/functions-framework!Request_2#abortController:member",
+              "docComment": "/**\n * An AbortController used to signal cancellation of a function invocation (e.g. in case of time out).\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "abortController?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AbortController",
+                  "canonicalReference": "!AbortController:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "abortController",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
               "canonicalReference": "@google-cloud/functions-framework!Request_2#executionId:member",
               "docComment": "/**\n * Request-specified execution ID.\n */\n",
               "excerptTokens": [
@@ -1873,47 +1978,6 @@
               "endIndex": 2
             }
           ]
-        },
-        {
-          "kind": "Variable",
-          "canonicalReference": "@google-cloud/functions-framework!typed:var",
-          "docComment": "/**\n * Register a function that handles strongly typed invocations.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to trigger\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "typed: "
-            },
-            {
-              "kind": "Content",
-              "text": "<T, U>(functionName: string, handler: "
-            },
-            {
-              "kind": "Reference",
-              "text": "TypedFunction",
-              "canonicalReference": "@google-cloud/functions-framework!TypedFunction:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<T, U> | ((req: T) => U | "
-            },
-            {
-              "kind": "Reference",
-              "text": "Promise",
-              "canonicalReference": "!Promise:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<U>)) => void"
-            }
-          ],
-          "fileUrlPath": "src/function_registry.ts",
-          "isReadonly": true,
-          "releaseTag": "Public",
-          "name": "typed",
-          "variableTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 6
-          }
         },
         {
           "kind": "Interface",
