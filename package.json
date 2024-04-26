@@ -52,7 +52,7 @@
   "author": "Google Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.18.20",
+    "@microsoft/api-extractor": "^7.43.1",
     "@types/body-parser": "1.19.5",
     "@types/minimist": "1.2.5",
     "@types/mocha": "9.1.1",

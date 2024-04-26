@@ -49,12 +49,12 @@ export const main = async () => {
       // eslint-disable-next-line no-process-exit
       process.exit(1);
     }
+
     const {userFunction, signatureType} = loadedFunction;
-    const server = getServer(
-      userFunction!,
-      signatureType,
-      options.enableExecutionId
-    );
+    // It is possible to overwrite the configured signature type in code so we
+    // reset it here based on what we loaded.
+    options.signatureType = signatureType;
+    const server = getServer(userFunction!, options);
     const errorHandler = new ErrorHandler(server);
     server
       .listen(options.port, () => {

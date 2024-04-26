@@ -48,9 +48,13 @@ export const getTestServer = (functionName: string): Server => {
       `The provided function "${functionName}" was not registered. Did you forget to require the module that defined it?`
     );
   }
-  return getServer(
-    registeredFunction.userFunction,
-    registeredFunction.signatureType,
-    /*enableExecutionId=*/ false
-  );
+  return getServer(registeredFunction.userFunction, {
+    signatureType: registeredFunction.signatureType,
+    enableExecutionId: false,
+    timeoutMilliseconds: 0,
+    port: '0',
+    target: '',
+    sourceLocation: '',
+    printHelp: false,
+  });
 };
