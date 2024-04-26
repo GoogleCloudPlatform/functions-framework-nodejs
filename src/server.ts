@@ -31,9 +31,9 @@ import {FrameworkOptions} from './options';
 /**
  * Creates and configures an Express application and returns an HTTP server
  * which will run it.
- * @param userFunction User's function.
- * @param options the configured Function Framework options.
- * @return HTTP server.
+ * @param userFunction - User's function
+ * @param options - The configured Function Framework options
+ * @return HTTP server
  */
 export function getServer(
   userFunction: HandlerFunction,
@@ -55,9 +55,9 @@ export function getServer(
    * Retains a reference to the raw body buffer to allow access to the raw body
    * for things like request signature validation.  This is used as the "verify"
    * function in body-parser options.
-   * @param req Express request object.
-   * @param res Express response object.
-   * @param buf Buffer to be saved.
+   * @param req - Express request object
+   * @param res - Express response object
+   * @param buf - Buffer to be saved
    */
   function rawBodySaver(req: Request, res: Response, buf: Buffer) {
     req.rawBody = buf;

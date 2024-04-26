@@ -56,7 +56,7 @@ const register = <T = unknown, U = unknown>(
  * - must be <= 63 characters
  * - must start with a letter
  * - must end with a letter or number
- * @param functionName the function name
+ * @param functionName - The function name
  * @returns true if the function name is valid
  */
 export const isValidFunctionName = (functionName: string): boolean => {
@@ -67,9 +67,9 @@ export const isValidFunctionName = (functionName: string): boolean => {
 
 /**
  * Get a declaratively registered function
- * @param functionName the name with which the function was registered
- * @returns the registered function and signature type or undefined no function matching
- * the provided name has been registered.
+ * @param functionName - The name with which the function was registered
+ * @returns The registered function and signature type or undefined no function matching
+ * the provided name has been registered
  */
 export const getRegisteredFunction = (
   functionName: string
@@ -80,8 +80,8 @@ export const getRegisteredFunction = (
 
 /**
  * Register a function that responds to HTTP requests.
- * @param functionName - the name of the function
- * @param handler - the function to invoke when handling HTTP requests
+ * @param functionName - The name of the function
+ * @param handler - The function to invoke when handling HTTP requests
  * @public
  */
 export const http = (functionName: string, handler: HttpFunction): void => {
@@ -90,8 +90,8 @@ export const http = (functionName: string, handler: HttpFunction): void => {
 
 /**
  * Register a function that handles CloudEvents.
- * @param functionName - the name of the function
- * @param handler - the function to trigger when handling CloudEvents
+ * @param functionName - The name of the function
+ * @param handler - The function to trigger when handling CloudEvents
  * @public
  */
 export const cloudEvent = <T = unknown>(
@@ -103,8 +103,8 @@ export const cloudEvent = <T = unknown>(
 
 /**
  * Register a function that handles strongly typed invocations.
- * @param functionName - the name of the function
- * @param handler - the function to trigger
+ * @param functionName - The name of the function
+ * @param handler - The function to trigger
  * @internal
  */
 export const typed = <T, U>(

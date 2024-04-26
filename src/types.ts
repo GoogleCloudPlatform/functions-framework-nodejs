@@ -28,8 +28,8 @@ export type SignatureType = (typeof SignatureType)[number];
 
 /**
  * Type guard to test if a provided value is valid SignatureType
- * @param x the value to test
- * @returns true if the provided value is a valid SignatureType
+ * @param x - The value to test
+ * @returns True if the provided value is a valid SignatureType
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isValidSignatureType = (x: any): x is SignatureType => {

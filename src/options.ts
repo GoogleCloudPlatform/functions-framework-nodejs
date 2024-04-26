@@ -162,9 +162,9 @@ Documentation:
 /**
  * Parse the configurable framework options from the provided CLI arguments and
  * environment variables.
- * @param cliArgs the raw command line arguments
- * @param envVars the environment variables to parse options from
- * @returns the parsed options that should be used to configure the framework.
+ * @param cliArgs - The raw command line arguments
+ * @param envVars - The environment variables to parse options from
+ * @returns The parsed options that should be used to configure the framework
  */
 export const parseOptions = (
   cliArgs: string[] = process.argv,
