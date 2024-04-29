@@ -36,7 +36,7 @@ export const CE_SERVICE = {
  *
  * {@link https://github.com/cloudevents/spec/blob/main/http-protocol-binding.md#3-http-message-mapping}
  *
- * @param req - Express request object.
+ * @param req - Express request object
  * @return True if the request is a CloudEvents event in binary content mode,
  *     false otherwise.
  */
@@ -53,8 +53,8 @@ export function isBinaryCloudEvent(req: express.Request): boolean {
  * Returns a CloudEvents context from the given CloudEvents request. Context
  * attributes are retrieved from request headers.
  *
- * @param req Express request object.
- * @return CloudEvents context.
+ * @param req - Express request object
+ * @return CloudEvents context
  */
 export function getBinaryCloudEventContext(
   req: express.Request

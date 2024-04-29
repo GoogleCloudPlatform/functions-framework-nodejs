@@ -175,7 +175,7 @@
         {
           "kind": "Function",
           "canonicalReference": "@google-cloud/functions-framework!cloudEvent:function(1)",
-          "docComment": "/**\n * Register a function that handles CloudEvents.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to trigger when handling CloudEvents\n *\n * @public\n */\n",
+          "docComment": "/**\n * Register a function that handles CloudEvents.\n *\n * @param functionName - The name of the function\n *\n * @param handler - The function to trigger when handling CloudEvents\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -949,7 +949,7 @@
         {
           "kind": "Function",
           "canonicalReference": "@google-cloud/functions-framework!http:function(1)",
-          "docComment": "/**\n * Register a function that responds to HTTP requests.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to invoke when handling HTTP requests\n *\n * @public\n */\n",
+          "docComment": "/**\n * Register a function that responds to HTTP requests.\n *\n * @param functionName - The name of the function\n *\n * @param handler - The function to invoke when handling HTTP requests\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -1125,7 +1125,7 @@
             {
               "kind": "MethodSignature",
               "canonicalReference": "@google-cloud/functions-framework!InvocationFormat#deserializeRequest:member(1)",
-              "docComment": "/**\n * Creates an instance of the request type from an invocation request.\n *\n * @param request - the request body as raw bytes\n */\n",
+              "docComment": "/**\n * Creates an instance of the request type from an invocation request.\n *\n * @param request - The request body as raw bytes\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -1180,7 +1180,7 @@
             {
               "kind": "MethodSignature",
               "canonicalReference": "@google-cloud/functions-framework!InvocationFormat#serializeResponse:member(1)",
-              "docComment": "/**\n * Writes the response type to the invocation result.\n *\n * @param responseWriter - interface for writing to the invocation result\n *\n * @param response - the response object\n */\n",
+              "docComment": "/**\n * Writes the response type to the invocation result.\n *\n * @param responseWriter - Interface for writing to the invocation result\n *\n * @param response - The response object\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",

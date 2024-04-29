@@ -41,8 +41,8 @@ type OnDoneCallback = (err: Error | null, result: any) => void;
 
 /**
  * Get a completion handler that can be used to signal completion of an event function.
- * @param res the response object of the request the completion handler is for.
- * @returns an OnDoneCallback for the provided request.
+ * @param res - The response object of the request the completion handler is for
+ * @returns An OnDoneCallback for the provided request.
  */
 const getOnDoneCallback = (res: Response): OnDoneCallback => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,8 +58,8 @@ const getOnDoneCallback = (res: Response): OnDoneCallback => {
 
 /**
  * Helper function to parse a CloudEvent object from an HTTP request.
- * @param req an Express HTTP request
- * @returns a CloudEvent parsed from the request
+ * @param req - An Express HTTP request
+ * @returns A CloudEvent parsed from the request
  */
 const parseCloudEventRequest = (req: Request): CloudEvent<unknown> => {
   let cloudEvent = req.body;
@@ -77,8 +77,8 @@ const parseCloudEventRequest = (req: Request): CloudEvent<unknown> => {
 /**
  * Helper function to background event context and data payload object from an HTTP
  * request.
- * @param req an Express HTTP request
- * @returns the data playload and event context parsed from the request
+ * @param req - An Express HTTP request
+ * @returns The data playload and event context parsed from the request
  */
 const parseBackgroundEvent = (req: Request): {data: {}; context: Context} => {
   const event = req.body;
@@ -100,8 +100,8 @@ const parseBackgroundEvent = (req: Request): {data: {}; context: Context} => {
 /**
  * Wraps the provided function into an Express handler function with additional
  * instrumentation logic.
- * @param execute Runs user's function.
- * @return An Express handler function.
+ * @param execute - Runs user's function
+ * @return An Express handler function
  */
 const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
   return (req: Request, res: Response) => {
@@ -132,8 +132,8 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
 
 /**
  * Wraps an async CloudEvent function in an express RequestHandler.
- * @param userFunction User's function.
- * @return An Express hander function that invokes the user function.
+ * @param userFunction - User's function
+ * @return An Express hander function that invokes the user function
  */
 const wrapCloudEventFunction = (
   userFunction: CloudEventFunction
@@ -153,8 +153,8 @@ const wrapCloudEventFunction = (
 
 /**
  * Wraps callback style CloudEvent function in an express RequestHandler.
- * @param userFunction User's function.
- * @return An Express hander function that invokes the user function.
+ * @param userFunction - User's function
+ * @return An Express hander function that invokes the user function
  */
 const wrapCloudEventFunctionWithCallback = (
   userFunction: CloudEventFunctionWithCallback
@@ -169,8 +169,8 @@ const wrapCloudEventFunctionWithCallback = (
 
 /**
  * Wraps an async event function in an express RequestHandler.
- * @param userFunction User's function.
- * @return An Express hander function that invokes the user function.
+ * @param userFunction - User's function
+ * @return An Express hander function that invokes the user function
  */
 const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
@@ -188,8 +188,8 @@ const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
 
 /**
  * Wraps a callback style event function in an express RequestHandler.
- * @param userFunction User's function.
- * @return An Express hander function that invokes the user function.
+ * @param userFunction - User's function
+ * @return An Express hander function that invokes the user function
  */
 const wrapEventFunctionWithCallback = (
   userFunction: EventFunctionWithCallback
@@ -204,7 +204,7 @@ const wrapEventFunctionWithCallback = (
 
 /**
  * Wraps a typed function in an express style RequestHandler.
- * @param userFunction User's function
+ * @param userFunction - User's function
  * @return An Express handler function that invokes the user function
  */
 const wrapTypedFunction = (typedFunction: TypedFunction): RequestHandler => {

@@ -25,9 +25,9 @@ const SEVERITY = 'severity';
 /**
  * Logs an error message and sends back an error response to the incoming
  * request.
- * @param err Error to be logged and sent.
- * @param res Express response object.
- * @param callback A function to be called synchronously.
+ * @param err - Error to be logged and sent
+ * @param res - Express response object
+ * @param callback - A function to be called synchronously
  */
 export function sendCrashResponse({
   err,
