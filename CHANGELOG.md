@@ -4,6 +4,20 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.3.0...v3.4.0) (2024-04-29)
+
+
+### Features
+
+* AbortController to signal request timeouts ([#600](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/600)) ([7a538e0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/7a538e09f07cfffde1e2ee1592f53386062639c2))
+* add execution id support ([#592](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/592)) ([1c48074](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1c48074b749343904f07abd53328a2233eccd47b))
+
+
+### Bug Fixes
+
+* etag should not be set on any response ([#571](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/571)) ([89a3abb](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/89a3abb10a815eeb37bc779ae7015e751765cf62))
+* framework fails to shutdown gracefully when exit code is a string ([#545](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/545)) ([5355069](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/53550694b56c80cf326d21198cd65d641cfbbc17))
+
 ## [3.3.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.2.1...v3.3.0) (2023-06-28)
 
 
