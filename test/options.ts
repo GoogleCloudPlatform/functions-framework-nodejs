@@ -193,14 +193,12 @@ describe('parseOptions', () => {
 
   executionIdTestData.forEach(testCase => {
     it(testCase.name, () => {
+      const options = parseOptions(testCase.cliOpts, testCase.envVars);
       if (
         semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
       ) {
-        assert.throws(() => {
-          parseOptions(testCase.cliOpts, testCase.envVars);
-        });
+        assert.strictEqual(options.enableExecutionId, false)
       } else {
-        const options = parseOptions(testCase.cliOpts, testCase.envVars);
         assert.strictEqual(options.enableExecutionId, true);
       }
     });
