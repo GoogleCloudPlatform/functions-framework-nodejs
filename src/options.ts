@@ -146,9 +146,13 @@ const ExecutionIdOption = new ConfigurableOption(
       (typeof x === 'boolean' && x) ||
       (typeof x === 'string' && x.toLowerCase() === 'true');
     if (isTrue && !isVersionSatisfied) {
-      throw new OptionsError(
-        `Execution id is only supported with Node.js versions ${requiredNodeJsVersionForLogExecutionID} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      console.warn(
+        `Execution id is only supported with Node.js versions
+        ${requiredNodeJsVersionForLogExecutionID} and above. Your
+        current version is ${nodeVersion}. Please upgrade.`
       );
+      console.warn('Proceeding with execution id support disabled...');
+      return false;
     }
     return isTrue;
   }
