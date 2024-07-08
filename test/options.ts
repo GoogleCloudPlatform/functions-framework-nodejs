@@ -197,7 +197,7 @@ describe('parseOptions', () => {
       if (
         semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
       ) {
-        assert.strictEqual(options.enableExecutionId, false)
+        assert.strictEqual(options.enableExecutionId, false);
       } else {
         assert.strictEqual(options.enableExecutionId, true);
       }
