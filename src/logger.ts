@@ -137,12 +137,14 @@ export function getModifiedData(
   };
   if (isJSON) {
     dataWithContext = getJSONWithContext(processedData, currentContext);
-    if (!(SEVERITY in dataWithContext)) {
-      dataWithContext[SEVERITY] = stderr ? 'ERROR' : 'INFO';
+    if (stderr && !(SEVERITY in dataWithContext)) {
+      dataWithContext[SEVERITY] = 'ERROR';
     }
   } else {
     dataWithContext = getTextWithContext(processedData, currentContext);
-    dataWithContext[SEVERITY] = stderr ? 'ERROR' : 'INFO';
+    if (stderr) {
+      dataWithContext[SEVERITY] = 'ERROR';
+    }
   }
 
   return JSON.stringify(dataWithContext) + '\n';

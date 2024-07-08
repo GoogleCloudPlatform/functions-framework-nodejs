@@ -149,15 +149,7 @@ describe('getModifiedData', () => {
     assert.equal(modifiedData, expectedOutput);
   });
 
-  it('parses firebase log severity', () => {
-    const modifiedData = <string>(
-      getModifiedData('testing info log level', undefined, false)
-    );
-    assert.equal('INFO', JSON.parse(modifiedData)['severity']);
-    assert.equal('testing info log level', JSON.parse(modifiedData)['message']);
-  });
-
-  it('parses firebase warning severity', () => {
+  it('parses firebase warning severity and message', () => {
     const modifiedData = <string>(
       getModifiedData(
         '\u001b[33m{"severity":"WARNING","message":"testing warning log level"}\u001b[39m\n',
@@ -172,7 +164,7 @@ describe('getModifiedData', () => {
     );
   });
 
-  it('parses firebase error severity', () => {
+  it('parses firebase error severity and message', () => {
     const modifiedData = <string>(
       getModifiedData(
         '\u001b[31m{"severity":"ERROR","message":"testing error log level"}\u001b[39m\n',
