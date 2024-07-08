@@ -188,7 +188,7 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
     return {isJSON: false, processedData: data};
   }
 
-  // strip any leading ANSI terminal codes from the start of the decoded data
+  // strip any leading ANSI terminal codes from the decoded data
   // before trying to parse it as json
   decodedData = decodedData.replace(/\x1b[[(?);]{0,2}(;?\d)*./g, '');
   try {
