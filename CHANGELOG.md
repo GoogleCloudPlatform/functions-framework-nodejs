@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.0...v3.4.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* if execution id support requested for node 12, fail open and drop execution id support instead of crashing out ([#618](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/618)) ([47003fd](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/47003fdc7c7b1315fb219233928222593d606b93))
+* parse structured logs, and handle ANSI escape codes in logs ([#620](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/620)) ([33a7266](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/33a7266900a8030f4f1f7fd6b11e4293e75b4a9e))
+
 ## [3.4.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.3.0...v3.4.0) (2024-04-29)
 
 
