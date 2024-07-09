@@ -127,14 +127,24 @@ export function getModifiedData(
     return data;
   }
   const {isJSON, processedData} = processData(data, encoding);
-  let dataWithContext;
+
+  let dataWithContext: {
+    message: string | Uint8Array;
+    'logging.googleapis.com/labels': {execution_id: string | undefined};
+    'logging.googleapis.com/trace': string | undefined;
+    'logging.googleapis.com/spanId': string | undefined;
+    severity?: string | undefined;
+  };
   if (isJSON) {
     dataWithContext = getJSONWithContext(processedData, currentContext);
+    if (stderr && !(SEVERITY in dataWithContext)) {
+      dataWithContext[SEVERITY] = 'ERROR';
+    }
   } else {
     dataWithContext = getTextWithContext(processedData, currentContext);
-  }
-  if (stderr) {
-    dataWithContext[SEVERITY] = 'ERROR';
+    if (stderr) {
+      dataWithContext[SEVERITY] = 'ERROR';
+    }
   }
 
   return JSON.stringify(dataWithContext) + '\n';
@@ -178,6 +188,9 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
     return {isJSON: false, processedData: data};
   }
 
+  // strip any leading ANSI color codes from the decoded data
+  // to parse colored JSON objects correctly
+  decodedData = decodedData.replace(/\x1b[[(?);]{0,2}(;?\d)*./g, '');
   try {
     return {isJSON: true, processedData: JSON.parse(decodedData)};
   } catch (e) {

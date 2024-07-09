@@ -148,4 +148,34 @@ describe('getModifiedData', () => {
       ) + '\n';
     assert.equal(modifiedData, expectedOutput);
   });
+
+  it('parses firebase warning severity and message', () => {
+    const modifiedData = <string>(
+      getModifiedData(
+        '\u001b[33m{"severity":"WARNING","message":"testing warning log level"}\u001b[39m\n',
+        undefined,
+        true
+      )
+    );
+    assert.equal('WARNING', JSON.parse(modifiedData)['severity']);
+    assert.equal(
+      'testing warning log level',
+      JSON.parse(modifiedData)['message']
+    );
+  });
+
+  it('parses firebase error severity and message', () => {
+    const modifiedData = <string>(
+      getModifiedData(
+        '\u001b[31m{"severity":"ERROR","message":"testing error log level"}\u001b[39m\n',
+        undefined,
+        true
+      )
+    );
+    assert.equal('ERROR', JSON.parse(modifiedData)['severity']);
+    assert.equal(
+      'testing error log level',
+      JSON.parse(modifiedData)['message']
+    );
+  });
 });
