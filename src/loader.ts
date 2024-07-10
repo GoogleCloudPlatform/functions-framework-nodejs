@@ -30,12 +30,11 @@ import {getRegisteredFunction} from './function_registry';
 //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
 // Exported for testing.
 export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
-export const satisfiedMinNodeVersionESModules = (function (nodeVersion = process.versions.node): boolean {
+export const satisfiedMinNodeVersionESModules = (function (
+  nodeVersion = process.versions.node
+): boolean {
   const [major, minor] = nodeVersion.slice(1).split('.', 2).map(Number);
-  return (
-    major > 13 ||
-    (major === 13 && minor >= 2)
-  );
+  return major > 13 || (major === 13 && minor >= 2);
 })();
 
 /**

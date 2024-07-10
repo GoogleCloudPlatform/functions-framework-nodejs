@@ -131,12 +131,12 @@ const TimeoutOption = new ConfigurableOption(
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
-export const satisfiedRequiredNodeJsVersionForLogExecutionID = (function (nodeVersion = process.versions.node) {
+export const satisfiedRequiredNodeJsVersionForLogExecutionID = (function (
+  nodeVersion = process.versions.node
+) {
   const [major] = nodeVersion.split('.', 1).map(Number);
-  return (
-    major >= 13
-  );
-})()
+  return major >= 13;
+})();
 
 const ExecutionIdOption = new ConfigurableOption(
   'log-execution-id',

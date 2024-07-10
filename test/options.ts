@@ -193,7 +193,10 @@ describe('parseOptions', () => {
   executionIdTestData.forEach(testCase => {
     it(testCase.name, () => {
       const options = parseOptions(testCase.cliOpts, testCase.envVars);
-      assert.strictEqual(options.enableExecutionId, satisfiedRequiredNodeJsVersionForLogExecutionID);
+      assert.strictEqual(
+        options.enableExecutionId,
+        satisfiedRequiredNodeJsVersionForLogExecutionID
+      );
     });
   });
 
