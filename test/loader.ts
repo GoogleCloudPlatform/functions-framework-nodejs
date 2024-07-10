@@ -79,7 +79,7 @@ describe('loading function', () => {
       );
       return loadedFunction?.userFunction as functions.HttpFunction;
     };
-    if (loader.satisfiesMinNodeVersionESModules()) {
+    if (loader.satisfiedMinNodeVersionESModules) {
       it(`should load function in an ES module ${test.name}`, async () => {
         const loadedFunction = await loadFn();
         const returned = loadedFunction(express.request, express.response);

@@ -1,7 +1,6 @@
-import * as semver from 'semver';
 import { Request, Response } from './functions';
 import { NextFunction } from 'express';
-import { satisfiesRequiredNodeJsVersionForLogExecutionID } from './options';
+import { satisfiedRequiredNodeJsVersionForLogExecutionID } from './options';
 import type { AsyncLocalStorage } from 'node:async_hooks';
 
 export interface ExecutionContext {
@@ -17,9 +16,7 @@ export async function asyncLocalStorageMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (
-    satisfiesRequiredNodeJsVersionForLogExecutionID()
-  ) {
+  if (satisfiedRequiredNodeJsVersionForLogExecutionID) {
     if (!asyncLocalStorage) {
       const asyncHooks = await import('node:async_hooks');
       asyncLocalStorage = new asyncHooks.AsyncLocalStorage();

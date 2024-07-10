@@ -19,7 +19,6 @@
  */
 
 import * as path from 'path';
-import * as semver from 'semver';
 import * as readPkgUp from 'read-pkg-up';
 import {pathToFileURL} from 'url';
 import {HandlerFunction} from './functions';
@@ -31,9 +30,13 @@ import {getRegisteredFunction} from './function_registry';
 //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
 // Exported for testing.
 export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
-export function satisfiesMinNodeVersionESModules(): boolean {
-  return semver.gte(process.version, MIN_NODE_VERSION_ESMODULES)
-}
+export const satisfiedMinNodeVersionESModules = (function (nodeVersion = process.versions.node): boolean {
+  const [major, minor] = nodeVersion.slice(1).split('.', 2).map(Number);
+  return (
+    major > 13 ||
+    (major === 13 && minor >= 2)
+  );
+})();
 
 /**
  * Determines whether the given module is an ES module.
@@ -107,7 +110,7 @@ export async function getUserFunction(
     let functionModule;
     const esModule = await isEsModule(functionModulePath);
     if (esModule) {
-      if (satisfiesMinNodeVersionESModules() === false) {
+      if (!satisfiedMinNodeVersionESModules) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
             `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`

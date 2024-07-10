@@ -17,7 +17,7 @@ import {resolve} from 'path';
 import {
   parseOptions,
   FrameworkOptions,
-  satisfiesRequiredNodeJsVersionForLogExecutionID,
+  satisfiedRequiredNodeJsVersionForLogExecutionID,
 } from '../src/options';
 
 describe('parseOptions', () => {
@@ -193,13 +193,7 @@ describe('parseOptions', () => {
   executionIdTestData.forEach(testCase => {
     it(testCase.name, () => {
       const options = parseOptions(testCase.cliOpts, testCase.envVars);
-      if (
-        satisfiesRequiredNodeJsVersionForLogExecutionID()
-      ) {
-        assert.strictEqual(options.enableExecutionId, true);
-      } else {
-        assert.strictEqual(options.enableExecutionId, false);
-      }
+      assert.strictEqual(options.enableExecutionId, satisfiedRequiredNodeJsVersionForLogExecutionID);
     });
   });
 
