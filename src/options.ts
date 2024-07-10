@@ -132,16 +132,20 @@ const TimeoutOption = new ConfigurableOption(
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
+export function satisfiesRequiredNodeJsVersionForLogExecutionID () {
+  return  semver.gte(
+    process.versions.node,
+    requiredNodeJsVersionForLogExecutionID
+  )
+}
+
 const ExecutionIdOption = new ConfigurableOption(
   'log-execution-id',
   'LOG_EXECUTION_ID',
   false,
   x => {
     const nodeVersion = process.versions.node;
-    const isVersionSatisfied = semver.gte(
-      nodeVersion,
-      requiredNodeJsVersionForLogExecutionID
-    );
+    const isVersionSatisfied = satisfiesRequiredNodeJsVersionForLogExecutionID();
     const isTrue =
       (typeof x === 'boolean' && x) ||
       (typeof x === 'string' && x.toLowerCase() === 'true');

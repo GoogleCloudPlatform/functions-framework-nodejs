@@ -31,6 +31,9 @@ import {getRegisteredFunction} from './function_registry';
 //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#browser_compatibility
 // Exported for testing.
 export const MIN_NODE_VERSION_ESMODULES = '13.2.0';
+export function satisfiesMinNodeVersionESModules(): boolean {
+  return semver.gte(process.version, MIN_NODE_VERSION_ESMODULES)
+}
 
 /**
  * Determines whether the given module is an ES module.
@@ -104,7 +107,7 @@ export async function getUserFunction(
     let functionModule;
     const esModule = await isEsModule(functionModulePath);
     if (esModule) {
-      if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
+      if (satisfiesMinNodeVersionESModules() === false) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
             `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`
