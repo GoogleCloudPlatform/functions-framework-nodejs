@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.1...v3.4.2) (2024-07-22)
+
+
+### Bug Fixes
+
+* Don't set severity level for text log. ([#625](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/625)) ([5bd82de](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/5bd82de7fff4e41967974587dbe389a1d637f78b))
+
 ## [3.4.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.0...v3.4.1) (2024-07-09)
 
 
