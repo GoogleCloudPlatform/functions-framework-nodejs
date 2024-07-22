@@ -135,7 +135,7 @@ describe('getModifiedData', () => {
     const modifiedData = getModifiedData(sampleText, undefined, true);
     const expectedOutput =
       JSON.stringify(
-        Object.assign(JSON.parse(expectedTextOutput), {severity: 'ERROR'})
+        Object.assign(JSON.parse(expectedTextOutput))
       ) + '\n';
     assert.equal(modifiedData, expectedOutput);
   });

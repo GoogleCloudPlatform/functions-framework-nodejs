@@ -142,9 +142,6 @@ export function getModifiedData(
     }
   } else {
     dataWithContext = getTextWithContext(processedData, currentContext);
-    if (stderr) {
-      dataWithContext[SEVERITY] = 'ERROR';
-    }
   }
 
   return JSON.stringify(dataWithContext) + '\n';
