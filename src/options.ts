@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import * as minimist from 'minimist';
-import * as semver from 'semver';
 import {resolve} from 'path';
 import {SignatureType, isValidSignatureType} from './types';
 
@@ -132,20 +131,23 @@ const TimeoutOption = new ConfigurableOption(
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
+export const satisfiedRequiredNodeJsVersionForLogExecutionID = (function (
+  nodeVersion = process.versions.node
+) {
+  const [major] = nodeVersion.split('.', 1).map(Number);
+  return major >= 13;
+})();
+
 const ExecutionIdOption = new ConfigurableOption(
   'log-execution-id',
   'LOG_EXECUTION_ID',
   false,
   x => {
     const nodeVersion = process.versions.node;
-    const isVersionSatisfied = semver.gte(
-      nodeVersion,
-      requiredNodeJsVersionForLogExecutionID
-    );
     const isTrue =
       (typeof x === 'boolean' && x) ||
       (typeof x === 'string' && x.toLowerCase() === 'true');
-    if (isTrue && !isVersionSatisfied) {
+    if (isTrue && !satisfiedRequiredNodeJsVersionForLogExecutionID) {
       console.warn(
         `Execution id is only supported with Node.js versions
         ${requiredNodeJsVersionForLogExecutionID} and above. Your
