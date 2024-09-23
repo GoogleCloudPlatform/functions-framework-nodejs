@@ -62,8 +62,8 @@ const CE_SOURCE_REGEX = /\/\/([^/]+)\/(.+)/;
 
 /**
  * Is the given request a known CloudEvent that can be converted to a legacy event.
- * @param request express request object
- * @returns true if the request can be converted
+ * @param request - Express request object
+ * @returns True if the request can be converted
  */
 const isConvertableCloudEvent = (request: Request): boolean => {
   if (isBinaryCloudEvent(request)) {
@@ -75,8 +75,8 @@ const isConvertableCloudEvent = (request: Request): boolean => {
 
 /**
  * Splits a CloudEvent source string into resource and subject components.
- * @param source the cloud event source
- * @returns the parsed service and name components of the CE source string
+ * @param source - The cloud event source
+ * @returns The parsed service and name components of the CE source string
  */
 export const parseSource = (
   source: string
@@ -95,8 +95,8 @@ export const parseSource = (
 
 /**
  * Marshal a known GCP CloudEvent request the equivalent context/data legacy event format.
- * @param req express request object
- * @returns the request body of the equivalent legacy event request
+ * @param req - Express request object
+ * @returns The request body of the equivalent legacy event request
  */
 const marshalConvertableCloudEvent = (
   req: Request
@@ -173,9 +173,9 @@ const marshalConvertableCloudEvent = (
 /**
  * Express middleware to convert cloud event requests to legacy GCF events. This enables
  * functions using the "EVENT" signature type to accept requests from a cloud event producer.
- * @param req express request object
- * @param res express response object
- * @param next function used to pass control to the next middle middleware function in the stack
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Function used to pass control to the next middle middleware function in the stack
  */
 export const cloudEventToBackgroundEventMiddleware = (
   req: Request,

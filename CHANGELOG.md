@@ -4,6 +4,35 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.1...v3.4.2) (2024-07-22)
+
+
+### Bug Fixes
+
+* Don't set severity level for text log. ([#625](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/625)) ([5bd82de](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/5bd82de7fff4e41967974587dbe389a1d637f78b))
+
+## [3.4.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.0...v3.4.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* if execution id support requested for node 12, fail open and drop execution id support instead of crashing out ([#618](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/618)) ([47003fd](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/47003fdc7c7b1315fb219233928222593d606b93))
+* parse structured logs, and handle ANSI escape codes in logs ([#620](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/620)) ([33a7266](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/33a7266900a8030f4f1f7fd6b11e4293e75b4a9e))
+
+## [3.4.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.3.0...v3.4.0) (2024-04-29)
+
+
+### Features
+
+* AbortController to signal request timeouts ([#600](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/600)) ([7a538e0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/7a538e09f07cfffde1e2ee1592f53386062639c2))
+* add execution id support ([#592](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/592)) ([1c48074](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/1c48074b749343904f07abd53328a2233eccd47b))
+
+
+### Bug Fixes
+
+* etag should not be set on any response ([#571](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/571)) ([89a3abb](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/89a3abb10a815eeb37bc779ae7015e751765cf62))
+* framework fails to shutdown gracefully when exit code is a string ([#545](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/545)) ([5355069](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/53550694b56c80cf326d21198cd65d641cfbbc17))
+
 ## [3.3.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.2.1...v3.3.0) (2023-06-28)
 
 

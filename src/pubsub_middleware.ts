@@ -89,7 +89,7 @@ export interface MarshalledPubSubBody {
 
 /**
  * Type predicate that checks if a given Request is a RawPubSubRequest
- * @param request a Request object to typecheck
+ * @param request - A Request object to typecheck
  * @returns true if this Request is a RawPubSubRequest
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,7 +106,7 @@ const isRawPubSubRequestBody = (body: any): body is RawPubSubBody => {
 
 /**
  * Extract the Pub/Sub topic name from the HTTP request path.
- * @param path the URL path of the http request
+ * @param path - The URL path of the http request
  * @returns the Pub/Sub topic name if the path matches the expected format,
  * null otherwise
  */
@@ -125,8 +125,8 @@ const extractPubSubTopic = (path: string): string | null => {
 
 /**
  * Marshal the body of an HTTP request from a Pub/Sub subscription
- * @param body an unmarshalled http request body from a Pub/Sub push subscription
- * @param path the HTTP request path
+ * @param body - An unmarshalled http request body from a Pub/Sub push subscription
+ * @param path - The HTTP request path
  * @returns the marshalled request body expected by wrapEventFunction
  */
 const marshalPubSubRequestBody = (
@@ -153,9 +153,9 @@ const marshalPubSubRequestBody = (
 /**
  * Express middleware used to marshal the HTTP request body received directly from a
  * Pub/Sub subscription into the format that is expected downstream by wrapEventFunction
- * @param req express request object
- * @param res express response object
- * @param next function used to pass control to the next middle middleware function in the stack
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Function used to pass control to the next middle middleware function in the stack
  */
 export const legacyPubSubEventMiddleware = (
   req: Request,

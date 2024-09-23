@@ -44,6 +44,10 @@ export interface Request extends ExpressRequest {
    * Cloud Trace span ID.
    */
   spanId?: string;
+  /**
+   * An AbortController used to signal cancellation of a function invocation (e.g. in case of time out).
+   */
+  abortController?: AbortController;
 }
 
 /**
@@ -194,15 +198,15 @@ export interface InvocationFormat<T, U> {
   /**
    * Creates an instance of the request type from an invocation request.
    *
-   * @param request the request body as raw bytes
+   * @param request - The request body as raw bytes
    */
   deserializeRequest(request: InvocationRequest): T | Promise<T>;
 
   /**
    * Writes the response type to the invocation result.
    *
-   * @param responseWriter interface for writing to the invocation result
-   * @param response the response object
+   * @param responseWriter - Interface for writing to the invocation result
+   * @param response - The response object
    */
   serializeResponse(
     responseWriter: InvocationResponse,

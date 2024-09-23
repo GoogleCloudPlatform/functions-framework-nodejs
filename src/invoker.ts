@@ -34,9 +34,9 @@ export const setLatestRes = (res: express.Response) => {
 
 /**
  * Sends back a response to the incoming request.
- * @param result Output from function execution.
- * @param err Error from function execution.
- * @param res Express response object.
+ * @param result - Output from function execution
+ * @param err - Error from function execution
+ * @param res - Express response object
  */
 
 export function sendResponse(
@@ -79,7 +79,7 @@ const killInstance = process.exit.bind(process, 16);
 
 /**
  * Enables registration of error handlers.
- * @param server HTTP server which invokes user's function.
+ * @param server - HTTP server which invokes user's function
  * @constructor
  */
 export class ErrorHandler {

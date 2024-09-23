@@ -52,6 +52,10 @@ export interface FrameworkOptions {
    * Whether or not to enable execution id support.
    */
   enableExecutionId: boolean;
+  /**
+   * The request timeout.
+   */
+  timeoutMilliseconds: number;
 }
 
 /**
@@ -112,6 +116,20 @@ const SignatureOption = new ConfigurableOption(
     );
   }
 );
+const TimeoutOption = new ConfigurableOption(
+  'timeout',
+  'CLOUD_RUN_TIMEOUT_SECONDS',
+  0,
+  (x: string | number) => {
+    if (typeof x === 'string') {
+      x = parseInt(x, 10);
+    }
+    if (isNaN(x) || x < 0) {
+      throw new OptionsError('Timeout must be a positive integer');
+    }
+    return x * 1000;
+  }
+);
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
 const ExecutionIdOption = new ConfigurableOption(
@@ -128,9 +146,13 @@ const ExecutionIdOption = new ConfigurableOption(
       (typeof x === 'boolean' && x) ||
       (typeof x === 'string' && x.toLowerCase() === 'true');
     if (isTrue && !isVersionSatisfied) {
-      throw new OptionsError(
-        `Execution id is only supported with Node.js versions ${requiredNodeJsVersionForLogExecutionID} and above. Your current version is ${nodeVersion}. Please upgrade.`
+      console.warn(
+        `Execution id is only supported with Node.js versions
+        ${requiredNodeJsVersionForLogExecutionID} and above. Your
+        current version is ${nodeVersion}. Please upgrade.`
       );
+      console.warn('Proceeding with execution id support disabled...');
+      return false;
     }
     return isTrue;
   }
@@ -144,9 +166,9 @@ Documentation:
 /**
  * Parse the configurable framework options from the provided CLI arguments and
  * environment variables.
- * @param cliArgs the raw command line arguments
- * @param envVars the environment variables to parse options from
- * @returns the parsed options that should be used to configure the framework.
+ * @param cliArgs - The raw command line arguments
+ * @param envVars - The environment variables to parse options from
+ * @returns The parsed options that should be used to configure the framework
  */
 export const parseOptions = (
   cliArgs: string[] = process.argv,
@@ -158,6 +180,7 @@ export const parseOptions = (
       FunctionTargetOption.cliOption,
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
+      TimeoutOption.cliOption,
     ],
   });
   return {
@@ -165,6 +188,7 @@ export const parseOptions = (
     target: FunctionTargetOption.parse(argv, envVars),
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
+    timeoutMilliseconds: TimeoutOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
     enableExecutionId: ExecutionIdOption.parse(argv, envVars),
   };

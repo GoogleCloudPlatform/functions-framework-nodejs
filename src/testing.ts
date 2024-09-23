@@ -21,8 +21,8 @@ import {getServer} from './server';
 
 /**
  * Testing utility for retrieving a function registered with the Functions Framework
- * @param functionName the name of the function to get
- * @returns a function that was registered with the Functions Framework
+ * @param functionName - The name of the function to get
+ * @returns A function that was registered with the Functions Framework
  *
  * @beta
  */
@@ -36,8 +36,8 @@ export const getFunction = (
  * Create an Express server that is configured to invoke a function that was
  * registered with the Functions Framework. This is a useful utility for testing functions
  * using [supertest](https://www.npmjs.com/package/supertest).
- * @param functionName the name of the function to wrap in the test server
- * @returns a function that was registered with the Functions Framework
+ * @param functionName - The name of the function to wrap in the test server
+ * @returns A function that was registered with the Functions Framework
  *
  * @beta
  */
@@ -48,9 +48,13 @@ export const getTestServer = (functionName: string): Server => {
       `The provided function "${functionName}" was not registered. Did you forget to require the module that defined it?`
     );
   }
-  return getServer(
-    registeredFunction.userFunction,
-    registeredFunction.signatureType,
-    /*enableExecutionId=*/ false
-  );
+  return getServer(registeredFunction.userFunction, {
+    signatureType: registeredFunction.signatureType,
+    enableExecutionId: false,
+    timeoutMilliseconds: 0,
+    port: '0',
+    target: '',
+    sourceLocation: '',
+    printHelp: false,
+  });
 };

@@ -174,7 +174,7 @@ export async function getUserFunction(
 /**
  * Returns resolved path to the module containing the user function.
  * Returns null if the module can not be identified.
- * @param codeLocation Directory with user's code.
+ * @param codeLocation - Directory with user's code
  * @return Resolved path or null.
  */
 function getFunctionModulePath(codeLocation: string): string | null {

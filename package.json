@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/functions-framework",
-  "version": "3.3.0",
+  "version": "3.4.2",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=10.0.0"
@@ -52,14 +52,14 @@
   "author": "Google Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.18.20",
+    "@microsoft/api-extractor": "^7.43.1",
     "@types/body-parser": "1.19.5",
     "@types/minimist": "1.2.5",
     "@types/mocha": "9.1.1",
     "@types/node": "^20.11.24",
     "@types/on-finished": "2.3.4",
     "@types/semver": "^7.3.6",
-    "@types/sinon": "^10.0.0",
+    "@types/sinon": "^17.0.0",
     "@types/supertest": "2.0.16",
     "gts": "5.3.0",
     "mocha": "9.2.2",

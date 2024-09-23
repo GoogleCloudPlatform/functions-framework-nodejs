@@ -62,8 +62,8 @@ const CE_SERVICE_TO_RESOURCE_RE = new Map([
 
 /**
  * Is this request a known GCF event that can be converted to a cloud event.
- * @param req the express request object
- * @returns true if this request can be converted to a CloudEvent
+ * @param req - The express request object
+ * @returns True if this request can be converted to a CloudEvent
  */
 const isConvertableBackgroundEvent = (req: Request): boolean => {
   const {body} = req;
@@ -79,8 +79,8 @@ const isConvertableBackgroundEvent = (req: Request): boolean => {
 
 /**
  * Convert the given HTTP request into the GCF Background Event data / context format.
- * @param body the express request object
- * @returns a marshalled background event
+ * @param body - The express request object
+ * @returns A marshalled background event
  */
 const getBackgroundEvent = (request: Request): LegacyEvent => {
   let {context} = request.body;
@@ -104,8 +104,8 @@ interface ParsedResource {
 
 /**
  * Splits a background event's resource into a CloudEvent service, resource, and subject.
- * @param context the GCF event context to parse.
- * @returns the CloudEvent service, resource and subject fields for the given GCF event context.
+ * @param context - The GCF event context to parse
+ * @returns The CloudEvent service, resource and subject fields for the given GCF event context
  */
 export const splitResource = (
   context: CloudFunctionsContext
@@ -159,9 +159,9 @@ export const splitResource = (
 /**
  * Express middleware to convert background GCF requests to Cloudevents. This enables functions
  * using the "cloudevent" signature type to accept requests from a background event producer.
- * @param req express request object
- * @param res express response object
- * @param next function used to pass control to the next middleware function in the stack
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Function used to pass control to the next middleware function in the stack
  */
 export const backgroundEventToCloudEventMiddleware = (
   req: Request,
