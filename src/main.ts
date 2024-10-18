@@ -57,15 +57,21 @@ export const main = async () => {
     const server = getServer(userFunction!, options);
     const errorHandler = new ErrorHandler(server);
     server
-      .listen(options.port, () => {
-        errorHandler.register();
-        if (process.env.NODE_ENV !== 'production') {
-          console.log('Serving function...');
-          console.log(`Function: ${options.target}`);
-          console.log(`Signature type: ${signatureType}`);
-          console.log(`URL: http://localhost:${options.port}/`);
+      .listen(
+        {
+          port: options.port,
+          host: options.host,
+        },
+        () => {
+          errorHandler.register();
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('Serving function...');
+            console.log(`Function: ${options.target}`);
+            console.log(`Signature type: ${signatureType}`);
+            console.log(`URL: http://localhost:${options.port}/`);
+          }
         }
-      })
+      )
       .setTimeout(0); // Disable automatic timeout on incoming connections.
   } catch (e) {
     if (e instanceof OptionsError) {

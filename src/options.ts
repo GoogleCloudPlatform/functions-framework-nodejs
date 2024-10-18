@@ -32,6 +32,10 @@ export interface FrameworkOptions {
    */
   port: string;
   /**
+   * The host on which this server listens for all HTTP requests.
+   */
+  host: string;
+  /**
    * The name of the function within user's node module to execute. If such a
    * function is not defined, then falls back to 'function' name.
    */
@@ -92,6 +96,7 @@ class ConfigurableOption<T> {
 }
 
 const PortOption = new ConfigurableOption('port', 'PORT', '8080');
+const HostOption = new ConfigurableOption('host', 'HOST', '127.0.0.1');
 const FunctionTargetOption = new ConfigurableOption(
   'target',
   'FUNCTION_TARGET',
@@ -185,6 +190,7 @@ export const parseOptions = (
   });
   return {
     port: PortOption.parse(argv, envVars),
+    host: HostOption.parse(argv, envVars),
     target: FunctionTargetOption.parse(argv, envVars),
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
