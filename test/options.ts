@@ -54,6 +54,7 @@ describe('parseOptions', () => {
       envVars: {},
       expectedOptions: {
         port: '8080',
+        host: '',
         target: 'function',
         sourceLocation: resolve(''),
         signatureType: 'http',
@@ -75,10 +76,13 @@ describe('parseOptions', () => {
         '--source=/source',
         '--timeout',
         '6',
+        '--host',
+        '0.0.0.0',
       ],
       envVars: {},
       expectedOptions: {
         port: '1234',
+        host: '0.0.0.0',
         target: 'helloWorld',
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
@@ -92,6 +96,7 @@ describe('parseOptions', () => {
       cliOpts: ['bin/node', '/index.js'],
       envVars: {
         PORT: '1234',
+        HOST: '0.0.0.0',
         FUNCTION_TARGET: 'helloWorld',
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
@@ -99,6 +104,7 @@ describe('parseOptions', () => {
       },
       expectedOptions: {
         port: '1234',
+        host: '0.0.0.0',
         target: 'helloWorld',
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',
@@ -119,9 +125,12 @@ describe('parseOptions', () => {
         'cloudevent',
         '--source=/source',
         '--timeout=3',
+        '--host',
+        '0.0.0.0',
       ],
       envVars: {
         PORT: '4567',
+        HOST: '127.0.0.1',
         FUNCTION_TARGET: 'fooBar',
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
@@ -129,6 +138,7 @@ describe('parseOptions', () => {
       },
       expectedOptions: {
         port: '1234',
+        host: '0.0.0.0',
         target: 'helloWorld',
         sourceLocation: resolve('/source'),
         signatureType: 'cloudevent',

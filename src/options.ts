@@ -96,7 +96,7 @@ class ConfigurableOption<T> {
 }
 
 const PortOption = new ConfigurableOption('port', 'PORT', '8080');
-const HostOption = new ConfigurableOption('host', 'HOST', '127.0.0.1');
+const HostOption = new ConfigurableOption('host', 'HOST', '');
 const FunctionTargetOption = new ConfigurableOption(
   'target',
   'FUNCTION_TARGET',

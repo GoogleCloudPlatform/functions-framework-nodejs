@@ -56,22 +56,22 @@ export const main = async () => {
     options.signatureType = signatureType;
     const server = getServer(userFunction!, options);
     const errorHandler = new ErrorHandler(server);
+    const {host, port} = options;
+
+    const serverOptions = {
+      port,
+      ...(host && {host}),
+    };
     server
-      .listen(
-        {
-          port: options.port,
-          host: options.host,
-        },
-        () => {
-          errorHandler.register();
-          if (process.env.NODE_ENV !== 'production') {
-            console.log('Serving function...');
-            console.log(`Function: ${options.target}`);
-            console.log(`Signature type: ${signatureType}`);
-            console.log(`URL: http://localhost:${options.port}/`);
-          }
+      .listen(serverOptions, () => {
+        errorHandler.register();
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('Serving function...');
+          console.log(`Function: ${options.target}`);
+          console.log(`Signature type: ${signatureType}`);
+          console.log(`URL: http://localhost:${options.port}/`);
         }
-      )
+      })
       .setTimeout(0); // Disable automatic timeout on incoming connections.
   } catch (e) {
     if (e instanceof OptionsError) {
