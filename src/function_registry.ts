@@ -18,6 +18,7 @@ import {
   HandlerFunction,
   TypedFunction,
   JsonInvocationFormat,
+  CloudEventFunctionWithCallback,
 } from './functions';
 import {SignatureType} from './types';
 
@@ -96,7 +97,7 @@ export const http = (functionName: string, handler: HttpFunction): void => {
  */
 export const cloudEvent = <T = unknown>(
   functionName: string,
-  handler: CloudEventFunction<T>
+  handler: CloudEventFunction<T> | CloudEventFunctionWithCallback<T>
 ): void => {
   register(functionName, 'cloudevent', handler);
 };
