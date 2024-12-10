@@ -5,12 +5,12 @@
 [![Node unit CI][ff_node_unit_img]][ff_node_unit_link] [![Node lint CI][ff_node_lint_img]][ff_node_lint_link] [![Node conformace CI][ff_node_conformance_img]][ff_node_conformance_link]  ![Security Scorecard](https://api.securityscorecards.dev/projects/github.com/GoogleCloudPlatform/functions-framework-nodejs/badge)
 
 An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
-for writing portable Node.js functions -- brought to you by the Google Cloud Functions team.
+for writing portable Node.js functions.
 
 The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
 
-*   [Google Cloud Functions](https://cloud.google.com/functions/)
+*   [Google Cloud Run functions](https://cloud.google.com/functions/)
 *   Your local development machine
 *   [Cloud Run](https://cloud.google.com/run/) and [Cloud Run for Anthos](https://cloud.google.com/anthos/run)
 *   [Knative](https://github.com/knative/)-based environments
@@ -156,25 +156,16 @@ command-line arguments:
 
 ## Run your function on serverless platforms
 
-### Google Cloud Functions
+### Google Cloud Run functions
 
-The
-[Node.js 10 runtime on Google Cloud Functions](https://cloud.google.com/functions/docs/concepts/nodejs-10-runtime)
-is based on the Functions Framework. On Cloud Functions, the Functions Framework
-is completely optional: if you don't add it to your `package.json`, it will be
-installed automatically.
+The [Node.JS runtime on Cloud Run functions](https://cloud.google.com/functions/docs/concepts/nodejs-runtime) utilizes the Node.JS Functions Framework. On Cloud Run functions, the Functions Framework is completely optional: if you don't add it to your `package.json`, it will be
+installed automatically. For
 
 After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
-### Cloud Run / Cloud Run for Anthos
-
-After you've written your function, added the Functions Framework and updated your `start` script in `package.json`, deploy it to Cloud Run with `gcloud run deploy`. Check out the [Cloud Run quickstart for Node.js](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs).
-
-If you want even more control over the environment, you can [deploy to Cloud Run for Anthos](https://cloud.google.com/anthos/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run for Anthos, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
-
-### Container environments based on Knative
+### Container environments based on KNative
 
 Cloud Run and Cloud Run for Anthos both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
 
@@ -201,7 +192,7 @@ For example:
   }
 ```
 
-## Enable Google Cloud Functions Events
+## Enable Google Cloud Run functions Events
 
 The Functions Framework can unmarshall incoming
 Google Cloud Functions [event](https://cloud.google.com/functions/docs/concepts/events-triggers#events) payloads to `data` and `context` objects.
