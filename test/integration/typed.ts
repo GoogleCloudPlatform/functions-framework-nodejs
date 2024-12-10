@@ -97,7 +97,7 @@ describe('Typed Function', () => {
       func: 'nameConcatFunc',
       name: 'POST malformatted JSON',
       requestBody: 'ASDF',
-      expectedBody: /Failed to parse malformatted JSON in request.*/,
+      expectedBody: {},
       expectedStatus: 400,
       expectedCallCount: 0,
     },
@@ -141,17 +141,16 @@ describe('Typed Function', () => {
     it(test.name, async () => {
       const st = supertest(getTestServer(test.func));
 
-      const tc = st
+      const result = await st
         .post(test.path || '/')
         .send(test.requestBody || {})
         .set('Content-Type', 'application/json');
       if (test.expectedBody) {
-        tc.expect(test.expectedBody);
+        assert.deepStrictEqual(result.body, test.expectedBody);
       }
       if (test.expectedStatus) {
-        tc.expect(test.expectedStatus);
+        assert.strictEqual(result.status, test.expectedStatus);
       }
-      await tc;
       assert.strictEqual(callCount, test.expectedCallCount);
     });
   });

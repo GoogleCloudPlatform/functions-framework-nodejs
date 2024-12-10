@@ -80,7 +80,7 @@ describe('wrapUserFunction', () => {
       assert.deepStrictEqual(res, response);
       done();
     }, 'http');
-    func(request, response, () => {});
+    void func(request, response, () => {});
   });
 
   it('correctly wraps an async background function', done => {
@@ -93,7 +93,7 @@ describe('wrapUserFunction', () => {
       await new Promise(resolve => setTimeout(resolve, 20));
       done();
     }, 'event');
-    func(request, response, () => {});
+    void func(request, response, () => {});
   });
 
   it('correctly wraps a background function with callback', done => {
@@ -111,7 +111,7 @@ describe('wrapUserFunction', () => {
       },
       'event'
     );
-    func(request, response, () => {});
+    void func(request, response, () => {});
   });
 
   it('correctly wraps an async CloudEvent function', done => {
@@ -126,7 +126,7 @@ describe('wrapUserFunction', () => {
       },
       'cloudevent'
     );
-    func(request, response, () => {});
+    void func(request, response, () => {});
   });
 
   it('correctly wraps a CloudEvent function with callback', done => {
@@ -143,7 +143,7 @@ describe('wrapUserFunction', () => {
       },
       'cloudevent'
     );
-    func(request, response, () => {});
+    void func(request, response, () => {});
   });
 
   describe('wraps a Typed JSON function', () => {
@@ -164,7 +164,7 @@ describe('wrapUserFunction', () => {
       const response = new ResponseMock();
       const func = wrapUserFunction(synchronousJsonFunction, 'typed');
 
-      func(request, response as unknown as Response, () => {});
+      void func(request, response as unknown as Response, () => {});
 
       response.on('done', () => {
         assert.strictEqual(response.statusCode, 200);
@@ -184,7 +184,7 @@ describe('wrapUserFunction', () => {
       const response = new ResponseMock();
       const func = wrapUserFunction(synchronousJsonFunction, 'typed');
 
-      func(request, response as unknown as Response, () => {});
+      void func(request, response as unknown as Response, () => {});
 
       response.on('done', () => {
         assert.strictEqual(response.statusCode, 400);
@@ -210,7 +210,7 @@ describe('wrapUserFunction', () => {
       const response = new ResponseMock();
       const func = wrapUserFunction(typedFn, 'typed');
 
-      func(request, response as unknown as Response, () => {});
+      void func(request, response as unknown as Response, () => {});
 
       response.on('done', () => {
         assert.strictEqual(response.statusCode, 200);
@@ -241,7 +241,7 @@ describe('wrapUserFunction', () => {
       const response = new ResponseMock();
       const func = wrapUserFunction(typedFn, 'typed');
 
-      func(request, response as unknown as Response, () => {});
+      void func(request, response as unknown as Response, () => {});
 
       response.on('done', () => {
         assert.strictEqual(response.statusCode, 500);

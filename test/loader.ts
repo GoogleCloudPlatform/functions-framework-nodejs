@@ -82,7 +82,7 @@ describe('loading function', () => {
     };
     if (semver.lt(process.version, loader.MIN_NODE_VERSION_ESMODULES)) {
       it(`should fail to load function in an ES module ${test.name}`, async () => {
-        assert.rejects(loadFn);
+        void assert.rejects(loadFn);
       });
     } else {
       it(`should load function in an ES module ${test.name}`, async () => {

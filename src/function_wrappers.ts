@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// eslint-disable-next-line node/no-deprecated-api
+// eslint-disable-next-line n/no-deprecated-api
 import * as domain from 'domain';
 import {Request, Response, RequestHandler} from 'express';
 import {sendCrashResponse} from './logger';
@@ -231,6 +231,7 @@ const wrapTypedFunction = (typedFunction: TypedFunction): RequestHandler => {
       resTyped = await resTyped;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     typedFunction.format.serializeResponse(
       new InvocationResponseImpl(res),
       resTyped
