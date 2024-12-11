@@ -1,7 +1,7 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.43.1",
+    "toolVersion": "7.48.0",
     "schemaVersion": 1011,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
@@ -1846,7 +1846,7 @@
                 {
                   "kind": "Reference",
                   "text": "AbortController",
-                  "canonicalReference": "!AbortController:interface"
+                  "canonicalReference": "@types/node!__global.AbortController:interface"
                 },
                 {
                   "kind": "Content",

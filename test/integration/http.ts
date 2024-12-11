@@ -82,7 +82,7 @@ describe('HTTP Function', () => {
       name: 'GET favicon.ico',
       httpVerb: 'GET',
       path: '/favicon.ico',
-      expectedBody: '',
+      expectedBody: {},
       expectedStatus: 404,
       expectedCallCount: 0,
     },
@@ -90,7 +90,7 @@ describe('HTTP Function', () => {
       name: 'with robots.txt',
       httpVerb: 'GET',
       path: '/robots.txt',
-      expectedBody: '',
+      expectedBody: {},
       expectedStatus: 404,
       expectedCallCount: 0,
     },
@@ -99,14 +99,15 @@ describe('HTTP Function', () => {
   testData.forEach(test => {
     it(test.name, async () => {
       const st = supertest(getTestServer('testHttpFunction'));
-      await (test.httpVerb === 'GET'
-        ? st.get(test.path)
-        : st.post(test.path).send({text: 'hello'})
-      )
-        .set('Content-Type', 'application/json')
-        .expect(test.expectedBody)
-        .expect(test.expectedStatus)
-        .expect(res => assert(!res.get('etag')));
+      const response = await (
+        test.httpVerb === 'GET'
+          ? st.get(test.path)
+          : st.post(test.path).send({text: 'hello'})
+      ).set('Content-Type', 'application/json');
+
+      assert.deepStrictEqual(response.body, test.expectedBody);
+      assert.strictEqual(response.status, test.expectedStatus);
+      assert.equal(response.get('etag'), null);
       assert.strictEqual(callCount, test.expectedCallCount);
     });
   });

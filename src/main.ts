@@ -13,6 +13,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/* eslint-disable n/no-process-exit */
 
 // Functions framework entry point that configures and starts Node.js server
 // that runs user's code on HTTP request.
@@ -78,4 +79,4 @@ export const main = async () => {
 };
 
 // Call the main method to load the user code and start the http server.
-main();
+void main();

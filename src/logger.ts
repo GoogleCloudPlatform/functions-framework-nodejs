@@ -92,16 +92,18 @@ function interceptStderrWrite() {
 }
 
 export const errorHandler = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: Error | any,
-  req: express.Request,
+  req: express.Request, // eslint-disable-line @typescript-eslint/no-unused-vars
   res: express.Response,
-  next: express.NextFunction
+  next: express.NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
   interceptStderrWrite();
   res.status(500);
   res.render('error', {error: err});
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function splitArgs(args: any[]) {
   let encoding, cb;
   if (
@@ -159,6 +161,7 @@ function getTextWithContext(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getJSONWithContext(json: any, context: ExecutionContext) {
   if (EXECUTION_CONTEXT_LABELS_KEY in json) {
     json[EXECUTION_CONTEXT_LABELS_KEY]['execution_id'] = context.executionId;

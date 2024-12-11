@@ -1,4 +1,4 @@
-/* eslint-disable node/no-missing-require */
+/* eslint-disable n/no-missing-require */
 const fs = require('fs');
 const functions = require('@google-cloud/functions-framework');
 const fileName = 'function_output.json';
