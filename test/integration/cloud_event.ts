@@ -336,7 +336,6 @@ describe('CloudEvent Function', () => {
       .expect(204);
   });
 
-
   it('returns a 500 if the function throws an exception', async () => {
     functions.cloudEvent('testTypedCloudEvent', () => {
       throw 'I crashed';

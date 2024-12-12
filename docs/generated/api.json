@@ -204,6 +204,15 @@
             },
             {
               "kind": "Content",
+              "text": "<T> | "
+            },
+            {
+              "kind": "Reference",
+              "text": "CloudEventFunctionWithCallback",
+              "canonicalReference": "@google-cloud/functions-framework!CloudEventFunctionWithCallback:interface"
+            },
+            {
+              "kind": "Content",
               "text": "<T>"
             },
             {
@@ -217,8 +226,8 @@
           ],
           "fileUrlPath": "src/function_registry.ts",
           "returnTypeTokenRange": {
-            "startIndex": 8,
-            "endIndex": 9
+            "startIndex": 10,
+            "endIndex": 11
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -235,7 +244,7 @@
               "parameterName": "handler",
               "parameterTypeTokenRange": {
                 "startIndex": 5,
-                "endIndex": 7
+                "endIndex": 9
               },
               "isOptional": false
             }
