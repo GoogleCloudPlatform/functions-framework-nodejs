@@ -41,9 +41,12 @@ describe('CloudEvent Function', () => {
 
   let receivedCloudEvent: functions.CloudEvent<unknown> | null;
   before(() => {
-    functions.cloudEvent('testCloudEventFunction', ce => {
-      receivedCloudEvent = ce;
-    });
+    functions.cloudEvent(
+      'testCloudEventFunction',
+      (ce: functions.CloudEvent<unknown>) => {
+        receivedCloudEvent = ce;
+      }
+    );
   });
 
   beforeEach(() => {
@@ -288,11 +291,39 @@ describe('CloudEvent Function', () => {
     const testPayload = 'a test string';
 
     // register a strongly typed CloudEvent function
-    functions.cloudEvent<string>('testTypedCloudEvent', ce => {
-      assert.deepStrictEqual(ce.data, testPayload);
-      // use a property that proves this is actually typed as a string
-      assert.deepStrictEqual(ce.data.length, testPayload.length);
-    });
+    functions.cloudEvent<string>(
+      'testTypedCloudEvent',
+      (ce: functions.CloudEvent<string>) => {
+        assert.deepStrictEqual(ce.data, testPayload);
+        // use a property that proves this is actually typed as a string
+        assert.deepStrictEqual(ce.data.length, testPayload.length);
+      }
+    );
+
+    // invoke the function with a CloudEvent with a string payload
+    const server = getTestServer('testTypedCloudEvent');
+    await supertest(server)
+      .post('/')
+      .send({
+        ...TEST_CLOUD_EVENT,
+        data: testPayload,
+      })
+      .expect(204);
+  });
+
+  it('allows customers to use a handler with callbacks for failure', async () => {
+    const testPayload = 'a test string';
+
+    // register a strongly typed CloudEvent function
+    functions.cloudEvent<string>(
+      'testTypedCloudEvent',
+      (ce: functions.CloudEvent<string>, callback) => {
+        assert.deepStrictEqual(ce.data, testPayload);
+        // use a property that proves this is actually typed as a string
+        assert.deepStrictEqual(ce.data.length, testPayload.length);
+        callback();
+      }
+    );
 
     // invoke the function with a CloudEvent with a string payload
     const server = getTestServer('testTypedCloudEvent');

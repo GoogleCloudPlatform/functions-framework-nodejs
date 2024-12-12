@@ -6,9 +6,12 @@ import {
 import {Request, Response} from '../src/functions';
 import {NextFunction} from 'express';
 import * as assert from 'assert';
+import * as semver from 'semver';
+
+const runOrSkip = semver.lt(process.versions.node, '13.0.0') ? it.skip : it;
 
 describe('asyncLocalStorageMiddleware', () => {
-  it('async local storage', () => {
+  runOrSkip('async local storage', async () => {
     const req = {
       body: 'test body',
       executionId: 'testExecutionId',
@@ -25,7 +28,7 @@ describe('asyncLocalStorageMiddleware', () => {
       assert.strictEqual(executionContext.traceId, req.traceId);
     };
 
-    asyncLocalStorageMiddleware(
+    await asyncLocalStorageMiddleware(
       req as Request,
       {} as Response,
       next as NextFunction
