@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.4](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.3...v3.4.4) (2024-12-19)
+
+
+### Bug Fixes
+
+* do not call render in the errorHandler ([#665](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/665)) ([9206893](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/920689311c7441a6fe15bbddc9a566a4543e2d49))
+
 ## [3.4.3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.2...v3.4.3) (2024-12-12)
 
 
