@@ -99,8 +99,7 @@ export const errorHandler = (
   next: express.NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
   interceptStderrWrite();
-  res.status(500);
-  res.render('error', {error: err});
+  sendCrashResponse({err, res});
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
