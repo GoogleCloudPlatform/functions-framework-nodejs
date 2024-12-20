@@ -57,8 +57,14 @@ export const main = async () => {
     options.signatureType = signatureType;
     const server = getServer(userFunction!, options);
     const errorHandler = new ErrorHandler(server);
+    const {host, port} = options;
+
+    const serverOptions = {
+      port,
+      ...(host && {host}),
+    };
     server
-      .listen(options.port, () => {
+      .listen(serverOptions, () => {
         errorHandler.register();
         if (process.env.NODE_ENV !== 'production') {
           console.log('Serving function...');
