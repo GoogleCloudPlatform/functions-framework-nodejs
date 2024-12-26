@@ -28,8 +28,7 @@ export const executionContextMiddleware = (
   if (cloudTraceContext) {
     const match = cloudTraceContext.match(TRACE_CONTEXT_PATTERN);
     if (match?.groups) {
-      const {traceId, spanId} = match.groups;
-      req.spanId = spanId;
+      req.spanId = match.groups.spanId;
     }
   }
   next();

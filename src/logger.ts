@@ -164,10 +164,10 @@ function getJSONWithContext(json: any, context: ExecutionContext) {
   } else {
     json[EXECUTION_CONTEXT_LABELS_KEY] = {execution_id: context.executionId};
   }
-  return {
-    ...json,
-    [EXECUTION_CONTEXT_SPAN_ID_KEY]: context.spanId,
-  };
+  if (!(EXECUTION_CONTEXT_SPAN_ID_KEY in json)) {
+    json[EXECUTION_CONTEXT_SPAN_ID_KEY] = context.spanId;
+  }
+  return json;
 }
 
 function processData(data: Uint8Array | string, encoding?: BufferEncoding) {

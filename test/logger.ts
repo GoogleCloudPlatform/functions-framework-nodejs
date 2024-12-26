@@ -106,6 +106,25 @@ describe('getModifiedData', () => {
     assert.equal(modifiedData, expectedOutput);
   });
 
+  it('json with user span id', () => {
+    const data = JSON.stringify({
+      text: 'default text.',
+      component: 'arbitrary-property',
+      'logging.googleapis.com/spanId': 'mySpanId',
+    });
+    const expectedOutput =
+      JSON.stringify({
+        text: 'default text.',
+        component: 'arbitrary-property',
+        'logging.googleapis.com/spanId': 'mySpanId',
+        'logging.googleapis.com/labels': {
+          execution_id: 'testExecutionId',
+        },
+      }) + '\n';
+    const modifiedData = getModifiedData(data);
+    assert.equal(modifiedData, expectedOutput);
+  });
+
   it('uint8array', () => {
     const modifiedData = getModifiedData(sampleUint8Arr);
     assert.equal(modifiedData, expectedTextOutput);
