@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.4...v3.4.5) (2024-12-26)
+
+
+### Bug Fixes
+
+* fix trace context pattern, remove trace id and respect logging span id field. ([#667](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/667)) ([0fb00a5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/0fb00a5a548555376b3ac81b2393a6f878b18a03))
+
 ## [3.4.4](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.3...v3.4.4) (2024-12-19)
 
 
