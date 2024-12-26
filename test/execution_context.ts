@@ -19,13 +19,15 @@ describe('executionContextMiddleware', () => {
   const testSpanId = '123';
   const testTrace = 'testtrace';
   const validExecutionId = 'xn1h9xdgv6zw';
-  const headers = {
-    'X-Cloud-Trace-Context': `${testTrace}/${testSpanId};o=1`,
-    'function-execution-id': validExecutionId,
-  };
 
   it('uses execution ID in header', () => {
-    const req = createRequest({}, headers);
+    const req = createRequest(
+      {},
+      {
+        'X-Cloud-Trace-Context': `${testTrace}/${testSpanId};o=1`,
+        'function-execution-id': validExecutionId,
+      }
+    );
 
     executionContextMiddleware(req as Request, {} as Response, next);
 
@@ -34,7 +36,10 @@ describe('executionContextMiddleware', () => {
   });
 
   it('generates execution ID if not in header', () => {
-    const req = createRequest({}, headers);
+    const req = createRequest(
+      {},
+      {'X-Cloud-Trace-Context': `${testTrace}/${testSpanId}`}
+    );
 
     executionContextMiddleware(req as Request, {} as Response, next);
 
