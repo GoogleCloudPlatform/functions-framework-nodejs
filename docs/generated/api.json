@@ -1952,33 +1952,6 @@
                 "startIndex": 1,
                 "endIndex": 2
               }
-            },
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "@google-cloud/functions-framework!Request_2#traceId:member",
-              "docComment": "/**\n * Cloud Trace trace ID.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "traceId?: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "string"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isReadonly": false,
-              "isOptional": true,
-              "releaseTag": "Public",
-              "name": "traceId",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
             }
           ],
           "extendsTokenRanges": [
