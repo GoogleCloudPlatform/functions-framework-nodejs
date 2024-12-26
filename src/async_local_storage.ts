@@ -6,7 +6,6 @@ import type {AsyncLocalStorage} from 'node:async_hooks';
 
 export interface ExecutionContext {
   executionId?: string;
-  traceId?: string;
   spanId?: string;
 }
 
@@ -32,7 +31,6 @@ export async function asyncLocalStorageMiddleware(
   asyncLocalStorage.run(
     {
       executionId: req.executionId,
-      traceId: req.traceId,
       spanId: req.spanId,
     },
     () => {

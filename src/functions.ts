@@ -37,10 +37,6 @@ export interface Request extends ExpressRequest {
    */
   executionId?: string;
   /**
-   * Cloud Trace trace ID.
-   */
-  traceId?: string;
-  /**
    * Cloud Trace span ID.
    */
   spanId?: string;

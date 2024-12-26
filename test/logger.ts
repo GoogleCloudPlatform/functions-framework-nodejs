@@ -47,14 +47,12 @@ describe('getModifiedData', () => {
   const sampleUint8Arr = new Uint8Array(Buffer.from(sampleText));
   const expectedExecutionContext = {
     executionId: 'testExecutionId',
-    traceId: 'testTraceId',
     spanId: 'testSpanId',
   };
   const expectedMetadata = {
     'logging.googleapis.com/labels': {
       execution_id: 'testExecutionId',
     },
-    'logging.googleapis.com/trace': 'testTraceId',
     'logging.googleapis.com/spanId': 'testSpanId',
   };
   const expectedTextOutput =
@@ -102,8 +100,26 @@ describe('getModifiedData', () => {
           user_label_1: 'value_1',
           execution_id: 'testExecutionId',
         },
-        'logging.googleapis.com/trace': 'testTraceId',
         'logging.googleapis.com/spanId': 'testSpanId',
+      }) + '\n';
+    const modifiedData = getModifiedData(data);
+    assert.equal(modifiedData, expectedOutput);
+  });
+
+  it('json with user span id', () => {
+    const data = JSON.stringify({
+      text: 'default text.',
+      component: 'arbitrary-property',
+      'logging.googleapis.com/spanId': 'mySpanId',
+    });
+    const expectedOutput =
+      JSON.stringify({
+        text: 'default text.',
+        component: 'arbitrary-property',
+        'logging.googleapis.com/spanId': 'mySpanId',
+        'logging.googleapis.com/labels': {
+          execution_id: 'testExecutionId',
+        },
       }) + '\n';
     const modifiedData = getModifiedData(data);
     assert.equal(modifiedData, expectedOutput);
