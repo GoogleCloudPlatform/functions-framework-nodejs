@@ -5,7 +5,7 @@ const FUNCTION_EXECUTION_ID_HEADER_KEY = 'function-execution-id';
 const TRACE_CONTEXT_HEADER_KEY = 'X-Cloud-Trace-Context';
 
 const TRACE_CONTEXT_PATTERN =
-  /^(?<traceId>\w+)\/(?<spanId>\d+);o=(?<options>.+)$/;
+  /^(?<traceId>\w+)\/(?<spanId>\d+)(?:;o=(?<options>.+))?$/;
 
 function generateExecutionId() {
   const timestampPart = Date.now().toString(36).slice(-6);
@@ -29,7 +29,6 @@ export const executionContextMiddleware = (
     const match = cloudTraceContext.match(TRACE_CONTEXT_PATTERN);
     if (match?.groups) {
       const {traceId, spanId} = match.groups;
-      req.traceId = traceId;
       req.spanId = spanId;
     }
   }

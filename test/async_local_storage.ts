@@ -15,7 +15,6 @@ describe('asyncLocalStorageMiddleware', () => {
     const req = {
       body: 'test body',
       executionId: 'testExecutionId',
-      traceId: 'testtrace',
       spanId: 'testSpanId',
     };
     let executionContext;
@@ -25,7 +24,6 @@ describe('asyncLocalStorageMiddleware', () => {
       assert(executionContext);
       assert.strictEqual(executionContext.executionId, req.executionId);
       assert.strictEqual(executionContext.spanId, req.spanId);
-      assert.strictEqual(executionContext.traceId, req.traceId);
     };
 
     await asyncLocalStorageMiddleware(

@@ -18,7 +18,6 @@ import {getCurrentContext, ExecutionContext} from './async_local_storage';
 import {Buffer} from 'buffer';
 
 export const EXECUTION_CONTEXT_LABELS_KEY = 'logging.googleapis.com/labels';
-export const EXECUTION_CONTEXT_TRACE_KEY = 'logging.googleapis.com/trace';
 export const EXECUTION_CONTEXT_SPAN_ID_KEY = 'logging.googleapis.com/spanId';
 const SEVERITY = 'severity';
 
@@ -132,7 +131,6 @@ export function getModifiedData(
   let dataWithContext: {
     message: string | Uint8Array;
     'logging.googleapis.com/labels': {execution_id: string | undefined};
-    'logging.googleapis.com/trace': string | undefined;
     'logging.googleapis.com/spanId': string | undefined;
     severity?: string | undefined;
   };
@@ -155,7 +153,6 @@ function getTextWithContext(
   return {
     message: data,
     [EXECUTION_CONTEXT_LABELS_KEY]: {execution_id: context.executionId},
-    [EXECUTION_CONTEXT_TRACE_KEY]: context.traceId,
     [EXECUTION_CONTEXT_SPAN_ID_KEY]: context.spanId,
   };
 }
@@ -169,7 +166,6 @@ function getJSONWithContext(json: any, context: ExecutionContext) {
   }
   return {
     ...json,
-    [EXECUTION_CONTEXT_TRACE_KEY]: context.traceId,
     [EXECUTION_CONTEXT_SPAN_ID_KEY]: context.spanId,
   };
 }

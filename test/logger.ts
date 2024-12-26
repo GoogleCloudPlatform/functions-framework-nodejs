@@ -47,14 +47,12 @@ describe('getModifiedData', () => {
   const sampleUint8Arr = new Uint8Array(Buffer.from(sampleText));
   const expectedExecutionContext = {
     executionId: 'testExecutionId',
-    traceId: 'testTraceId',
     spanId: 'testSpanId',
   };
   const expectedMetadata = {
     'logging.googleapis.com/labels': {
       execution_id: 'testExecutionId',
     },
-    'logging.googleapis.com/trace': 'testTraceId',
     'logging.googleapis.com/spanId': 'testSpanId',
   };
   const expectedTextOutput =
@@ -102,7 +100,6 @@ describe('getModifiedData', () => {
           user_label_1: 'value_1',
           execution_id: 'testExecutionId',
         },
-        'logging.googleapis.com/trace': 'testTraceId',
         'logging.googleapis.com/spanId': 'testSpanId',
       }) + '\n';
     const modifiedData = getModifiedData(data);

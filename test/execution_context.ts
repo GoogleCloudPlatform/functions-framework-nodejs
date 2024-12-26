@@ -31,7 +31,6 @@ describe('executionContextMiddleware', () => {
 
     assert.strictEqual(req.executionId, validExecutionId);
     assert.strictEqual(req.spanId, testSpanId);
-    assert.strictEqual(req.traceId, testTrace);
   });
 
   it('generates execution ID if not in header', () => {
@@ -41,7 +40,6 @@ describe('executionContextMiddleware', () => {
 
     assert(req.executionId);
     assert.strictEqual(req.spanId, testSpanId);
-    assert.strictEqual(req.traceId, testTrace);
   });
 
   it('req trace undefined if not in header', () => {
@@ -51,6 +49,5 @@ describe('executionContextMiddleware', () => {
 
     assert(req.executionId);
     assert.strictEqual(req.spanId, undefined);
-    assert.strictEqual(req.traceId, undefined);
   });
 });
