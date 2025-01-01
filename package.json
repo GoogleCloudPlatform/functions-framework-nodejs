@@ -55,7 +55,7 @@
     "@microsoft/api-extractor": "^7.48.0",
     "@types/body-parser": "1.19.5",
     "@types/minimist": "1.2.5",
-    "@types/mocha": "^9.1.1",
+    "@types/mocha": "^10.0.0",
     "@types/node": "^22.10.1",
     "@types/on-finished": "2.3.4",
     "@types/semver": "^7.5.8",
