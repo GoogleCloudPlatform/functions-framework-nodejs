@@ -37,6 +37,7 @@ const testOptions = {
   enableExecutionId: false,
   timeoutMilliseconds: 0,
   port: '0',
+  host: '',
   target: '',
   sourceLocation: '',
   printHelp: false,
