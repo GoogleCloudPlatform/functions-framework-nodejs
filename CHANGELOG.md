@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.4.6](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.5...v3.4.6) (2025-03-04)
+
+
+### Bug Fixes
+
+* remove logger.errorHandler. ([#676](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/676)) ([a5394d5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/a5394d56dfd4f6044f2a55dcd423155ce9069b77))
+
 ## [3.4.5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.4...v3.4.5) (2024-12-26)
 
 
