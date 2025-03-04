@@ -25,7 +25,6 @@ import {timeoutMiddleware} from './middleware/timeout';
 import {wrapUserFunction} from './function_wrappers';
 import {asyncLocalStorageMiddleware} from './async_local_storage';
 import {executionContextMiddleware} from './execution_context';
-import {errorHandler} from './logger';
 import {FrameworkOptions} from './options';
 
 /**
@@ -159,11 +158,6 @@ export function getServer(
     app.all('/*', requestHandler);
   } else {
     app.post('/*', requestHandler);
-  }
-
-  // Error Handler
-  if (options.enableExecutionId) {
-    app.use(errorHandler);
   }
 
   return http.createServer(app);
