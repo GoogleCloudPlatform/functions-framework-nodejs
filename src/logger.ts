@@ -90,17 +90,6 @@ function interceptStderrWrite() {
   };
 }
 
-export const errorHandler = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  err: Error | any,
-  req: express.Request, // eslint-disable-line @typescript-eslint/no-unused-vars
-  res: express.Response,
-  next: express.NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
-) => {
-  interceptStderrWrite();
-  sendCrashResponse({err, res});
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function splitArgs(args: any[]) {
   let encoding, cb;
