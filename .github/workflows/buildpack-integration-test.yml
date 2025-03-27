@@ -14,46 +14,6 @@ on:
 permissions: read-all
 
 jobs:
-  nodejs10:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
-    with:
-      http-builder-source: 'test/conformance'
-      http-builder-target: 'writeHttpDeclarative'
-      cloudevent-builder-source: 'test/conformance'
-      cloudevent-builder-target: 'writeCloudEventDeclarative'
-      prerun: 'test/conformance/prerun.sh'
-      builder-runtime: 'nodejs10'
-      builder-runtime-version: '10'
-  nodejs12:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
-    with:
-      http-builder-source: 'test/conformance'
-      http-builder-target: 'writeHttpDeclarative'
-      cloudevent-builder-source: 'test/conformance'
-      cloudevent-builder-target: 'writeCloudEventDeclarative'
-      prerun: 'test/conformance/prerun.sh'
-      builder-runtime: 'nodejs12'
-      builder-runtime-version: '12'
-  nodejs14:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
-    with:
-      http-builder-source: 'test/conformance'
-      http-builder-target: 'writeHttpDeclarative'
-      cloudevent-builder-source: 'test/conformance'
-      cloudevent-builder-target: 'writeCloudEventDeclarative'
-      prerun: 'test/conformance/prerun.sh'
-      builder-runtime: 'nodejs14'
-      builder-runtime-version: '14'
-  nodejs16:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
-    with:
-      http-builder-source: 'test/conformance'
-      http-builder-target: 'writeHttpDeclarative'
-      cloudevent-builder-source: 'test/conformance'
-      cloudevent-builder-target: 'writeCloudEventDeclarative'
-      prerun: 'test/conformance/prerun.sh'
-      builder-runtime: 'nodejs16'
-      builder-runtime-version: '16'
   nodejs18:
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
@@ -64,6 +24,7 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs18'
       builder-runtime-version: '18'
+      builder-url: 'us-docker.pkg.dev/serverless-runtimes/google-22-full/builder/nodejs:latest'
   nodejs20:
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
@@ -74,3 +35,15 @@ jobs:
       prerun: 'test/conformance/prerun.sh'
       builder-runtime: 'nodejs20'
       builder-runtime-version: '20'
+      builder-url: 'us-docker.pkg.dev/serverless-runtimes/google-22-full/builder/nodejs:latest'
+  nodejs22:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
+    with:
+      http-builder-source: 'test/conformance'
+      http-builder-target: 'writeHttpDeclarative'
+      cloudevent-builder-source: 'test/conformance'
+      cloudevent-builder-target: 'writeCloudEventDeclarative'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'nodejs22'
+      builder-runtime-version: '22'
+      builder-url: 'us-docker.pkg.dev/serverless-runtimes/google-22-full/builder/nodejs:latest'
