@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.5.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.5.0...v3.5.1) (2025-03-27)
+
+
+### Bug Fixes
+
+* correct handling of IGNORED_ROUTES set to empty ([4799207](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/4799207fa637b447e8f5fae2237c4294a90ff56f))
+
 ## [3.5.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.6...v3.5.0) (2025-03-27)
 
 
