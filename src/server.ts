@@ -136,10 +136,13 @@ export function getServer(
   }
   if (options.ignoredRoutes !== null) {
     // Ignored routes is a configuration option that allows requests to specific paths to be prevented
-    // from invoking the user's function.
-    app.use(options.ignoredRoutes, (req, res) => {
-      res.status(404).send(null);
-    });
+    // from invoking the user's function. An empty string indicates that no routes should be filtered.
+    if (options.ignoredRoutes.trim() !== '') {
+      // Any non-empty string is the used a route expression to return 404 for.
+      app.use(options.ignoredRoutes, (req, res) => {
+        res.status(404).send(null);
+      });
+    }
   } else if (options.signatureType === 'http') {
     // We configure some default ignored routes, only for HTTP functions.
     app.use('/favicon.ico|/robots.txt', (req, res) => {
