@@ -134,14 +134,23 @@ export function getServer(
   if (options.signatureType === 'cloudevent') {
     app.use(backgroundEventToCloudEventMiddleware);
   }
-
-  if (options.signatureType === 'http') {
-    app.use('/favicon.ico|/robots.txt', (req, res) => {
-      // Neither crawlers nor browsers attempting to pull the icon find the body
-      // contents particularly useful, so we send nothing in the response body.
+  if (options.ignoredRoutes !== null) {
+    // Ignored routes is a configuration option that allows requests to specific paths to be prevented
+    // from invoking the user's function.
+    app.use(options.ignoredRoutes, (req, res) => {
       res.status(404).send(null);
     });
+  } else if (options.signatureType === 'http') {
+    // We configure some default ignored routes, only for HTTP functions.
+    app.use('/favicon.ico|/robots.txt', (req, res) => {
+      // Neither crawlers nor browsers attempting to pull the icon find the body
+      // contents particularly useful, so we filter these requests out from invoking
+      // the user's function by default.
+      res.status(404).send(null);
+    });
+  }
 
+  if (options.signatureType === 'http') {
     app.use('/*', (req, res, next) => {
       onFinished(res, (err, res) => {
         res.locals.functionExecutionFinished = true;

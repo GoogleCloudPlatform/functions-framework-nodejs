@@ -56,5 +56,6 @@ export const getTestServer = (functionName: string): Server => {
     target: '',
     sourceLocation: '',
     printHelp: false,
+    ignoredRoutes: null,
   });
 };

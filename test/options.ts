@@ -60,6 +60,7 @@ describe('parseOptions', () => {
         printHelp: false,
         enableExecutionId: false,
         timeoutMilliseconds: 0,
+        ignoredRoutes: null,
       },
     },
     {
@@ -75,6 +76,7 @@ describe('parseOptions', () => {
         '--source=/source',
         '--timeout',
         '6',
+        '--ignored-routes=banana',
       ],
       envVars: {},
       expectedOptions: {
@@ -85,6 +87,7 @@ describe('parseOptions', () => {
         printHelp: false,
         enableExecutionId: false,
         timeoutMilliseconds: 6000,
+        ignoredRoutes: 'banana',
       },
     },
     {
@@ -96,6 +99,7 @@ describe('parseOptions', () => {
         FUNCTION_SIGNATURE_TYPE: 'cloudevent',
         FUNCTION_SOURCE: '/source',
         CLOUD_RUN_TIMEOUT_SECONDS: '2',
+        IGNORED_ROUTES: '',
       },
       expectedOptions: {
         port: '1234',
@@ -105,6 +109,7 @@ describe('parseOptions', () => {
         printHelp: false,
         enableExecutionId: false,
         timeoutMilliseconds: 2000,
+        ignoredRoutes: '',
       },
     },
     {
@@ -119,6 +124,7 @@ describe('parseOptions', () => {
         'cloudevent',
         '--source=/source',
         '--timeout=3',
+        '--ignored-routes=avocado',
       ],
       envVars: {
         PORT: '4567',
@@ -126,6 +132,7 @@ describe('parseOptions', () => {
         FUNCTION_SIGNATURE_TYPE: 'event',
         FUNCTION_SOURCE: '/somewhere/else',
         CLOUD_RUN_TIMEOUT_SECONDS: '5',
+        IGNORED_ROUTES: 'banana',
       },
       expectedOptions: {
         port: '1234',
@@ -135,6 +142,7 @@ describe('parseOptions', () => {
         printHelp: false,
         enableExecutionId: false,
         timeoutMilliseconds: 3000,
+        ignoredRoutes: 'avocado',
       },
     },
   ];

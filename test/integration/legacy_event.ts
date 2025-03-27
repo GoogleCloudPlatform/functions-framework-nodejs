@@ -40,6 +40,7 @@ const testOptions = {
   target: '',
   sourceLocation: '',
   printHelp: false,
+  ignoredRoutes: null,
 };
 
 describe('Event Function', () => {
