@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [3.5.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.6...v3.5.0) (2025-03-27)
+
+
+### Features
+
+* adds a new ignored-routes config option ([70f68e9](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/70f68e9d0b4fa1db6345ab012ddfec0fd983f762))
+
+
+### Bug Fixes
+
+* **deps:** downgrade @types/express to v4 ([d40a514](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/d40a5149bd4302ecb293101a18f0eaa552ddfc7c))
+
 ## [3.4.6](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.4.5...v3.4.6) (2025-03-04)
 
 
