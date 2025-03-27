@@ -182,6 +182,7 @@ ignored.
 | `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` or `cloudevent` |
 | `--source`         | `FUNCTION_SOURCE`         | The path to the directory of your function. Default: `cwd` (the current working directory)                                                                                                                       |
 | `--log-execution-id`| `LOG_EXECUTION_ID`        | Enables execution IDs in logs, either `true` or `false`. When not specified, default to disable. Requires Node.js 13.0.0 or later.                                                                                |
+| `--ignored-routes`| `IGNORED_ROUTES`        | A route expression for requests that should not be routed the function. An empty 404 response will be returned. This is set to `/favicon.ico|/robots.txt` by default for `http` functions.                                                     |
 
 You can set command-line flags in your `package.json` via the `start` script.
 For example:

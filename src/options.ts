@@ -56,6 +56,10 @@ export interface FrameworkOptions {
    * The request timeout.
    */
   timeoutMilliseconds: number;
+  /**
+   * Routes that should return a 404 without invoking the function.
+   */
+  ignoredRoutes: string | null;
 }
 
 /**
@@ -86,7 +90,7 @@ class ConfigurableOption<T> {
 
   parse(cliArgs: minimist.ParsedArgs, envVars: NodeJS.ProcessEnv): T {
     return this.validator(
-      cliArgs[this.cliOption] || envVars[this.envVar] || this.defaultValue
+      cliArgs[this.cliOption] ?? envVars[this.envVar] ?? this.defaultValue
     );
   }
 }
@@ -129,6 +133,11 @@ const TimeoutOption = new ConfigurableOption(
     }
     return x * 1000;
   }
+);
+const IgnoredRoutesOption = new ConfigurableOption<string | null>(
+  'ignored-routes',
+  'IGNORED_ROUTES',
+  null // null by default so we can detect if it is explicitly set to ""
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
@@ -181,6 +190,7 @@ export const parseOptions = (
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
       TimeoutOption.cliOption,
+      IgnoredRoutesOption.cliOption,
     ],
   });
   return {
@@ -191,5 +201,6 @@ export const parseOptions = (
     timeoutMilliseconds: TimeoutOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
     enableExecutionId: ExecutionIdOption.parse(argv, envVars),
+    ignoredRoutes: IgnoredRoutesOption.parse(argv, envVars),
   };
 };
