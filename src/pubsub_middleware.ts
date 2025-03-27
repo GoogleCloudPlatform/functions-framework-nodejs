@@ -118,7 +118,7 @@ const extractPubSubTopic = (path: string): string | null => {
   console.warn('Failed to extract the topic name from the URL path.');
   console.warn(
     "Configure your subscription's push endpoint to use the following path: ",
-    'projects/PROJECT_NAME/topics/TOPIC_NAME'
+    'projects/PROJECT_NAME/topics/TOPIC_NAME',
   );
   return null;
 };
@@ -131,7 +131,7 @@ const extractPubSubTopic = (path: string): string | null => {
  */
 const marshalPubSubRequestBody = (
   body: RawPubSubBody,
-  path: string
+  path: string,
 ): MarshalledPubSubBody => ({
   context: {
     eventId: body.message.messageId,
@@ -160,7 +160,7 @@ const marshalPubSubRequestBody = (
 export const legacyPubSubEventMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const {body, path} = req;
   if (isRawPubSubRequestBody(body) && !isBinaryCloudEvent(req)) {

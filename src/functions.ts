@@ -88,25 +88,15 @@ export interface CloudEventFunctionWithCallback<T = unknown> {
 }
 
 /**
- * A Typed function handler that may return a value or a promise.
- * @public
- */
-export interface TypedFunction<T = unknown, U = unknown> {
-  handler: (req: T) => U | Promise<U>;
-  format: InvocationFormat<T, U>;
-}
-
-/**
  * A function handler.
  * @public
  */
-export type HandlerFunction<T = unknown, U = unknown> =
+export type HandlerFunction<T = unknown> =
   | HttpFunction
   | EventFunction
   | EventFunctionWithCallback
   | CloudEventFunction<T>
-  | CloudEventFunctionWithCallback<T>
-  | TypedFunction<T, U>;
+  | CloudEventFunctionWithCallback<T>;
 
 /**
  * A legacy event.
@@ -184,54 +174,4 @@ export interface InvocationResponse {
   write(data: string | Buffer): void;
   /** Ends the response, must be called once at the end of writing. */
   end(data: string | Buffer): void;
-}
-
-/**
- * The contract for a request deserializer and response serializer.
- * @public
- */
-export interface InvocationFormat<T, U> {
-  /**
-   * Creates an instance of the request type from an invocation request.
-   *
-   * @param request - The request body as raw bytes
-   */
-  deserializeRequest(request: InvocationRequest): T | Promise<T>;
-
-  /**
-   * Writes the response type to the invocation result.
-   *
-   * @param responseWriter - Interface for writing to the invocation result
-   * @param response - The response object
-   */
-  serializeResponse(
-    responseWriter: InvocationResponse,
-    response: U
-  ): void | Promise<void>;
-}
-
-/**
- * Default invocation format for JSON requests.
- * @public
- */
-export class JsonInvocationFormat<T, U> implements InvocationFormat<T, U> {
-  deserializeRequest(request: InvocationRequest): T {
-    const body = request.body();
-    if (typeof body !== 'string') {
-      throw new Error('Unsupported Content-Type, expected application/json');
-    }
-    try {
-      return JSON.parse(body);
-    } catch (e) {
-      throw new Error(
-        'Failed to parse malformatted JSON in request: ' +
-          (e as SyntaxError).message
-      );
-    }
-  }
-
-  serializeResponse(responseWriter: InvocationResponse, response: U): void {
-    responseWriter.setHeader('content-type', 'application/json');
-    responseWriter.end(JSON.stringify(response));
-  }
 }

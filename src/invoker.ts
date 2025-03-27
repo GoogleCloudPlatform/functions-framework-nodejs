@@ -44,7 +44,7 @@ export function sendResponse(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result: any,
   err: Error | null,
-  res: express.Response
+  res: express.Response,
 ) {
   if (err) {
     sendCrashResponse({err, res, statusHeader: 'error'});
@@ -67,7 +67,7 @@ export function sendResponse(
       // (this was the customer's clear intent) but send a 204 (NO CONTENT) and
       // log an error message explaining why their content wasn't sent.
       console.error(
-        'Error serializing return value: ' + (sendErr as Error).toString()
+        'Error serializing return value: ' + (sendErr as Error).toString(),
       );
       res.sendStatus(204); // No Content
     }

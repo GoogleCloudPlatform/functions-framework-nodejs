@@ -85,12 +85,12 @@ class ConfigurableOption<T> {
      * A function used to valid the user provided value.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private validator: (x: any) => T = x => x as T
+    private validator: (x: any) => T = x => x as T,
   ) {}
 
   parse(cliArgs: minimist.ParsedArgs, envVars: NodeJS.ProcessEnv): T {
     return this.validator(
-      cliArgs[this.cliOption] ?? envVars[this.envVar] ?? this.defaultValue
+      cliArgs[this.cliOption] ?? envVars[this.envVar] ?? this.defaultValue,
     );
   }
 }
@@ -99,13 +99,13 @@ const PortOption = new ConfigurableOption('port', 'PORT', '8080');
 const FunctionTargetOption = new ConfigurableOption(
   'target',
   'FUNCTION_TARGET',
-  'function'
+  'function',
 );
 const SourceLocationOption = new ConfigurableOption(
   'source',
   'FUNCTION_SOURCE',
   '',
-  resolve
+  resolve,
 );
 const SignatureOption = new ConfigurableOption(
   'signature-type',
@@ -116,9 +116,9 @@ const SignatureOption = new ConfigurableOption(
       return x;
     }
     throw new OptionsError(
-      `Function signature type must be one of: ${SignatureType.join(', ')}.`
+      `Function signature type must be one of: ${SignatureType.join(', ')}.`,
     );
-  }
+  },
 );
 const TimeoutOption = new ConfigurableOption(
   'timeout',
@@ -132,12 +132,12 @@ const TimeoutOption = new ConfigurableOption(
       throw new OptionsError('Timeout must be a positive integer');
     }
     return x * 1000;
-  }
+  },
 );
 const IgnoredRoutesOption = new ConfigurableOption<string | null>(
   'ignored-routes',
   'IGNORED_ROUTES',
-  null // null by default so we can detect if it is explicitly set to ""
+  null, // null by default so we can detect if it is explicitly set to ""
 );
 
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
@@ -149,7 +149,7 @@ const ExecutionIdOption = new ConfigurableOption(
     const nodeVersion = process.versions.node;
     const isVersionSatisfied = semver.gte(
       nodeVersion,
-      requiredNodeJsVersionForLogExecutionID
+      requiredNodeJsVersionForLogExecutionID,
     );
     const isTrue =
       (typeof x === 'boolean' && x) ||
@@ -158,13 +158,13 @@ const ExecutionIdOption = new ConfigurableOption(
       console.warn(
         `Execution id is only supported with Node.js versions
         ${requiredNodeJsVersionForLogExecutionID} and above. Your
-        current version is ${nodeVersion}. Please upgrade.`
+        current version is ${nodeVersion}. Please upgrade.`,
       );
       console.warn('Proceeding with execution id support disabled...');
       return false;
     }
     return isTrue;
-  }
+  },
 );
 
 export const helpText = `Example usage:
@@ -181,7 +181,7 @@ Documentation:
  */
 export const parseOptions = (
   cliArgs: string[] = process.argv,
-  envVars: NodeJS.ProcessEnv = process.env
+  envVars: NodeJS.ProcessEnv = process.env,
 ): FrameworkOptions => {
   const argv = minimist(cliArgs, {
     string: [

@@ -110,7 +110,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
   const createBackgroundEventBody = (
     eventType: string,
     resource: {[k: string]: string} | string,
-    data: object = {data: '10'}
+    data: object = {data: '10'},
   ) => ({
     context: {
       eventId: '1215011316659232',
@@ -125,7 +125,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
     type: string,
     source: string,
     data: object,
-    subject?: string
+    subject?: string,
   ) =>
     Object.assign(subject ? {subject} : {}, {
       specversion: '1.0',
@@ -185,14 +185,14 @@ describe('backgroundEventToCloudEventMiddleware', () => {
             messageId: '1215011316659232',
             publishTime: '2020-05-18T12:13:19Z',
           },
-        }
+        },
       ),
     },
     {
       name: 'Legacy PubSub request',
       body: createBackgroundEventBody(
         'providers/cloud.pubsub/eventTypes/topic.publish',
-        'projects/sample-project/topics/gcf-test'
+        'projects/sample-project/topics/gcf-test',
       ),
       expectedCloudEvent: createCloudEventBody(
         'google.cloud.pubsub.topic.v1.messagePublished',
@@ -203,7 +203,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
             messageId: '1215011316659232',
             publishTime: '2020-05-18T12:13:19Z',
           },
-        }
+        },
       ),
     },
     {
@@ -218,7 +218,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
             lastSignedInAt: '2020-10-24T11:00:00Z',
           },
           uid: 'UUpby3s4spZre6kHsgVSPetzQ8l2',
-        }
+        },
       ),
       expectedCloudEvent: createCloudEventBody(
         'google.firebase.auth.user.v1.created',
@@ -231,7 +231,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
           },
           uid: 'UUpby3s4spZre6kHsgVSPetzQ8l2',
         },
-        'users/UUpby3s4spZre6kHsgVSPetzQ8l2'
+        'users/UUpby3s4spZre6kHsgVSPetzQ8l2',
       ),
     },
   ];
@@ -247,7 +247,7 @@ describe('backgroundEventToCloudEventMiddleware', () => {
       backgroundEventToCloudEventMiddleware(
         req as Request,
         {} as Response,
-        next
+        next,
       );
       assert.deepStrictEqual(req.body, test.expectedCloudEvent);
       assert.strictEqual(next.called, true);

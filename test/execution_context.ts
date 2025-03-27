@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 describe('executionContextMiddleware', () => {
   const createRequest = (
     body: object | string,
-    headers?: {[key: string]: string}
+    headers?: {[key: string]: string},
   ) =>
     ({
       body,
@@ -26,7 +26,7 @@ describe('executionContextMiddleware', () => {
       {
         'X-Cloud-Trace-Context': `${testTrace}/${testSpanId};o=1`,
         'function-execution-id': validExecutionId,
-      }
+      },
     );
 
     executionContextMiddleware(req as Request, {} as Response, next);
@@ -38,7 +38,7 @@ describe('executionContextMiddleware', () => {
   it('generates execution ID if not in header', () => {
     const req = createRequest(
       {},
-      {'X-Cloud-Trace-Context': `${testTrace}/${testSpanId}`}
+      {'X-Cloud-Trace-Context': `${testTrace}/${testSpanId}`},
     );
 
     executionContextMiddleware(req as Request, {} as Response, next);

@@ -43,7 +43,7 @@ export const main = async () => {
     const loadedFunction = await getUserFunction(
       options.sourceLocation,
       options.target,
-      options.signatureType
+      options.signatureType,
     );
     if (!loadedFunction) {
       console.error('Could not load the function, shutting down.');

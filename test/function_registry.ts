@@ -13,7 +13,6 @@
 // limitations under the License.
 import * as assert from 'assert';
 import * as FunctionRegistry from '../src/function_registry';
-import {JsonInvocationFormat} from '../src';
 
 describe('function_registry', () => {
   it('can register http functions', () => {
@@ -30,16 +29,6 @@ describe('function_registry', () => {
       FunctionRegistry.getRegisteredFunction('ceFunction')!;
     assert.deepStrictEqual('cloudevent', signatureType);
     assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
-  });
-
-  it('can register typed functions', () => {
-    FunctionRegistry.typed('typedFunction', (identity: string) => identity);
-    const {userFunction, signatureType} =
-      FunctionRegistry.getRegisteredFunction('typedFunction')!;
-    assert.deepStrictEqual('typed', signatureType);
-
-    assert.ok(!(userFunction instanceof Function));
-    assert.ok(userFunction.format instanceof JsonInvocationFormat);
   });
 
   it('throws an error if you try to register a function with an invalid URL', () => {

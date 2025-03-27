@@ -14,7 +14,7 @@ let asyncLocalStorage: AsyncLocalStorage<ExecutionContext> | undefined;
 export async function asyncLocalStorageMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   if (
     semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
@@ -35,7 +35,7 @@ export async function asyncLocalStorageMiddleware(
     },
     () => {
       next();
-    }
+    },
   );
 }
 
