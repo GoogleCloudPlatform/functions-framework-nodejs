@@ -66,7 +66,7 @@ describe('cloudEventToBackgroundEventMiddleware', () => {
       name: 'Firebase database request',
       headers: ceHeaders(
         'google.firebase.database.ref.v1.written',
-        '//firebasedatabase.googleapis.com/projects/_/locations/europe-west1/instances/my-project-id'
+        '//firebasedatabase.googleapis.com/projects/_/locations/europe-west1/instances/my-project-id',
       ),
       body: {some: 'value'},
       expectedBody: {
@@ -85,7 +85,7 @@ describe('cloudEventToBackgroundEventMiddleware', () => {
       name: 'PubSub request',
       headers: ceHeaders(
         'google.cloud.pubsub.topic.v1.messagePublished',
-        '//pubsub.googleapis.com/projects/sample-project/topics/gcf-test'
+        '//pubsub.googleapis.com/projects/sample-project/topics/gcf-test',
       ),
       body: {
         message: {
@@ -112,7 +112,7 @@ describe('cloudEventToBackgroundEventMiddleware', () => {
       name: 'Cloud Storage request',
       headers: ceHeaders(
         'google.cloud.storage.object.v1.finalized',
-        '//storage.googleapis.com/projects/_/buckets/some-bucket'
+        '//storage.googleapis.com/projects/_/buckets/some-bucket',
       ),
       body: {
         some: 'value',
@@ -139,7 +139,7 @@ describe('cloudEventToBackgroundEventMiddleware', () => {
       name: 'Firebase auth request',
       headers: ceHeaders(
         'google.firebase.auth.user.v1.created',
-        '//firebaseauth.googleapis.com/projects/my-project-id'
+        '//firebaseauth.googleapis.com/projects/my-project-id',
       ),
       body: {
         metadata: {
@@ -177,7 +177,7 @@ describe('cloudEventToBackgroundEventMiddleware', () => {
       cloudEventToBackgroundEventMiddleware(
         request as Request,
         {} as Response,
-        next
+        next,
       );
       assert.deepStrictEqual(request.body, test.expectedBody);
       assert.strictEqual(next.called, true);

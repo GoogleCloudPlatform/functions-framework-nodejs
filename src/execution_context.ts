@@ -16,7 +16,7 @@ function generateExecutionId() {
 export const executionContextMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   let executionId = req.header(FUNCTION_EXECUTION_ID_HEADER_KEY);
   if (!executionId) {
