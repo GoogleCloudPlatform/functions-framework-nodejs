@@ -16,22 +16,20 @@ import {
   HttpFunction,
   CloudEventFunction,
   HandlerFunction,
-  TypedFunction,
-  JsonInvocationFormat,
   CloudEventFunctionWithCallback,
 } from './functions';
 import {SignatureType} from './types';
 
-interface RegisteredFunction<T, U> {
+interface RegisteredFunction<T> {
   signatureType: SignatureType;
-  userFunction: HandlerFunction<T, U>;
+  userFunction: HandlerFunction<T>;
 }
 
 /**
  * Singleton map to hold the registered functions
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const registrationContainer = new Map<string, RegisteredFunction<any, any>>();
+const registrationContainer = new Map<string, RegisteredFunction<any>>();
 
 /**
  * Helper method to store a registered function in the registration container
@@ -39,7 +37,7 @@ const registrationContainer = new Map<string, RegisteredFunction<any, any>>();
 const register = <T = unknown, U = unknown>(
   functionName: string,
   signatureType: SignatureType,
-  userFunction: HandlerFunction<T, U>
+  userFunction: HandlerFunction<T>,
 ): void => {
   if (!isValidFunctionName(functionName)) {
     throw new Error(`Invalid function name: ${functionName}`);
@@ -73,9 +71,9 @@ export const isValidFunctionName = (functionName: string): boolean => {
  * the provided name has been registered
  */
 export const getRegisteredFunction = (
-  functionName: string
+  functionName: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): RegisteredFunction<any, any> | undefined => {
+): RegisteredFunction<any> | undefined => {
   return registrationContainer.get(functionName);
 };
 
@@ -97,26 +95,7 @@ export const http = (functionName: string, handler: HttpFunction): void => {
  */
 export const cloudEvent = <T = unknown>(
   functionName: string,
-  handler: CloudEventFunction<T> | CloudEventFunctionWithCallback<T>
+  handler: CloudEventFunction<T> | CloudEventFunctionWithCallback<T>,
 ): void => {
   register(functionName, 'cloudevent', handler);
-};
-
-/**
- * Register a function that handles strongly typed invocations.
- * @param functionName - The name of the function
- * @param handler - The function to trigger
- * @internal
- */
-export const typed = <T, U>(
-  functionName: string,
-  handler: TypedFunction<T, U>['handler'] | TypedFunction<T, U>
-): void => {
-  if (handler instanceof Function) {
-    handler = {
-      handler,
-      format: new JsonInvocationFormat<T, U>(),
-    };
-  }
-  register(functionName, 'typed', handler);
 };

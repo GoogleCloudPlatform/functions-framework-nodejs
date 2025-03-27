@@ -36,7 +36,7 @@ import {FrameworkOptions} from './options';
  */
 export function getServer(
   userFunction: HandlerFunction,
-  options: FrameworkOptions
+  options: FrameworkOptions,
 ): http.Server {
   // App to use for function executions.
   const app = express();
@@ -88,17 +88,8 @@ export function getServer(
   };
 
   // Apply middleware
-  if (options.signatureType !== 'typed') {
-    // If the function is not typed then JSON parsing can be done automatically, otherwise the
-    // functions format must determine deserialization.
-    app.use(bodyParser.json(cloudEventsBodySavingOptions));
-    app.use(bodyParser.json(defaultBodySavingOptions));
-  } else {
-    const jsonParserOptions = Object.assign({}, defaultBodySavingOptions, {
-      type: 'application/json',
-    });
-    app.use(bodyParser.text(jsonParserOptions));
-  }
+  app.use(bodyParser.json(cloudEventsBodySavingOptions));
+  app.use(bodyParser.json(defaultBodySavingOptions));
   app.use(bodyParser.text(defaultBodySavingOptions));
   app.use(bodyParser.urlencoded(urlEncodedOptions));
   // The parser will process ALL content types so MUST come last.

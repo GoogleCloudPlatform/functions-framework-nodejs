@@ -52,7 +52,7 @@ describe('timeoutMiddleware', () => {
     middleware(request, response, next);
     assert.strictEqual(
       (request.setTimeout as sinon.SinonSpy).calledWith(1000),
-      true
+      true,
     );
   });
 });

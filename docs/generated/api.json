@@ -1,7 +1,7 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.48.0",
+    "toolVersion": "7.52.5",
     "schemaVersion": 1011,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
@@ -854,14 +854,6 @@
             },
             {
               "kind": "Content",
-              "text": ", U = "
-            },
-            {
-              "kind": "Content",
-              "text": "unknown"
-            },
-            {
-              "kind": "Content",
               "text": "> = "
             },
             {
@@ -907,16 +899,7 @@
             },
             {
               "kind": "Content",
-              "text": "<T> | "
-            },
-            {
-              "kind": "Reference",
-              "text": "TypedFunction",
-              "canonicalReference": "@google-cloud/functions-framework!TypedFunction:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<T, U>"
+              "text": "<T>"
             },
             {
               "kind": "Content",
@@ -937,22 +920,11 @@
                 "startIndex": 1,
                 "endIndex": 2
               }
-            },
-            {
-              "typeParameterName": "U",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              }
             }
           ],
           "typeTokenRange": {
-            "startIndex": 5,
-            "endIndex": 17
+            "startIndex": 3,
+            "endIndex": 13
           }
         },
         {
@@ -1088,174 +1060,6 @@
                   "isOptional": false
                 }
               ]
-            }
-          ],
-          "extendsTokenRanges": []
-        },
-        {
-          "kind": "Interface",
-          "canonicalReference": "@google-cloud/functions-framework!InvocationFormat:interface",
-          "docComment": "/**\n * The contract for a request deserializer and response serializer.\n *\n * @public\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export interface InvocationFormat<T, U> "
-            }
-          ],
-          "fileUrlPath": "src/functions.ts",
-          "releaseTag": "Public",
-          "typeParameters": [
-            {
-              "typeParameterName": "T",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            },
-            {
-              "typeParameterName": "U",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            }
-          ],
-          "name": "InvocationFormat",
-          "preserveMemberOrder": false,
-          "members": [
-            {
-              "kind": "MethodSignature",
-              "canonicalReference": "@google-cloud/functions-framework!InvocationFormat#deserializeRequest:member(1)",
-              "docComment": "/**\n * Creates an instance of the request type from an invocation request.\n *\n * @param request - The request body as raw bytes\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "deserializeRequest(request: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "InvocationRequest",
-                  "canonicalReference": "@google-cloud/functions-framework!InvocationRequest:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "T | "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Promise",
-                  "canonicalReference": "!Promise:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isOptional": false,
-              "returnTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 6
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "request",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  },
-                  "isOptional": false
-                }
-              ],
-              "name": "deserializeRequest"
-            },
-            {
-              "kind": "MethodSignature",
-              "canonicalReference": "@google-cloud/functions-framework!InvocationFormat#serializeResponse:member(1)",
-              "docComment": "/**\n * Writes the response type to the invocation result.\n *\n * @param responseWriter - Interface for writing to the invocation result\n *\n * @param response - The response object\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "serializeResponse(responseWriter: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "InvocationResponse",
-                  "canonicalReference": "@google-cloud/functions-framework!InvocationResponse:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", response: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "U"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void | "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Promise",
-                  "canonicalReference": "!Promise:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<void>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isOptional": false,
-              "returnTypeTokenRange": {
-                "startIndex": 5,
-                "endIndex": 8
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "responseWriter",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  },
-                  "isOptional": false
-                },
-                {
-                  "parameterName": "response",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 3,
-                    "endIndex": 4
-                  },
-                  "isOptional": false
-                }
-              ],
-              "name": "serializeResponse"
             }
           ],
           "extendsTokenRanges": []
@@ -1536,181 +1340,6 @@
           "extendsTokenRanges": []
         },
         {
-          "kind": "Class",
-          "canonicalReference": "@google-cloud/functions-framework!JsonInvocationFormat:class",
-          "docComment": "/**\n * Default invocation format for JSON requests.\n *\n * @public\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare class JsonInvocationFormat<T, U> implements "
-            },
-            {
-              "kind": "Reference",
-              "text": "InvocationFormat",
-              "canonicalReference": "@google-cloud/functions-framework!InvocationFormat:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<T, U>"
-            },
-            {
-              "kind": "Content",
-              "text": " "
-            }
-          ],
-          "fileUrlPath": "src/functions.ts",
-          "releaseTag": "Public",
-          "typeParameters": [
-            {
-              "typeParameterName": "T",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            },
-            {
-              "typeParameterName": "U",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            }
-          ],
-          "isAbstract": false,
-          "name": "JsonInvocationFormat",
-          "preserveMemberOrder": false,
-          "members": [
-            {
-              "kind": "Method",
-              "canonicalReference": "@google-cloud/functions-framework!JsonInvocationFormat#deserializeRequest:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "deserializeRequest(request: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "InvocationRequest",
-                  "canonicalReference": "@google-cloud/functions-framework!InvocationRequest:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "T"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              },
-              "releaseTag": "Public",
-              "isProtected": false,
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "request",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  },
-                  "isOptional": false
-                }
-              ],
-              "isOptional": false,
-              "isAbstract": false,
-              "name": "deserializeRequest"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "@google-cloud/functions-framework!JsonInvocationFormat#serializeResponse:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "serializeResponse(responseWriter: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "InvocationResponse",
-                  "canonicalReference": "@google-cloud/functions-framework!InvocationResponse:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", response: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "U"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 5,
-                "endIndex": 6
-              },
-              "releaseTag": "Public",
-              "isProtected": false,
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "responseWriter",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  },
-                  "isOptional": false
-                },
-                {
-                  "parameterName": "response",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 3,
-                    "endIndex": 4
-                  },
-                  "isOptional": false
-                }
-              ],
-              "isOptional": false,
-              "isAbstract": false,
-              "name": "serializeResponse"
-            }
-          ],
-          "implementsTokenRanges": [
-            {
-              "startIndex": 1,
-              "endIndex": 3
-            }
-          ]
-        },
-        {
           "kind": "TypeAlias",
           "canonicalReference": "@google-cloud/functions-framework!LegacyCloudFunctionsContext:type",
           "docComment": "/**\n * A legacy event function context.\n *\n * @public\n */\n",
@@ -1960,132 +1589,6 @@
               "endIndex": 2
             }
           ]
-        },
-        {
-          "kind": "Interface",
-          "canonicalReference": "@google-cloud/functions-framework!TypedFunction:interface",
-          "docComment": "/**\n * A Typed function handler that may return a value or a promise.\n *\n * @public\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export interface TypedFunction<T = "
-            },
-            {
-              "kind": "Content",
-              "text": "unknown"
-            },
-            {
-              "kind": "Content",
-              "text": ", U = "
-            },
-            {
-              "kind": "Content",
-              "text": "unknown"
-            },
-            {
-              "kind": "Content",
-              "text": "> "
-            }
-          ],
-          "fileUrlPath": "src/functions.ts",
-          "releaseTag": "Public",
-          "typeParameters": [
-            {
-              "typeParameterName": "T",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            },
-            {
-              "typeParameterName": "U",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              }
-            }
-          ],
-          "name": "TypedFunction",
-          "preserveMemberOrder": false,
-          "members": [
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "@google-cloud/functions-framework!TypedFunction#format:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "format: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "InvocationFormat",
-                  "canonicalReference": "@google-cloud/functions-framework!InvocationFormat:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T, U>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isReadonly": false,
-              "isOptional": false,
-              "releaseTag": "Public",
-              "name": "format",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 3
-              }
-            },
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "@google-cloud/functions-framework!TypedFunction#handler:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "handler: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "(req: T) => U | "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Promise",
-                  "canonicalReference": "!Promise:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<U>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isReadonly": false,
-              "isOptional": false,
-              "releaseTag": "Public",
-              "name": "handler",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 4
-              }
-            }
-          ],
-          "extendsTokenRanges": []
         }
       ]
     }

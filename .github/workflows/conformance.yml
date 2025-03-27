@@ -84,16 +84,6 @@ jobs:
               -validate-mapping=false \
               -cmd="npm start -- --target=writeHttpDeclarative"
 
-      - name: Run Typed conformance tests using declarative API
-        working-directory: 'test/conformance'
-        run: |
-          ~/client \
-              -type=http \
-              -declarative-type=typed \
-              -buildpacks=false \
-              -validate-mapping=false \
-              -cmd="npm start -- --target=writeTypedDeclarative"
-
       - name: Run cloudevent conformance tests using declarative API
         working-directory: 'test/conformance'
         run: |

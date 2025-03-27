@@ -79,12 +79,12 @@ const isConvertableCloudEvent = (request: Request): boolean => {
  * @returns The parsed service and name components of the CE source string
  */
 export const parseSource = (
-  source: string
+  source: string,
 ): {service: string; name: string} => {
   const match = source.match(CE_SOURCE_REGEX);
   if (!match) {
     throw new EventConversionError(
-      `Failed to convert CloudEvent with invalid source: "${source}"`
+      `Failed to convert CloudEvent with invalid source: "${source}"`,
     );
   }
   return {
@@ -99,7 +99,7 @@ export const parseSource = (
  * @returns The request body of the equivalent legacy event request
  */
 const marshalConvertableCloudEvent = (
-  req: Request
+  req: Request,
 ): {context: object; data: object} => {
   const ceContext = getBinaryCloudEventContext(req);
   const {service, name} = parseSource(ceContext.source!);
@@ -180,7 +180,7 @@ const marshalConvertableCloudEvent = (
 export const cloudEventToBackgroundEventMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (isConvertableCloudEvent(req)) {
     // This is a CloudEvent that can be converted a known legacy event.

@@ -44,7 +44,7 @@ describe('loading function', () => {
       const loadedFunction = await loader.getUserFunction(
         process.cwd() + test.codeLocation,
         test.target,
-        'http'
+        'http',
       );
       const userFunction =
         loadedFunction?.userFunction as functions.HttpFunction;
@@ -76,7 +76,7 @@ describe('loading function', () => {
       const loadedFunction = await loader.getUserFunction(
         process.cwd() + test.codeLocation,
         test.target,
-        'http'
+        'http',
       );
       return loadedFunction?.userFunction as functions.HttpFunction;
     };
@@ -97,7 +97,7 @@ describe('loading function', () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/does_not_exist',
       'functionDoesNotExist',
-      'http'
+      'http',
     );
 
     assert.strictEqual(loadedFunction, null);
@@ -107,7 +107,7 @@ describe('loading function', () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'functionDoesNotExist',
-      'http'
+      'http',
     );
 
     assert.strictEqual(loadedFunction, null);
@@ -120,7 +120,7 @@ describe('loading function', () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'registeredFunction',
-      'http'
+      'http',
     );
     const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
     const returned = userFunction(express.request, express.response);
@@ -134,7 +134,7 @@ describe('loading function', () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'testFunction',
-      'http'
+      'http',
     );
     const userFunction = loadedFunction?.userFunction as functions.HttpFunction;
     const returned = userFunction(express.request, express.response);
@@ -146,7 +146,7 @@ describe('loading function', () => {
     const loadedFunction = await loader.getUserFunction(
       process.cwd() + '/test/data/with_main',
       'registeredFunction',
-      'http'
+      'http',
     );
     assert.strictEqual(loadedFunction?.signatureType, 'cloudevent');
   });

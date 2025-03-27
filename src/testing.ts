@@ -27,7 +27,7 @@ import {getServer} from './server';
  * @beta
  */
 export const getFunction = (
-  functionName: string
+  functionName: string,
 ): HandlerFunction | undefined => {
   return getRegisteredFunction(functionName)?.userFunction;
 };
@@ -45,7 +45,7 @@ export const getTestServer = (functionName: string): Server => {
   const registeredFunction = getRegisteredFunction(functionName);
   if (!registeredFunction) {
     throw new Error(
-      `The provided function "${functionName}" was not registered. Did you forget to require the module that defined it?`
+      `The provided function "${functionName}" was not registered. Did you forget to require the module that defined it?`,
     );
   }
   return getServer(registeredFunction.userFunction, {

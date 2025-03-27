@@ -109,7 +109,7 @@ export function splitArgs(args: any[]) {
 export function getModifiedData(
   data: Uint8Array | string,
   encoding?: BufferEncoding,
-  stderr = false
+  stderr = false,
 ) {
   const currentContext = getCurrentContext();
   if (!currentContext) {
@@ -137,7 +137,7 @@ export function getModifiedData(
 
 function getTextWithContext(
   data: Uint8Array | string,
-  context: ExecutionContext
+  context: ExecutionContext,
 ) {
   return {
     message: data,

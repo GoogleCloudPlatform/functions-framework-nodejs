@@ -29,7 +29,7 @@ describe('asyncLocalStorageMiddleware', () => {
     await asyncLocalStorageMiddleware(
       req as Request,
       {} as Response,
-      next as NextFunction
+      next as NextFunction,
     );
 
     // The store is not accessible outside of the run()'s callback function.
