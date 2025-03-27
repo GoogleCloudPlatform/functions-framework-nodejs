@@ -1,11 +1,6 @@
 import * as assert from 'assert';
 import {Request, Response} from 'express';
-import {
-  Context,
-  CloudEvent,
-  JsonInvocationFormat,
-  TypedFunction,
-} from '../src/functions';
+import {Context, CloudEvent} from '../src/functions';
 import {wrapUserFunction} from '../src/function_wrappers';
 import EventEmitter = require('events');
 
@@ -24,7 +19,7 @@ describe('wrapUserFunction', () => {
 
   const createRequest = (
     body: object | string,
-    headers?: {[key: string]: string}
+    headers?: {[key: string]: string},
   ) =>
     ({
       body,
@@ -68,10 +63,6 @@ describe('wrapUserFunction', () => {
     return new ResponseMock() as unknown as Response;
   };
 
-  interface EchoMessage {
-    message: string;
-  }
-
   it('correctly wraps an http function', done => {
     const request = createRequest({foo: 'bar'});
     const response = createResponse();
@@ -109,7 +100,7 @@ describe('wrapUserFunction', () => {
           done();
         }, 20);
       },
-      'event'
+      'event',
     );
     void func(request, response, () => {});
   });
@@ -124,7 +115,7 @@ describe('wrapUserFunction', () => {
         await new Promise(resolve => setTimeout(resolve, 20));
         done();
       },
-      'cloudevent'
+      'cloudevent',
     );
     void func(request, response, () => {});
   });
@@ -141,112 +132,8 @@ describe('wrapUserFunction', () => {
           done();
         }, 20);
       },
-      'cloudevent'
+      'cloudevent',
     );
     void func(request, response, () => {});
-  });
-
-  describe('wraps a Typed JSON function', () => {
-    const synchronousJsonFunction: TypedFunction<EchoMessage, EchoMessage> = {
-      format: new JsonInvocationFormat<EchoMessage, EchoMessage>(),
-      handler: (req: EchoMessage): EchoMessage => {
-        return {
-          message: req.message,
-        };
-      },
-    };
-    it('when the handler is synchronous', done => {
-      const payload = JSON.stringify({
-        message: 'test',
-      });
-
-      const request = createRequest(payload);
-      const response = new ResponseMock();
-      const func = wrapUserFunction(synchronousJsonFunction, 'typed');
-
-      void func(request, response as unknown as Response, () => {});
-
-      response.on('done', () => {
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(
-          response.headers['content-type'],
-          'application/json'
-        );
-        assert.strictEqual(response.body, payload);
-        done();
-      });
-    });
-
-    it('when the format throws a parse error', done => {
-      const payload = 'Asdf';
-
-      const request = createRequest(payload);
-      const response = new ResponseMock();
-      const func = wrapUserFunction(synchronousJsonFunction, 'typed');
-
-      void func(request, response as unknown as Response, () => {});
-
-      response.on('done', () => {
-        assert.strictEqual(response.statusCode, 400);
-        done();
-      });
-    });
-
-    it('when the handler is asynchronous', done => {
-      const payload = JSON.stringify({
-        message: 'test',
-      });
-
-      const typedFn: TypedFunction<EchoMessage, EchoMessage> = {
-        format: new JsonInvocationFormat<EchoMessage, EchoMessage>(),
-        handler: (req: EchoMessage): Promise<EchoMessage> => {
-          return new Promise(accept => {
-            setImmediate(() => accept(req));
-          });
-        },
-      };
-
-      const request = createRequest(payload);
-      const response = new ResponseMock();
-      const func = wrapUserFunction(typedFn, 'typed');
-
-      void func(request, response as unknown as Response, () => {});
-
-      response.on('done', () => {
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(
-          response.headers['content-type'],
-          'application/json'
-        );
-        assert.strictEqual(response.body, payload);
-        done();
-      });
-    });
-
-    it('when the async handler throws an error', done => {
-      const payload = JSON.stringify({
-        message: 'test',
-      });
-
-      const typedFn: TypedFunction<EchoMessage, EchoMessage> = {
-        format: new JsonInvocationFormat<EchoMessage, EchoMessage>(),
-        handler: (): Promise<EchoMessage> => {
-          return new Promise((_, reject) => {
-            setImmediate(() => reject(new Error('an error')));
-          });
-        },
-      };
-
-      const request = createRequest(payload);
-      const response = new ResponseMock();
-      const func = wrapUserFunction(typedFn, 'typed');
-
-      void func(request, response as unknown as Response, () => {});
-
-      response.on('done', () => {
-        assert.strictEqual(response.statusCode, 500);
-        done();
-      });
-    });
   });
 });

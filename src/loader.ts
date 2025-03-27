@@ -20,7 +20,6 @@
 
 import * as path from 'path';
 import * as semver from 'semver';
-import * as readPkgUp from 'read-pkg-up';
 import {pathToFileURL} from 'url';
 import {HandlerFunction} from './functions';
 import {SignatureType} from './types';
@@ -56,7 +55,8 @@ async function isEsModule(modulePath: string): Promise<boolean> {
     return false;
   }
 
-  const pkg = await readPkgUp({
+  const {readPackageUp} = await dynamicImport('read-package-up');
+  const pkg = await readPackageUp({
     cwd: path.dirname(modulePath),
     normalize: false,
   });
@@ -73,7 +73,7 @@ async function isEsModule(modulePath: string): Promise<boolean> {
  */
 const dynamicImport = new Function(
   'modulePath',
-  'return import(modulePath)'
+  'return import(modulePath)',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as (modulePath: string) => Promise<any>;
 
@@ -85,7 +85,7 @@ const dynamicImport = new Function(
 export async function getUserFunction(
   codeLocation: string,
   functionTarget: string,
-  signatureType: SignatureType
+  signatureType: SignatureType,
 ): Promise<{
   userFunction: HandlerFunction;
   signatureType: SignatureType;
@@ -96,7 +96,7 @@ export async function getUserFunction(
       console.error(
         `Provided code location '${codeLocation}' is not a loadable module.` +
           '\nDid you specify the correct location for the module defining ' +
-          'your function?'
+          'your function?',
       );
       return null;
     }
@@ -107,7 +107,7 @@ export async function getUserFunction(
       if (semver.lt(process.version, MIN_NODE_VERSION_ESMODULES)) {
         console.error(
           `Cannot load ES Module on Node.js ${process.version}. ` +
-            `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`
+            `Please upgrade to Node.js v${MIN_NODE_VERSION_ESMODULES} and up.`,
         );
         return null;
       }
@@ -138,7 +138,7 @@ export async function getUserFunction(
     if (typeof userFunction === 'undefined') {
       console.error(
         `Function '${functionTarget}' is not defined in the provided ` +
-          'module.\nDid you specify the correct target function to execute?'
+          'module.\nDid you specify the correct target function to execute?',
       );
       return null;
     }
@@ -146,7 +146,7 @@ export async function getUserFunction(
     if (typeof userFunction !== 'function') {
       console.error(
         `'${functionTarget}' needs to be of type function. Got: ` +
-          `${typeof userFunction}`
+          `${typeof userFunction}`,
       );
       return null;
     }
@@ -165,7 +165,7 @@ export async function getUserFunction(
     }
     console.error(
       `Provided module can't be loaded.\n${additionalHint}` +
-        `Detailed stack trace: ${err.stack}`
+        `Detailed stack trace: ${err.stack}`,
     );
     return null;
   }

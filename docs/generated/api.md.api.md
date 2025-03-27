@@ -4,8 +4,6 @@
 
 ```ts
 
-/// <reference types="node" />
-
 import { CloudEventV1 as CloudEvent } from 'cloudevents';
 import { Request as Request_3 } from 'express';
 import { Response as Response_2 } from 'express';
@@ -59,7 +57,7 @@ export interface EventFunctionWithCallback {
 }
 
 // @public
-export type HandlerFunction<T = unknown, U = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T> | TypedFunction<T, U>;
+export type HandlerFunction<T = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T>;
 
 // @public
 export const http: (functionName: string, handler: HttpFunction) => void;
@@ -68,12 +66,6 @@ export const http: (functionName: string, handler: HttpFunction) => void;
 export interface HttpFunction {
     // (undocumented)
     (req: Request_2, res: Response_2): any;
-}
-
-// @public
-export interface InvocationFormat<T, U> {
-    deserializeRequest(request: InvocationRequest): T | Promise<T>;
-    serializeResponse(responseWriter: InvocationResponse, response: U): void | Promise<void>;
 }
 
 // @public
@@ -87,14 +79,6 @@ export interface InvocationResponse {
     end(data: string | Buffer): void;
     setHeader(key: string, value: string): void;
     write(data: string | Buffer): void;
-}
-
-// @public
-export class JsonInvocationFormat<T, U> implements InvocationFormat<T, U> {
-    // (undocumented)
-    deserializeRequest(request: InvocationRequest): T;
-    // (undocumented)
-    serializeResponse(responseWriter: InvocationResponse, response: U): void;
 }
 
 // @public
@@ -120,19 +104,6 @@ interface Request_2 extends Request_3 {
 export { Request_2 as Request }
 
 export { Response_2 as Response }
-
-// Warning: (ae-internal-missing-underscore) The name "typed" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export const typed: <T, U>(functionName: string, handler: TypedFunction<T, U> | ((req: T) => U | Promise<U>)) => void;
-
-// @public
-export interface TypedFunction<T = unknown, U = unknown> {
-    // (undocumented)
-    format: InvocationFormat<T, U>;
-    // (undocumented)
-    handler: (req: T) => U | Promise<U>;
-}
 
 // (No @packageDocumentation comment for this package)
 

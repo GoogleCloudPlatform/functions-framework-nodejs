@@ -29,7 +29,7 @@ const BACKGROUND_TO_CE_TYPE: {[key: string]: string} = Object.assign(
       'google.cloud.pubsub.topic.v1.messagePublished',
   },
   // include the inverse of CE_TO_BACKGROUND_TYPE
-  ...Object.entries(CE_TO_BACKGROUND_TYPE).map(([a, b]) => ({[b]: a}))
+  ...Object.entries(CE_TO_BACKGROUND_TYPE).map(([a, b]) => ({[b]: a})),
 );
 
 // Maps background event services to their equivalent CloudEvent services.
@@ -108,7 +108,7 @@ interface ParsedResource {
  * @returns The CloudEvent service, resource and subject fields for the given GCF event context
  */
 export const splitResource = (
-  context: CloudFunctionsContext
+  context: CloudFunctionsContext,
 ): ParsedResource => {
   let service = '';
   let resource = '';
@@ -123,7 +123,7 @@ export const splitResource = (
 
   if (!service) {
     for (const [backgroundService, ceService] of Object.entries(
-      SERVICE_BACKGROUND_TO_CE
+      SERVICE_BACKGROUND_TO_CE,
     )) {
       if (context.eventType?.startsWith(backgroundService)) {
         service = ceService;
@@ -133,7 +133,7 @@ export const splitResource = (
 
   if (!service) {
     throw new EventConversionError(
-      `Unable to find equivalent CloudEvent service for ${context.eventType}.`
+      `Unable to find equivalent CloudEvent service for ${context.eventType}.`,
     );
   }
 
@@ -145,7 +145,7 @@ export const splitResource = (
       subject = match[2];
     } else {
       throw new EventConversionError(
-        `Resource string did not match expected format: ${resource}.`
+        `Resource string did not match expected format: ${resource}.`,
       );
     }
   }
@@ -166,7 +166,7 @@ export const splitResource = (
 export const backgroundEventToCloudEventMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (isConvertableBackgroundEvent(req)) {
     // eslint-disable-next-line prefer-const
@@ -174,7 +174,7 @@ export const backgroundEventToCloudEventMiddleware = (
     const newType = BACKGROUND_TO_CE_TYPE[context.eventType ?? ''];
     if (!newType) {
       throw new EventConversionError(
-        `Unable to find equivalent CloudEvent type for ${context.eventType}`
+        `Unable to find equivalent CloudEvent type for ${context.eventType}`,
       );
     }
     // eslint-disable-next-line prefer-const
@@ -213,7 +213,7 @@ export const backgroundEventToCloudEventMiddleware = (
       const domain = req.body['domain'];
       if (!domain) {
         throw new EventConversionError(
-          `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`
+          `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`,
         );
       }
       let location = 'us-central1';
@@ -221,7 +221,7 @@ export const backgroundEventToCloudEventMiddleware = (
         const match = domain.match(/^([\w-]+)\.firebasedatabase\.app$/);
         if (!match) {
           throw new EventConversionError(
-            `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`
+            `Unable convert to ${CE_SERVICE.FIREBASE_DB} CloudEvent: invalid domain`,
           );
         }
         location = match[1];

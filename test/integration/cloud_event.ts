@@ -37,27 +37,23 @@ const TEST_EXTENSIONS = {
 };
 
 describe('CloudEvent Function', () => {
-  let clock: sinon.SinonFakeTimers;
-
   let receivedCloudEvent: functions.CloudEvent<unknown> | null;
   before(() => {
     functions.cloudEvent(
       'testCloudEventFunction',
       (ce: functions.CloudEvent<unknown>) => {
         receivedCloudEvent = ce;
-      }
+      },
     );
   });
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers();
     // Prevent log spew from the PubSub emulator request.
     sinon.stub(console, 'warn');
     sinon.stub(console, 'error');
   });
 
   afterEach(() => {
-    clock.restore();
     (console.warn as sinon.SinonSpy).restore();
     (console.error as sinon.SinonSpy).restore();
   });
@@ -173,39 +169,6 @@ describe('CloudEvent Function', () => {
       },
     },
     {
-      name: 'PubSub emulator request',
-      headers: {},
-      body: {
-        subscription: 'projects/FOO/subscriptions/BAR_SUB',
-        message: {
-          data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-          messageId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-          attributes: {
-            attribute1: 'value1',
-          },
-        },
-      },
-      expectedCloudEvent: {
-        specversion: '1.0',
-        type: 'google.cloud.pubsub.topic.v1.messagePublished',
-        source: '//pubsub.googleapis.com/',
-        id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-        time: '1970-01-01T00:00:00.000Z',
-        datacontenttype: 'application/json',
-        data: {
-          message: {
-            '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
-            attributes: {
-              attribute1: 'value1',
-            },
-            data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
-            messageId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
-            publishTime: '1970-01-01T00:00:00.000Z',
-          },
-        },
-      },
-    },
-    {
       name: 'Firebase Database GCF event request',
       headers: {},
       body: {
@@ -287,6 +250,47 @@ describe('CloudEvent Function', () => {
     });
   });
 
+  it('pubsub emulator requests', async () => {
+    const server = getTestServer('testCloudEventFunction');
+    await supertest(server)
+      .post('/')
+      .send({
+        subscription: 'projects/FOO/subscriptions/BAR_SUB',
+        message: {
+          data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
+          messageId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+          attributes: {
+            attribute1: 'value1',
+          },
+        },
+      })
+      .expect(204);
+    // fake the timestamps
+    receivedCloudEvent!.time = 'TIME';
+    (
+      receivedCloudEvent as {data: {message: {publishTime: string}}}
+    ).data.message.publishTime = 'TIME';
+    assert.deepStrictEqual(receivedCloudEvent, {
+      specversion: '1.0',
+      type: 'google.cloud.pubsub.topic.v1.messagePublished',
+      source: '//pubsub.googleapis.com/',
+      id: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+      time: 'TIME',
+      datacontenttype: 'application/json',
+      data: {
+        message: {
+          '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
+          attributes: {
+            attribute1: 'value1',
+          },
+          data: 'VGhpcyBpcyBhIHNhbXBsZSBtZXNzYWdl',
+          messageId: 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+          publishTime: 'TIME',
+        },
+      },
+    });
+  });
+
   it('allows customers to provide a type parameter for the data payload', async () => {
     const testPayload = 'a test string';
 
@@ -297,7 +301,7 @@ describe('CloudEvent Function', () => {
         assert.deepStrictEqual(ce.data, testPayload);
         // use a property that proves this is actually typed as a string
         assert.deepStrictEqual(ce.data.length, testPayload.length);
-      }
+      },
     );
 
     // invoke the function with a CloudEvent with a string payload
@@ -322,7 +326,7 @@ describe('CloudEvent Function', () => {
         // use a property that proves this is actually typed as a string
         assert.deepStrictEqual(ce.data.length, testPayload.length);
         callback();
-      }
+      },
     );
 
     // invoke the function with a CloudEvent with a string payload

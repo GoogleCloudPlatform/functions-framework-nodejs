@@ -26,9 +26,6 @@ import {
   CloudEventFunction,
   CloudEventFunctionWithCallback,
   HandlerFunction,
-  TypedFunction,
-  InvocationRequest,
-  InvocationResponse,
 } from './functions';
 import {CloudEvent} from './functions';
 import {SignatureType} from './types';
@@ -136,7 +133,7 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
  * @return An Express hander function that invokes the user function
  */
 const wrapCloudEventFunction = (
-  userFunction: CloudEventFunction
+  userFunction: CloudEventFunction,
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
@@ -145,7 +142,7 @@ const wrapCloudEventFunction = (
       .then(() => userFunction(cloudEvent))
       .then(
         result => callback(null, result),
-        err => callback(err, undefined)
+        err => callback(err, undefined),
       );
   };
   return wrapHttpFunction(httpHandler);
@@ -157,7 +154,7 @@ const wrapCloudEventFunction = (
  * @return An Express hander function that invokes the user function
  */
 const wrapCloudEventFunctionWithCallback = (
-  userFunction: CloudEventFunctionWithCallback
+  userFunction: CloudEventFunctionWithCallback,
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
@@ -180,7 +177,7 @@ const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
       .then(() => userFunction(data, context))
       .then(
         result => callback(null, result),
-        err => callback(err, undefined)
+        err => callback(err, undefined),
       );
   };
   return wrapHttpFunction(httpHandler);
@@ -192,7 +189,7 @@ const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
  * @return An Express hander function that invokes the user function
  */
 const wrapEventFunctionWithCallback = (
-  userFunction: EventFunctionWithCallback
+  userFunction: EventFunctionWithCallback,
 ): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
@@ -203,45 +200,6 @@ const wrapEventFunctionWithCallback = (
 };
 
 /**
- * Wraps a typed function in an express style RequestHandler.
- * @param userFunction - User's function
- * @return An Express handler function that invokes the user function
- */
-const wrapTypedFunction = (typedFunction: TypedFunction): RequestHandler => {
-  const typedHandlerWrapper: HttpFunction = async (
-    req: Request,
-    res: Response
-  ) => {
-    let reqTyped: unknown;
-    try {
-      reqTyped = typedFunction.format.deserializeRequest(
-        new InvocationRequestImpl(req)
-      );
-    } catch (err) {
-      sendCrashResponse({
-        err,
-        res,
-        statusOverride: 400, // 400 Bad Request
-      });
-      return;
-    }
-
-    let resTyped: unknown = typedFunction.handler(reqTyped);
-    if (resTyped instanceof Promise) {
-      resTyped = await resTyped;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    typedFunction.format.serializeResponse(
-      new InvocationResponseImpl(res),
-      resTyped
-    );
-  };
-
-  return wrapHttpFunction(typedHandlerWrapper);
-};
-
-/**
  * Wraps a user function with the provided signature type in an express
  * RequestHandler.
  * @param userFunction User's function.
@@ -249,7 +207,7 @@ const wrapTypedFunction = (typedFunction: TypedFunction): RequestHandler => {
  */
 export const wrapUserFunction = <T = unknown>(
   userFunction: HandlerFunction<T>,
-  signatureType: SignatureType
+  signatureType: SignatureType,
 ): RequestHandler => {
   switch (signatureType) {
     case 'http':
@@ -258,7 +216,7 @@ export const wrapUserFunction = <T = unknown>(
       // Callback style if user function has more than 2 arguments.
       if (userFunction instanceof Function && userFunction!.length > 2) {
         return wrapEventFunctionWithCallback(
-          userFunction as EventFunctionWithCallback
+          userFunction as EventFunctionWithCallback,
         );
       }
       return wrapEventFunction(userFunction as EventFunction);
@@ -266,43 +224,9 @@ export const wrapUserFunction = <T = unknown>(
       if (userFunction instanceof Function && userFunction!.length > 1) {
         // Callback style if user function has more than 1 argument.
         return wrapCloudEventFunctionWithCallback(
-          userFunction as CloudEventFunctionWithCallback
+          userFunction as CloudEventFunctionWithCallback,
         );
       }
       return wrapCloudEventFunction(userFunction as CloudEventFunction);
-    case 'typed':
-      return wrapTypedFunction(userFunction as TypedFunction);
   }
 };
-
-/**
- * @private
- */
-class InvocationRequestImpl implements InvocationRequest {
-  constructor(private req: Request) {}
-
-  body(): string | Buffer {
-    return this.req.body;
-  }
-
-  header(header: string): string | undefined {
-    return this.req.header(header);
-  }
-}
-
-/**
- * @private
- */
-class InvocationResponseImpl implements InvocationResponse {
-  constructor(private res: Response) {}
-
-  setHeader(key: string, value: string): void {
-    this.res.set(key, value);
-  }
-  write(data: string | Buffer): void {
-    this.res.write(data);
-  }
-  end(data: string | Buffer): void {
-    this.res.end(data);
-  }
-}

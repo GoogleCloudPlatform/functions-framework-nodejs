@@ -168,7 +168,7 @@ describe('parseOptions', () => {
   it('disable execution id support by cli flag', () => {
     const options = parseOptions(
       ['bin/node', '/index.js', '--log-execution-id=false'],
-      {}
+      {},
     );
     assert.strictEqual(options.enableExecutionId, false);
   });
