@@ -33,6 +33,7 @@ const EXPRESS_ERROR_HANDLE_PARAM_LENGTH = 4;
 
 /** A express app error handle. */
 interface ErrorHandle {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (err: Error, req: Request, res: Response, next: NextFunction): any;
 }
 

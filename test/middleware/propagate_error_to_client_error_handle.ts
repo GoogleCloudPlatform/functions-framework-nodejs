@@ -28,10 +28,15 @@ describe('propagateErrorToClientErrorHandleMiddleware', () => {
     const app = express();
     app.use(
       (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _err: Error,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _req: Request,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _res: Response,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _next: NextFunction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ): any => {
         errListener();
       }
