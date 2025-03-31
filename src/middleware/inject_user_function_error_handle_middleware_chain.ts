@@ -54,15 +54,12 @@ export const injectUserFunctionErrorHandleMiddlewareChain = (
     return;
   }
 
-  // Inject their error handle middleware chain into the framework app.
-  const middlewares = (userFunction as Express)._router.stack;
-  for (
-    let index = firstErrorHandleMiddlewareIndex;
-    index < middlewares.length;
-    index++
-  ) {
-    const middleware = middlewares[index];
-
+  // Inject middleware chain starting from the first error handle
+  // middleware into the framework app.
+  const middlewares = (userFunction as Express)._router.stack.slice(
+    firstErrorHandleMiddlewareIndex
+  );
+  for (const middleware of middlewares) {
     // We don't care about routes.
     if (middleware.route) {
       continue;
