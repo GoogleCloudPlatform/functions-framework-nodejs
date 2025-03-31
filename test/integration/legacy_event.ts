@@ -41,6 +41,7 @@ const testOptions = {
   sourceLocation: '',
   printHelp: false,
   ignoredRoutes: null,
+  propagateFrameworkErrors: false,
 };
 
 describe('Event Function', () => {
