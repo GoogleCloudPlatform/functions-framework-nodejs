@@ -18,6 +18,9 @@ import * as supertest from 'supertest';
 
 import * as functions from '../../src/index';
 import {getTestServer} from '../../src/testing';
+import {Request, Response, NextFunction} from 'express';
+import * as express from 'express';
+import {getServer} from '../../src/server';
 
 describe('HTTP Function', () => {
   let callCount = 0;
@@ -110,5 +113,89 @@ describe('HTTP Function', () => {
       assert.equal(response.get('etag'), null);
       assert.strictEqual(callCount, test.expectedCallCount);
     });
+  });
+
+  it('default error handler', async () => {
+    const app = express();
+    app.post('/foo', async (req, res) => {
+      res.send('Foo!');
+    });
+    app.use(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (_err: Error, _req: Request, res: Response, _next: NextFunction) => {
+        res.status(500).send('Caught error!');
+      }
+    );
+    functions.http('testHttpFunction', app);
+    const malformedBody = '{"key": "value", "anotherKey": }';
+    const st = supertest(
+      getServer(app, {
+        port: '',
+        target: '',
+        sourceLocation: '',
+        signatureType: 'http',
+        printHelp: false,
+        enableExecutionId: false,
+        timeoutMilliseconds: 0,
+        ignoredRoutes: null,
+        propagateFrameworkErrors: false,
+      })
+    );
+    const resBody =
+      '<!DOCTYPE html>\n' +
+      '<html lang="en">\n' +
+      '<head>\n' +
+      '<meta charset="utf-8">\n' +
+      '<title>Error</title>\n' +
+      '</head>\n' +
+      '<body>\n' +
+      '<pre>SyntaxError: Unexpected token &#39;}&#39;, ...&quot;therKey&quot;: }&quot; is not valid JSON<br> &nbsp; &nbsp;at JSON.parse (&lt;anonymous&gt;)<br> &nbsp; &nbsp;at parse (/Users/gregei/IdeaProjects/functions-framework-nodejs/node_modules/body-parser/lib/types/json.js:92:19)<br> &nbsp; &nbsp;at /Users/gregei/IdeaProjects/functions-framework-nodejs/node_modules/body-parser/lib/read.js:128:18<br> &nbsp; &nbsp;at AsyncResource.runInAsyncScope (node:async_hooks:211:14)<br> &nbsp; &nbsp;at invokeCallback (/Users/gregei/IdeaProjects/functions-framework-nodejs/node_modules/raw-body/index.js:238:16)<br> &nbsp; &nbsp;at done (/Users/gregei/IdeaProjects/functions-framework-nodejs/node_modules/raw-body/index.js:227:7)<br> &nbsp; &nbsp;at IncomingMessage.onEnd (/Users/gregei/IdeaProjects/functions-framework-nodejs/node_modules/raw-body/index.js:287:7)<br> &nbsp; &nbsp;at IncomingMessage.emit (node:events:518:28)<br> &nbsp; &nbsp;at IncomingMessage.emit (node:domain:552:15)<br> &nbsp; &nbsp;at endReadableNT (node:internal/streams/readable:1698:12)<br> &nbsp; &nbsp;at process.processTicksAndRejections (node:internal/process/task_queues:90:21)</pre>\n' +
+      '</body>\n' +
+      '</html>\n';
+
+    const response = await st
+      .post('/foo')
+      .set('Content-Type', 'application/json')
+      .send(malformedBody);
+
+    assert.strictEqual(response.status, 400);
+    assert.equal(response.text, resBody);
+  });
+
+  it('user application error handler', async () => {
+    const app = express();
+    const resBody = 'Caught error!';
+    app.post('/foo', async (req, res) => {
+      res.send('Foo!');
+    });
+    app.use(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (_err: Error, _req: Request, res: Response, _next: NextFunction) => {
+        res.status(500).send(resBody);
+      }
+    );
+    functions.http('testHttpFunction', app);
+    const malformedBody = '{"key": "value", "anotherKey": }';
+    const st = supertest(
+      getServer(app, {
+        port: '',
+        target: '',
+        sourceLocation: '',
+        signatureType: 'http',
+        printHelp: false,
+        enableExecutionId: false,
+        timeoutMilliseconds: 0,
+        ignoredRoutes: null,
+        propagateFrameworkErrors: true,
+      })
+    );
+
+    const response = await st
+      .post('/foo')
+      .set('Content-Type', 'application/json')
+      .send(malformedBody);
+
+    assert.strictEqual(response.status, 500);
+    assert.equal(response.text, resBody);
   });
 });

@@ -61,6 +61,7 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 0,
         ignoredRoutes: null,
+        propagateFrameworkErrors: false,
       },
     },
     {
@@ -77,6 +78,7 @@ describe('parseOptions', () => {
         '--timeout',
         '6',
         '--ignored-routes=banana',
+        '--propagate-framework-errors=true',
       ],
       envVars: {},
       expectedOptions: {
@@ -88,6 +90,7 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 6000,
         ignoredRoutes: 'banana',
+        propagateFrameworkErrors: true,
       },
     },
     {
@@ -100,6 +103,7 @@ describe('parseOptions', () => {
         FUNCTION_SOURCE: '/source',
         CLOUD_RUN_TIMEOUT_SECONDS: '2',
         IGNORED_ROUTES: '',
+        PROPAGATE_FRAMEWORK_ERRORS: 'true',
       },
       expectedOptions: {
         port: '1234',
@@ -110,6 +114,7 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 2000,
         ignoredRoutes: '',
+        propagateFrameworkErrors: true,
       },
     },
     {
@@ -125,6 +130,7 @@ describe('parseOptions', () => {
         '--source=/source',
         '--timeout=3',
         '--ignored-routes=avocado',
+        '--propagate-framework-errors',
       ],
       envVars: {
         PORT: '4567',
@@ -133,6 +139,7 @@ describe('parseOptions', () => {
         FUNCTION_SOURCE: '/somewhere/else',
         CLOUD_RUN_TIMEOUT_SECONDS: '5',
         IGNORED_ROUTES: 'banana',
+        PROPAGATE_FRAMEWORK_ERRORS: 'false',
       },
       expectedOptions: {
         port: '1234',
@@ -143,6 +150,7 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 3000,
         ignoredRoutes: 'avocado',
+        propagateFrameworkErrors: false,
       },
     },
   ];
@@ -235,5 +243,34 @@ describe('parseOptions', () => {
         parseOptions(testCase.cliOpts, testCase.envVars);
       });
     });
+  });
+
+  it('default disable propagate framework errors', () => {
+    const options = parseOptions(['bin/node', '/index.js'], {});
+    assert.strictEqual(options.propagateFrameworkErrors, false);
+  });
+
+  it('disable propagate framework errors by cli flag', () => {
+    const options = parseOptions(
+      ['bin/node', '/index.js', '--propagate-framework-errors=false'],
+      {}
+    );
+    assert.strictEqual(options.propagateFrameworkErrors, false);
+  });
+
+  it('enable propagate framework errors by cli flag', () => {
+    const options = parseOptions(
+      ['bin/node', '/index.js', '--propagate-framework-errors=true'],
+      {}
+    );
+    assert.strictEqual(options.propagateFrameworkErrors, true);
+  });
+
+  it('disable propagate framework errors by env var', () => {
+    const envVars = {
+      PROPAGATE_FRAMEWORK_ERRORS: 'False',
+    };
+    const options = parseOptions(cliOpts, envVars);
+    assert.strictEqual(options.propagateFrameworkErrors, false);
   });
 });
