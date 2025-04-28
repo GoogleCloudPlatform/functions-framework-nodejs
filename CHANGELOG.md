@@ -4,6 +4,25 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [4.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.5.1...v4.0.0) (2025-04-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade all dependencies
+* delete the undocumented "typed" function signature
+* drop support for old nodejs versions
+
+### Bug Fixes
+
+* delete the undocumented "typed" function signature ([c0714e7](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/c0714e71379d7b2a2e91a94db318614eb446dd7d))
+
+
+### Miscellaneous Chores
+
+* drop support for old nodejs versions ([c0714e7](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/c0714e71379d7b2a2e91a94db318614eb446dd7d))
+* upgrade all dependencies ([c0714e7](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/c0714e71379d7b2a2e91a94db318614eb446dd7d))
+
 ## [3.5.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.5.0...v3.5.1) (2025-03-27)
 
 
