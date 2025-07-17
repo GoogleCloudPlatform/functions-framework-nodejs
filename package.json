@@ -53,11 +53,11 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@microsoft/api-extractor": "^7.52.2",
-    "@types/body-parser": "1.19.5",
+    "@types/body-parser": "1.19.6",
     "@types/minimist": "1.2.5",
     "@types/mocha": "^10.0.0",
     "@types/node": "^22.13.14",
-    "@types/on-finished": "2.3.4",
+    "@types/on-finished": "2.3.5",
     "@types/semver": "^7.7.0",
     "@types/sinon": "^17.0.4",
     "@types/supertest": "6.0.3",
