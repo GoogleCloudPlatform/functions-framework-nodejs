@@ -65,6 +65,7 @@ describe('programmatic functions', () => {
   });
 
   it('should run a CloudEvent function', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let receivedEvent: any = null;
     const cloudEventFunc: CloudEventFunction = cloudEvent => {
       receivedEvent = cloudEvent;
