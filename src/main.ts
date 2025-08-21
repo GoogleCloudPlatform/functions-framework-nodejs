@@ -21,13 +21,22 @@ import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
 import {parseOptions, helpText, OptionsError} from './options';
+import {
+  HttpFunction,
+  EventFunction,
+  CloudEventFunction,
+  HandlerFunction,
+} from './functions';
 import {loggingHandlerAddExecutionContext} from './logger';
 
 /**
  * Main entrypoint for the functions framework that loads the user's function
  * and starts the HTTP server.
+ * @param code - A function to be executed.
  */
-export const main = async () => {
+export const main = async (
+  code?: HttpFunction | EventFunction | CloudEventFunction,
+) => {
   try {
     const options = parseOptions();
 
@@ -40,11 +49,21 @@ export const main = async () => {
       loggingHandlerAddExecutionContext();
     }
 
-    const loadedFunction = await getUserFunction(
-      options.sourceLocation,
-      options.target,
-      options.signatureType,
-    );
+    let loadedFunction;
+    // If a function is provided directly, use it.
+    if (code) {
+      loadedFunction = {
+        userFunction: code,
+        signatureType: options.signatureType || 'http',
+      };
+    } else {
+      // Otherwise, load the function from file.
+      loadedFunction = await getUserFunction(
+        options.sourceLocation,
+        options.target,
+        options.signatureType,
+      );
+    }
     if (!loadedFunction) {
       console.error('Could not load the function, shutting down.');
       // eslint-disable-next-line no-process-exit
@@ -55,7 +74,7 @@ export const main = async () => {
     // It is possible to overwrite the configured signature type in code so we
     // reset it here based on what we loaded.
     options.signatureType = signatureType;
-    const server = getServer(userFunction!, options);
+    const server = getServer(userFunction as HandlerFunction, options);
     const errorHandler = new ErrorHandler(server);
     server
       .listen(options.port, () => {
@@ -79,4 +98,7 @@ export const main = async () => {
 };
 
 // Call the main method to load the user code and start the http server.
-void main();
+// Only call main if the module is not being required.
+if (require.main === module) {
+  void main();
+}
