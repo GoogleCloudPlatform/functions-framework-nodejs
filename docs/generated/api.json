@@ -1589,6 +1589,71 @@
               "endIndex": 2
             }
           ]
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@google-cloud/functions-framework!run_2:function(1)",
+          "docComment": "/**\n * Main entrypoint for the functions framework that loads the user's function and starts the HTTP server.\n *\n * @param code - A function to be executed.\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "main: (code?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "HttpFunction",
+              "canonicalReference": "@google-cloud/functions-framework!HttpFunction:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " | "
+            },
+            {
+              "kind": "Reference",
+              "text": "EventFunction",
+              "canonicalReference": "@google-cloud/functions-framework!EventFunction:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " | "
+            },
+            {
+              "kind": "Reference",
+              "text": "CloudEventFunction",
+              "canonicalReference": "@google-cloud/functions-framework!CloudEventFunction:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ") => "
+            },
+            {
+              "kind": "Reference",
+              "text": "Promise",
+              "canonicalReference": "!Promise:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<void>"
+            }
+          ],
+          "fileUrlPath": "src/main.ts",
+          "returnTypeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 9
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "code",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 6
+              },
+              "isOptional": true
+            }
+          ],
+          "name": "run_2"
         }
       ]
     }
