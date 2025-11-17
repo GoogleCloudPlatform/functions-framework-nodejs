@@ -16,7 +16,7 @@ jobs:
         node-version: [18, 20, 22]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: true
           egress-policy: block
@@ -31,7 +31,7 @@ jobs:
             sum.golang.org:443
 
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
@@ -46,7 +46,7 @@ jobs:
         run: npm install
 
       - name: Install conformance client
-        uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@72a4f36b10f1c6435ab1a86a9ea24bda464cc262 # v1.8.6
+        uses: GoogleCloudPlatform/functions-framework-conformance/.github/actions/client/install@c7b9c8798fb35e454f76da185a40547ee55c784e # v1.8.7
         with:
           client-version: v1.8.3
           cache-path: ~/client
