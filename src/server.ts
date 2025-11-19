@@ -44,7 +44,7 @@ export function getServer(
   // Express middleware
 
   // Set request-specific values in the very first middleware.
-  app.use('/*', (req, res, next) => {
+  app.use('/{*splat}', (req, res, next) => {
     setLatestRes(res);
     res.locals.functionExecutionFinished = false;
     next();
@@ -136,7 +136,7 @@ export function getServer(
     }
   } else if (options.signatureType === 'http') {
     // We configure some default ignored routes, only for HTTP functions.
-    app.use('/favicon.ico|/robots.txt', (req, res) => {
+    app.use(['/favicon.ico', '/robots.txt'], (req, res) => {
       // Neither crawlers nor browsers attempting to pull the icon find the body
       // contents particularly useful, so we filter these requests out from invoking
       // the user's function by default.
@@ -145,7 +145,7 @@ export function getServer(
   }
 
   if (options.signatureType === 'http') {
-    app.use('/*', (req, res, next) => {
+    app.use('/{*splat}', (req, res, next) => {
       onFinished(res, (err, res) => {
         res.locals.functionExecutionFinished = true;
       });
@@ -158,9 +158,9 @@ export function getServer(
   // Set up the routes for the user's function
   const requestHandler = wrapUserFunction(userFunction, options.signatureType);
   if (options.signatureType === 'http') {
-    app.all('/*', requestHandler);
+    app.all('/{*splat}', requestHandler);
   } else {
-    app.post('/*', requestHandler);
+    app.post('/{*splat}', requestHandler);
   }
 
   return http.createServer(app);
