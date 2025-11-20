@@ -28,10 +28,16 @@ describe('HTTP Function', () => {
       if (req.query.crash) {
         throw 'I crashed';
       }
-      res.send({
-        result: req.body.text,
-        query: req.query.param,
-      });
+      if (req.method === 'GET') {
+        res.send({
+          query: req.query.param,
+        });
+      } else {
+        res.send({
+          result: req.body.text,
+          query: req.query.param,
+        });
+      }
     });
   });
 
