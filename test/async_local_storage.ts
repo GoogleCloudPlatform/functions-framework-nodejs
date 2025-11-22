@@ -6,9 +6,9 @@ import {
 import {Request, Response} from '../src/functions';
 import {NextFunction} from 'express';
 import * as assert from 'assert';
-import * as semver from 'semver';
+import {logExecutionIdSupported} from '../src/options';
 
-const runOrSkip = semver.lt(process.versions.node, '13.0.0') ? it.skip : it;
+const runOrSkip = logExecutionIdSupported ? it.skip : it;
 
 describe('asyncLocalStorageMiddleware', () => {
   runOrSkip('async local storage', async () => {
