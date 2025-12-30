@@ -4,6 +4,17 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [5.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v4.0.1...v5.0.0) (2025-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update dependency express to v5 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/715))
+
+### Miscellaneous Chores
+
+* release 5.0.0 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/726)) ([55aeec5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/55aeec5dc3be358f6ab37ac9d656f3e8f83870f4))
+
 ## [4.0.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v4.0.0...v4.0.1) (2025-11-20)
 
 
