@@ -9,7 +9,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* release 5.0.0 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/726))
+* update dependency express to v5 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/715))
 
 ### Miscellaneous Chores
 
