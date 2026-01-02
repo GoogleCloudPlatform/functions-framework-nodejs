@@ -26,6 +26,7 @@ import {wrapUserFunction} from './function_wrappers';
 import {asyncLocalStorageMiddleware} from './async_local_storage';
 import {executionContextMiddleware} from './execution_context';
 import {FrameworkOptions} from './options';
+import {injectUserFunctionErrorHandleMiddlewareChain} from './middleware/inject_user_function_error_handle_middleware_chain';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -161,6 +162,10 @@ export function getServer(
     app.all('/{*splat}', requestHandler);
   } else {
     app.post('/{*splat}', requestHandler);
+  }
+
+  if (options.propagateFrameworkErrors) {
+    injectUserFunctionErrorHandleMiddlewareChain(app, userFunction);
   }
 
   return http.createServer(app);
