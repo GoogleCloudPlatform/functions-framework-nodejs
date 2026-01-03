@@ -159,13 +159,13 @@ command-line arguments:
 ### Google Cloud Run functions
 
 The [Node.JS runtime on Cloud Run functions](https://cloud.google.com/functions/docs/concepts/nodejs-runtime) utilizes the Node.JS Functions Framework. On Cloud Run functions, the Functions Framework is completely optional: if you don't add it to your `package.json`, it will be
-installed automatically. For
+installed automatically.
 
 After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
-### Container environments based on KNative
+### Container environments based on Knative
 
 Cloud Run and Cloud Run for Anthos both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
 
