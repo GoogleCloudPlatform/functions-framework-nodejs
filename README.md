@@ -68,6 +68,8 @@ npm install @google-cloud/functions-framework
     };
     ```
 
+Option 1:
+
 1. Run the following command:
 
     ```sh
@@ -75,6 +77,33 @@ npm install @google-cloud/functions-framework
     ```
 
 1. Open http://localhost:8080/ in your browser and see _Hello, World_.
+
+Option 2:
+
+1. Create a `main.js` file with the following contents:
+
+    ```js
+    import { run } from '@google-cloud/functions-framework';
+    import { helloWorld } from './hello.js';
+
+    run(helloWorld);
+    ```
+
+1. Run `node main.js` to start the local development server to serve the function:
+
+   ```
+   Serving function...
+   Function: function
+   Signature type: http
+   URL: http://localhost:8080/
+   ```
+
+1. Send requests to this function using `curl` from another terminal window:
+
+    ```sh
+    curl localhost:8080
+    # Output: Hello, World
+    ```
 
 ### Quickstart: Set up a new project
 

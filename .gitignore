@@ -15,3 +15,4 @@ serverlog_stderr.txt
 serverlog_stdout.txt
 temp
 test/conformance/package-lock.json
+firebase-debug.log
