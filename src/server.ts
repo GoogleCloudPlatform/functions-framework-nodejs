@@ -25,7 +25,7 @@ import {timeoutMiddleware} from './middleware/timeout';
 import {wrapUserFunction} from './function_wrappers';
 import {asyncLocalStorageMiddleware} from './async_local_storage';
 import {executionContextMiddleware} from './execution_context';
-import {FrameworkOptions} from './options';
+import {FrameworkOptions, logExecutionIdSupported} from './options';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -106,8 +106,11 @@ export function getServer(
 
   // Get execution context.
   app.use(executionContextMiddleware);
+
   // Store execution context to async local storge.
-  app.use(asyncLocalStorageMiddleware);
+  if (logExecutionIdSupported) {
+    app.use(asyncLocalStorageMiddleware);
+  }
 
   if (
     options.signatureType === 'event' ||
