@@ -1,6 +1,10 @@
  {
   "experimental": {
     "extensionManagement": true
+  },
+  "mcp": {
+    "enabled": true,
+    "excluded": ["gemini-cloud-assist-mcp", "firebase", "julesServer", "securityServer", "osvScanner", "observability"]
   }
  }
  
