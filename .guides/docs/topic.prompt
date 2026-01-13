@@ -1,0 +1,11 @@
+---
+title: run a function from server.js
+description: how to invoke a function from the server code instead of using the Functions Framework CLI
+---
+It is possible to serve a remote function directly from the server code instead of using the Functions Framework CLI.
+
+The benefits include:
+
+- Functions can be started with node directly: `node src/server.js`
+- Furnctions can be used with node watcher without extra setup: `node watch src/server.js`
+- Better Typescript support with ts-node/tsx: `tsx --watch src/server.ts`
