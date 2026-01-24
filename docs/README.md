@@ -9,6 +9,7 @@ This directory contains advanced docs around the Functions Framework.
 - [Running and Deploying Docker Containers](docker.md)
 - [Writing a Function in Typescript](typescript.md)
 - [ES Modules](esm/README.md)
+- [Propagate internal framework errors](propagate-internal-framework-errors.md)
 
 ## Generated Docs
 

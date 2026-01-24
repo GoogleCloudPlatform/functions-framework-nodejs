@@ -15,7 +15,7 @@
 import * as minimist from 'minimist';
 import * as semver from 'semver';
 import {resolve} from 'path';
-import {SignatureType, isValidSignatureType} from './types';
+import {isValidSignatureType, SignatureType} from './types';
 
 /**
  * Error thrown when an invalid option is provided.
@@ -60,6 +60,10 @@ export interface FrameworkOptions {
    * Routes that should return a 404 without invoking the function.
    */
   ignoredRoutes: string | null;
+  /**
+   * Whether or not to propagate framework errors to the client.
+   */
+  propagateFrameworkErrors: boolean;
 }
 
 /**
@@ -167,6 +171,18 @@ const ExecutionIdOption = new ConfigurableOption(
   },
 );
 
+const PropagateFrameworkErrorsOption = new ConfigurableOption(
+  'propagate-framework-errors',
+  'PROPAGATE_FRAMEWORK_ERRORS',
+  false,
+  x => {
+    return (
+      (typeof x === 'boolean' && x) ||
+      (typeof x === 'string' && x.toLowerCase() === 'true')
+    );
+  }
+);
+
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
 Documentation:
@@ -191,6 +207,7 @@ export const parseOptions = (
       SourceLocationOption.cliOption,
       TimeoutOption.cliOption,
       IgnoredRoutesOption.cliOption,
+      PropagateFrameworkErrorsOption.cliOption,
     ],
   });
   return {
@@ -202,5 +219,9 @@ export const parseOptions = (
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
     enableExecutionId: ExecutionIdOption.parse(argv, envVars),
     ignoredRoutes: IgnoredRoutesOption.parse(argv, envVars),
+    propagateFrameworkErrors: PropagateFrameworkErrorsOption.parse(
+      argv,
+      envVars
+    ),
   };
 };
