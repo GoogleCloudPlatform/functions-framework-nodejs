@@ -13,12 +13,11 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as semver from 'semver';
 import {resolve} from 'path';
 import {
   parseOptions,
   FrameworkOptions,
-  requiredNodeJsVersionForLogExecutionID,
+  logExecutionIdSupported,
 } from '../src/options';
 
 describe('parseOptions', () => {
@@ -202,9 +201,7 @@ describe('parseOptions', () => {
   executionIdTestData.forEach(testCase => {
     it(testCase.name, () => {
       const options = parseOptions(testCase.cliOpts, testCase.envVars);
-      if (
-        semver.lt(process.versions.node, requiredNodeJsVersionForLogExecutionID)
-      ) {
+      if (logExecutionIdSupported === false) {
         assert.strictEqual(options.enableExecutionId, false);
       } else {
         assert.strictEqual(options.enableExecutionId, true);

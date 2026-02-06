@@ -25,8 +25,7 @@
     "express": "^5.0.0",
     "minimist": "^1.2.8",
     "on-finished": "^2.3.0",
-    "read-package-up": "^11.0.0",
-    "semver": "^7.7.1"
+    "read-package-up": "^11.0.0"
   },
   "scripts": {
     "test": "mocha build/test --recursive",
@@ -58,7 +57,6 @@
     "@types/mocha": "^10.0.0",
     "@types/node": "^24.0.0",
     "@types/on-finished": "2.3.5",
-    "@types/semver": "^7.7.0",
     "@types/sinon": "^17.0.4",
     "@types/supertest": "6.0.3",
     "gts": "6.0.2",

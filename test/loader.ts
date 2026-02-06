@@ -14,7 +14,6 @@
 
 import * as assert from 'assert';
 import * as express from 'express';
-import * as semver from 'semver';
 import * as functions from '../src/functions';
 import * as loader from '../src/loader';
 import * as FunctionRegistry from '../src/function_registry';
@@ -80,7 +79,7 @@ describe('loading function', () => {
       );
       return loadedFunction?.userFunction as functions.HttpFunction;
     };
-    if (semver.lt(process.version, loader.MIN_NODE_VERSION_ESMODULES)) {
+    if (loader.esModuleSupported === false) {
       it(`should fail to load function in an ES module ${test.name}`, async () => {
         void assert.rejects(loadFn);
       });
