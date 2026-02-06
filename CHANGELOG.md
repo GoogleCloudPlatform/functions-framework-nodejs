@@ -4,6 +4,25 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [5.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v4.0.1...v5.0.0) (2025-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update dependency express to v5 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/715))
+
+### Miscellaneous Chores
+
+* release 5.0.0 ([#726](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/726)) ([55aeec5](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/55aeec5dc3be358f6ab37ac9d656f3e8f83870f4))
+
+## [4.0.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v4.0.0...v4.0.1) (2025-11-20)
+
+
+### Bug Fixes
+
+* add release-assets.githubusercontent.com to allowed domains ([#713](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/713)) ([4cd1b2b](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/4cd1b2b7590cb6fab1f13fa18b0fd6f56b5a37af))
+* update microsoft/api-extractor to 7.55.0 ([#712](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/712)) ([8e565c8](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/8e565c846fa2a27babaa23ce91fe4525a87fedaa))
+
 ## [4.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v3.5.1...v4.0.0) (2025-04-28)
 
 
