@@ -1,46 +1,33 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "globalExtends": [
-    "config:base"
-  ],
+  "globalExtends": ["config:base"],
   "semanticCommits": "enabled",
   "extends": ["group:allNonMajor", "schedule:monthly"],
   "packageRules": [
     {
       "description": "Create a PR whenever there is a new major version",
-      "matchUpdateTypes": [
-        "major"
-      ]
+      "matchUpdateTypes": ["major"]
     },
     {
       "description": "Use releasable commit type for runtime dependency updates",
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "matchDepTypes": [
         "dependencies",
         "optionalDependencies",
         "peerDependencies"
       ],
-      "semanticCommitType": "deps",
+      "semanticCommitType": "fix",
       "semanticCommitScope": "deps"
     },
     {
       "description": "Keep development-only dependency updates non-releasable",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchDepTypes": [
-        "devDependencies"
-      ],
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps"
     }
   ],
-  "ignorePaths": [
-    "docs/**",
-    "experimental/**"
-  ],
+  "ignorePaths": ["docs/**", "experimental/**"],
   "pinVersions": false,
   "ignoreDeps": ["typescript"]
 }
