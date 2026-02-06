@@ -8,7 +8,7 @@ import {NextFunction} from 'express';
 import * as assert from 'assert';
 import {logExecutionIdSupported} from '../src/options';
 
-const runOrSkip = logExecutionIdSupported ? it.skip : it;
+const runOrSkip = logExecutionIdSupported ? it : it.skip;
 
 describe('asyncLocalStorageMiddleware', () => {
   runOrSkip('async local storage', async () => {
