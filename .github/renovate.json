@@ -22,7 +22,7 @@
         "optionalDependencies",
         "peerDependencies"
       ],
-      "semanticCommitType": "fix",
+      "semanticCommitType": "deps",
       "semanticCommitScope": "deps"
     },
     {
