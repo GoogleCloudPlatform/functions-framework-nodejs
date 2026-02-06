@@ -1,6 +1,2 @@
+releaseType: node
 handleGHRelease: true
-manifest: true
-branches:
-  - branch: main
-    releaseType: node
-    handleGHRelease: true
