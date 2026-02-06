@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [5.0.1](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v5.0.0...v5.0.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* remove semver dependency ([#700](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/700)) ([7c5551d](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/7c5551d7973d2fda0061305b59c40c7c69dc3ab0))
+
 ## [5.0.0](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v4.0.1...v5.0.0) (2025-12-30)
 
 
