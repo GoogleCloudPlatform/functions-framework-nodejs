@@ -3,6 +3,7 @@
   "globalExtends": [
     "config:base"
   ],
+  "semanticCommits": "enabled",
   "extends": ["group:allNonMajor", "schedule:monthly"],
   "packageRules": [
     {
@@ -10,6 +11,30 @@
       "matchUpdateTypes": [
         "major"
       ]
+    },
+    {
+      "description": "Use releasable commit type for runtime dependency updates",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "optionalDependencies",
+        "peerDependencies"
+      ],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Keep development-only dependency updates non-releasable",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
     }
   ],
   "ignorePaths": [
