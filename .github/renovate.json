@@ -3,13 +3,41 @@
   "globalExtends": [
     "config:base"
   ],
-  "extends": ["group:allNonMajor", "schedule:monthly"],
+  "semanticCommits": "enabled",
+  "extends": [
+    "group:allNonMajor",
+    "schedule:monthly"
+  ],
   "packageRules": [
     {
       "description": "Create a PR whenever there is a new major version",
       "matchUpdateTypes": [
         "major"
       ]
+    },
+    {
+      "description": "Use releasable commit type for runtime dependency updates",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "optionalDependencies",
+        "peerDependencies"
+      ],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Keep development-only dependency updates non-releasable",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
     }
   ],
   "ignorePaths": [
@@ -17,5 +45,7 @@
     "experimental/**"
   ],
   "pinVersions": false,
-  "ignoreDeps": ["typescript"]
+  "ignoreDeps": [
+    "typescript"
+  ]
 }
