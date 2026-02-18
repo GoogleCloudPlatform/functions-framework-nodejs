@@ -16,7 +16,7 @@ import * as express from 'express';
 import {CloudEvent} from './functions';
 
 /**
- * Custom exception class to represent errors durring event conversions.
+ * Custom exception class to represent errors during event conversions.
  */
 export class EventConversionError extends Error {}
 
@@ -62,7 +62,7 @@ export function getBinaryCloudEventContext(
   const context = {} as CloudEvent<unknown>;
   for (const name in req.headers) {
     if (name.startsWith('ce-')) {
-      const attributeName = name.substr(
+      const attributeName = name.substring(
         'ce-'.length,
       ) as keyof CloudEvent<unknown>;
       context[attributeName] = req.header(name);
