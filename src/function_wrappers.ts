@@ -75,7 +75,7 @@ const parseCloudEventRequest = (req: Request): CloudEvent<unknown> => {
  * Helper function to background event context and data payload object from an HTTP
  * request.
  * @param req - An Express HTTP request
- * @returns The data playload and event context parsed from the request
+ * @returns The data payload and event context parsed from the request
  */
 const parseBackgroundEvent = (req: Request): {data: {}; context: Context} => {
   const event = req.body;
@@ -130,7 +130,7 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
 /**
  * Wraps an async CloudEvent function in an express RequestHandler.
  * @param userFunction - User's function
- * @return An Express hander function that invokes the user function
+ * @return An Express handler function that invokes the user function
  */
 const wrapCloudEventFunction = (
   userFunction: CloudEventFunction,
@@ -151,7 +151,7 @@ const wrapCloudEventFunction = (
 /**
  * Wraps callback style CloudEvent function in an express RequestHandler.
  * @param userFunction - User's function
- * @return An Express hander function that invokes the user function
+ * @return An Express handler function that invokes the user function
  */
 const wrapCloudEventFunctionWithCallback = (
   userFunction: CloudEventFunctionWithCallback,
@@ -167,7 +167,7 @@ const wrapCloudEventFunctionWithCallback = (
 /**
  * Wraps an async event function in an express RequestHandler.
  * @param userFunction - User's function
- * @return An Express hander function that invokes the user function
+ * @return An Express handler function that invokes the user function
  */
 const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
   const httpHandler = (req: Request, res: Response) => {
@@ -186,7 +186,7 @@ const wrapEventFunction = (userFunction: EventFunction): RequestHandler => {
 /**
  * Wraps a callback style event function in an express RequestHandler.
  * @param userFunction - User's function
- * @return An Express hander function that invokes the user function
+ * @return An Express handler function that invokes the user function
  */
 const wrapEventFunctionWithCallback = (
   userFunction: EventFunctionWithCallback,
@@ -203,7 +203,7 @@ const wrapEventFunctionWithCallback = (
  * Wraps a user function with the provided signature type in an express
  * RequestHandler.
  * @param userFunction User's function.
- * @return An Express hander function that invokes the user function.
+ * @return An Express handler function that invokes the user function.
  */
 export const wrapUserFunction = <T = unknown>(
   userFunction: HandlerFunction<T>,
