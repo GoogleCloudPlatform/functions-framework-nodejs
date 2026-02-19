@@ -34,7 +34,7 @@ const registrationContainer = new Map<string, RegisteredFunction<any>>();
 /**
  * Helper method to store a registered function in the registration container
  */
-const register = <T = unknown, U = unknown>(
+const register = <T = unknown>(
   functionName: string,
   signatureType: SignatureType,
   userFunction: HandlerFunction<T>,
