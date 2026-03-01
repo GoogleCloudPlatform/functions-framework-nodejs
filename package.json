@@ -55,7 +55,7 @@
     "@types/body-parser": "1.19.6",
     "@types/minimist": "1.2.5",
     "@types/mocha": "^10.0.0",
-    "@types/node": "^24.0.0",
+    "@types/node": "^25.0.0",
     "@types/on-finished": "2.3.5",
     "@types/sinon": "^17.0.4",
     "@types/supertest": "6.0.3",
