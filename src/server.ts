@@ -43,6 +43,18 @@ export function getServer(
 
   // Express middleware
 
+  // Return 400 for URls containing non UTF-8 encoded chars 
+ app.use((req, res, next) => {
+  const pathOnly = req.url.split('?')[0].split('#')[0];
+  try {
+    decodeURIComponent(pathOnly);
+  } catch {
+    res.status(400).send('Bad Request: Invalid URL encoding');
+    return;
+  }
+  next();
+});
+
   // Set request-specific values in the very first middleware.
   app.use('/{*splat}', (req, res, next) => {
     setLatestRes(res);

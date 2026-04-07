@@ -100,6 +100,14 @@ describe('HTTP Function', () => {
       expectedStatus: 404,
       expectedCallCount: 0,
     },
+    {
+      name: 'GET with non UTF-8 encoded chars',
+      httpVerb: 'GET',
+      path: '/%C3',
+      expectedBody: {},
+      expectedStatus: 400,
+      expectedCallCount: 0,
+    },
   ];
 
   testData.forEach(test => {
