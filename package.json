@@ -18,6 +18,13 @@
       "default": "./build/src/testing.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      "testing": [
+        "./build/src/testing.d.ts"
+      ]
+    }
+  },
   "dependencies": {
     "@types/express": "^5.0.0",
     "body-parser": "^2.2.2",
