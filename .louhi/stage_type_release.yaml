@@ -1,0 +1,10 @@
+apiVersion: louhi/v2
+kind: StageType
+metadata:
+  name: Release
+spec:
+  description: 'Release Functions Framework Node.js to npm'
+  runtime: kokoro
+---
+kokoroJobName: cloud-functions-framework-team/functions-framework-releases/nodejs/release
+injectLouhiParameters: true

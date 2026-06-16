@@ -1,0 +1,9 @@
+apiVersion: louhi/v2
+kind: Repository
+metadata:
+  name: functions-framework-nodejs
+spec:
+  url: https://serverless.googlesource.com/functions-framework-nodejs
+  branchFilter: ^(main)$
+  tagFilter: null
+  triggerOnInitialization: false
