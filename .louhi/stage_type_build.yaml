@@ -1,0 +1,10 @@
+apiVersion: louhi/v2
+kind: StageType
+metadata:
+  name: Build
+spec:
+  description: 'Build and test Functions Framework Node.js'
+  runtime: kokoro
+---
+kokoroJobName: cloud-functions-framework-team/functions-framework-releases/nodejs/build
+injectLouhiParameters: true
