@@ -7,11 +7,11 @@ cd "$KOKORO_ARTIFACTS_DIR/git/serverless/functions-framework-nodejs"
 ### Configure Airlock
 # APT
 rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
-echo 'deb https://us-apt.pkg.dev/remote/artifact-foundry-prod/debian-3p-remote-bookworm bookworm main' | \
-    tee -a  /etc/apt/sources.list.d/artifact-registry.list
+echo 'deb https://us-apt.pkg.dev/remote/artifact-foundry-prod/debian-3p-remote-bookworm bookworm main' |
+  tee -a /etc/apt/sources.list.d/artifact-registry.list
 
 # NPM
-cat > .npmrc <<EOF
+cat >.npmrc <<EOF
 registry=https://us-npm.pkg.dev/artifact-foundry-prod/npm-3p-trusted/
 //us-npm.pkg.dev/artifact-foundry-prod/npm-3p-trusted/:always-auth=true
 EOF
@@ -27,11 +27,9 @@ npm ci
 # artifacts will be stored locally for attestation generation.
 npm pack --pack-destination="${ARTIFACTS}"
 
-
-
 ### Authenticate to OSS Exit Gate
 # Replace default registry with OSS Exit Gate
-cat > .npmrc <<EOF
+cat >.npmrc <<EOF
 registry=https://us-npm.pkg.dev/oss-exit-gate-prod/ff-releases--npm/
 //us-npm.pkg.dev/oss-exit-gate-prod/ff-releases--npm/:always-auth=true
 EOF
