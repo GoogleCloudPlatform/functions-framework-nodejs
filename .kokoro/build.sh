@@ -17,21 +17,17 @@ registry=https://us-npm.pkg.dev/artifact-foundry-prod/npm-3p-trusted/
 EOF
 cp .npmrc "$HOME/.npmrc"
 
-### Build all package.json
+### Build root package
 ARTIFACTS="${KOKORO_ARTIFACTS_DIR}/artifacts"
-mkdir "${ARTIFACTS}"
+mkdir -p "${ARTIFACTS}"
 
-readarray -t package_jsons < <(find "." -type d -name "node_modules" -prune -o -name "package.json" -print)
-for package_file in "${package_jsons[@]}"; do
-  echo "Building package ${package_file}"
-  package_dir="$(dirname "${package_file}")"
-  pushd "${package_dir}"
-  npm ci
-  # npm pack and npm publish needs to be distinct steps to ensure the
-  # artifacts will be stored locally for attestation generation.
-  npm pack --pack-destination="${ARTIFACTS}"
-  popd
-done
+echo "Building root package"
+npm ci
+# npm pack and npm publish needs to be distinct steps to ensure the
+# artifacts will be stored locally for attestation generation.
+npm pack --pack-destination="${ARTIFACTS}"
+
+
 
 ### Authenticate to OSS Exit Gate
 # Replace default registry with OSS Exit Gate
