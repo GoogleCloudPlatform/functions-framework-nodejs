@@ -65,7 +65,7 @@
     "@types/node": "^24.0.0",
     "@types/on-finished": "2.3.5",
     "@types/sinon": "^17.0.4",
-    "@types/supertest": "6.0.3",
+    "@types/supertest": "7.2.0",
     "google-artifactregistry-auth": "^3.5.0",
     "gts": "6.0.2",
     "mocha": "^11.1 .0",
