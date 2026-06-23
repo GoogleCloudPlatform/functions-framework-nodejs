@@ -165,6 +165,12 @@ After you've written your function, you can simply deploy it from your local
 machine using the `gcloud` command-line tool.
 [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
 
+When mounting Secret Manager secrets with `gcloud functions deploy --set-secrets`,
+do not mount a secret over `/workspace`. Cloud Run functions load the deployed
+function source from `/workspace`, so mounting a secret there can hide the
+application files and prevent the function from starting. Mount secret files
+under a different path, such as `/etc/secrets` or `/tmp`.
+
 ### Container environments based on Knative
 
 Cloud Run and Cloud Run for Anthos both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
