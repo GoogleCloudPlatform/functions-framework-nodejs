@@ -163,7 +163,15 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
   let decodedData;
   try {
     if (data instanceof Uint8Array) {
-      decodedData = Buffer.from(data.buffer).toString();
+      // Decode only the bytes the view actually spans. A Uint8Array (e.g. a
+      // Buffer carved from Node's shared pool) is often a view into a larger
+      // ArrayBuffer, so reading `data.buffer` directly would include unrelated
+      // bytes outside the view's byteOffset/byteLength range.
+      decodedData = Buffer.from(
+        data.buffer,
+        data.byteOffset,
+        data.byteLength,
+      ).toString();
     } else {
       decodedData = Buffer.from(data, encoding).toString();
     }
