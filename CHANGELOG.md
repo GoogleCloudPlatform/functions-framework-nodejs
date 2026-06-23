@@ -4,6 +4,15 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [5.0.3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v5.0.2...v5.0.3) (2026-06-22)
+
+
+### Bug Fixes
+
+* add typesVersions so testing module resolves under classic TypeScript moduleResolution ([#770](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/770)) ([d1593c2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/d1593c2193f0cbb9110215582f037874f141db89))
+* **deps:** bump path-to-regexp from 0.1.12 to 0.1.13 in /docs/esm ([#760](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/760)) ([5f58e79](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/5f58e79e2a90f8553a257ab04aa6feca34c1179d))
+* **deps:** bump qs, body-parser and express in /docs/esm ([#761](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/761)) ([308a16e](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/308a16e0eec2f826f2dd6cf3b75e7911cc8c55a0))
+
 ## [5.0.2](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v5.0.1...v5.0.2) (2026-02-18)
 
 
