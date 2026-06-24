@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/@google-cloud/functions-framework?activeTab=versions
 
+## [5.0.4](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v5.0.3...v5.0.4) (2026-06-24)
+
+
+### Bug Fixes
+
+* decode only the viewed bytes of Uint8Array log data ([#772](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/issues/772)) ([8b780fc](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/commit/8b780fc9e9f9a105543e661c58b1202a6804038a))
+
 ## [5.0.3](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/compare/v5.0.2...v5.0.3) (2026-06-22)
 
 
