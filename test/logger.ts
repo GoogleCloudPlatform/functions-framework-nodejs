@@ -147,6 +147,18 @@ describe('getModifiedData', () => {
     assert.equal(modifiedData, expectedTextOutput);
   });
 
+  it('uint8Array that is a view into a larger (pooled) buffer', () => {
+    // Node.js allocates most Buffers from a shared internal pool, so a Buffer
+    // written to stdout/stderr is frequently a view with a non-zero byteOffset
+    // into a much larger ArrayBuffer. The logger must honor the view's
+    // byteOffset/byteLength rather than decoding the entire backing buffer.
+    const pool = Buffer.alloc(64, 0x2e /* '.' */);
+    const view = pool.subarray(8, 8 + sampleText.length);
+    view.write(sampleText);
+    const modifiedData = getModifiedData(view);
+    assert.equal(modifiedData, expectedTextOutput);
+  });
+
   it('simple text with error', () => {
     const modifiedData = getModifiedData(sampleText, undefined, true);
     const expectedOutput =
