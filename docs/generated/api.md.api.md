@@ -105,6 +105,10 @@ export { Request_2 as Request }
 
 export { Response_2 as Response }
 
+// @public
+const run_2: (code?: HttpFunction | EventFunction | CloudEventFunction) => Promise<void>;
+export { run_2 as run }
+
 // (No @packageDocumentation comment for this package)
 
 ```

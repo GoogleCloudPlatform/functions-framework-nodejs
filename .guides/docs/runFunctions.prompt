@@ -1,0 +1,15 @@
+---
+title: run a function from a plain Node.js script
+description: when to invoke a function from the server code instead of using the Functions Framework CLI
+---
+It is possible to serve a remote function directly from a plain script instead of the Functions Framework CLI.
+
+The benefits include:
+
+- Functions can be started with node directly: `node src/server.js`
+- Furnctions can be used with node watcher without extra setup: `node watch src/server.js`
+- Better Typescript support with ts-node/tsx: `tsx --watch src/server.ts`
+- Easier debugging in IDEs because it is much easier to attach a debugger (like in VS Code or WebStorm) a plain Node.js script (node main.js) than to a command-line tool spawned via npx
+- Custom initialization code because running code before server starts can be useful
+
+When adding integration tests, choose this option so that you can easily stop the server instance within your test suite, rather than spawning a child process to run the CLI.
