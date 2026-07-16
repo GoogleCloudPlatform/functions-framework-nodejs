@@ -65,7 +65,10 @@ export function getBinaryCloudEventContext(
       const attributeName = name.substring(
         'ce-'.length,
       ) as keyof CloudEvent<unknown>;
-      context[attributeName] = req.header(name);
+      const val = req.header(name);
+      context[attributeName] = val
+        ? Buffer.from(val, 'binary').toString('utf-8')
+        : val;
     }
   }
   return context;
