@@ -291,6 +291,38 @@ describe('CloudEvent Function', () => {
     });
   });
 
+  it('marshals attribute-only Pub/Sub emulator requests', async () => {
+    const server = getTestServer('testCloudEventFunction');
+    await supertest(server)
+      .post('/projects/FOO/topics/BAR_TOPIC')
+      .send({
+        subscription: 'projects/FOO/subscriptions/BAR_SUB',
+        message: {
+          messageId: 'attribute-only-message',
+          publishTime: '2026-07-22T00:00:00.000Z',
+          attributes: {attribute1: 'value1'},
+        },
+      })
+      .expect(204);
+
+    assert.deepStrictEqual(receivedCloudEvent, {
+      specversion: '1.0',
+      type: 'google.cloud.pubsub.topic.v1.messagePublished',
+      source: '//pubsub.googleapis.com/projects/FOO/topics/BAR_TOPIC',
+      id: 'attribute-only-message',
+      time: '2026-07-22T00:00:00.000Z',
+      datacontenttype: 'application/json',
+      data: {
+        message: {
+          '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
+          attributes: {attribute1: 'value1'},
+          messageId: 'attribute-only-message',
+          publishTime: '2026-07-22T00:00:00.000Z',
+        },
+      },
+    });
+  });
+
   it('allows customers to provide a type parameter for the data payload', async () => {
     const testPayload = 'a test string';
 

@@ -46,7 +46,7 @@ export interface RawPubSubBody {
      * Base64 encoded message data. If this field is empty, the message must contain at least one
      * attribute.
      */
-    data: string;
+    data?: string;
     /**
      * ID of this message, assigned by the server when the message is published. Guaranteed to be
      * unique within the topic.
@@ -82,7 +82,7 @@ export interface MarshalledPubSubBody {
   };
   data: {
     '@type': typeof PUBSUB_MESSAGE_TYPE;
-    data: string;
+    data?: string;
     attributes: {[key: string]: string};
   };
 }
@@ -99,7 +99,9 @@ const isRawPubSubRequestBody = (body: any): body is RawPubSubBody => {
     !body.context &&
     body.subscription &&
     body.message &&
-    body.message.data &&
+    (body.message.data ||
+      (body.message.attributes &&
+        Object.keys(body.message.attributes).length > 0)) &&
     body.message.messageId
   );
 };
@@ -145,7 +147,7 @@ const marshalPubSubRequestBody = (
   },
   data: {
     '@type': PUBSUB_MESSAGE_TYPE,
-    data: body.message.data,
+    ...(body.message.data !== undefined && {data: body.message.data}),
     attributes: body.message.attributes || {},
   },
 });
