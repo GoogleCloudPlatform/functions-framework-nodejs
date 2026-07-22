@@ -211,6 +211,43 @@ describe('Event Function', () => {
     });
   });
 
+  it('marshals attribute-only Pub/Sub emulator requests', async () => {
+    let receivedData: {} | null = null;
+    let receivedContext: functions.CloudFunctionsContext | null = null;
+    const server = getServer((data: {}, context: functions.Context) => {
+      receivedData = data;
+      receivedContext = context as functions.CloudFunctionsContext;
+    }, testOptions);
+
+    await supertest(server)
+      .post('/projects/FOO/topics/BAR_TOPIC')
+      .send({
+        subscription: 'projects/FOO/subscriptions/BAR_SUB',
+        message: {
+          messageId: 'attribute-only-message',
+          publishTime: '2026-07-22T00:00:00.000Z',
+          attributes: {attribute1: 'value1'},
+        },
+      })
+      .set({'Content-Type': 'application/json'})
+      .expect(204);
+
+    assert.deepStrictEqual(receivedData, {
+      '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
+      attributes: {attribute1: 'value1'},
+    });
+    assert.deepStrictEqual(receivedContext, {
+      eventId: 'attribute-only-message',
+      timestamp: '2026-07-22T00:00:00.000Z',
+      eventType: 'google.pubsub.topic.publish',
+      resource: {
+        service: 'pubsub.googleapis.com',
+        type: 'type.googleapis.com/google.pubsub.v1.PubsubMessage',
+        name: 'projects/FOO/topics/BAR_TOPIC',
+      },
+    });
+  });
+
   it('returns a 500 if the function throws an exception', async () => {
     const server = getServer(() => {
       throw 'I crashed';
