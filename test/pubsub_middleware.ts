@@ -65,6 +65,7 @@ describe('legacyPubSubEventMiddleware', () => {
     path: string;
     body: object;
     expectedBody: () => object;
+    expectedHeaders?: () => object;
   }
 
   const testData: TestData[] = [
@@ -86,6 +87,52 @@ describe('legacyPubSubEventMiddleware', () => {
       body: {foo: 'bar'},
       expectedBody: () => ({foo: 'bar'}),
     },
+    {
+      name: 'Eventarc fallback CloudEvent (JSON payload)',
+      path: `/${PUB_SUB_TOPIC}`,
+      body: {
+        subscription: 'projects/FOO/subscriptions/BAR_SUB',
+        message: {
+          data: Buffer.from('{"hello":"world"}', 'utf8').toString('base64'),
+          messageId: '1',
+          attributes: {
+            'ce-type': 'google.cloud.firestore.document.v1.written',
+            'ce-source': '//firestore.googleapis.com/...',
+            'ce-subject': 'documents/... ',
+            'ce-datacontenttype': 'application/json',
+          },
+        },
+      },
+      expectedBody: () => ({hello: 'world'}),
+      expectedHeaders: () => ({
+        'ce-type': 'google.cloud.firestore.document.v1.written',
+        'ce-source': '//firestore.googleapis.com/...',
+        'ce-subject': 'documents/... ',
+        'ce-datacontenttype': 'application/json',
+      }),
+    },
+    {
+      name: 'Eventarc fallback CloudEvent (Unprefixed attributes & Binary payload)',
+      path: `/${PUB_SUB_TOPIC}`,
+      body: {
+        subscription: 'projects/FOO/subscriptions/BAR_SUB',
+        message: {
+          data: Buffer.from('bad-json', 'utf8').toString('base64'),
+          messageId: '1',
+          attributes: {
+            'type': 'google.cloud.storage.object.v1.finalized',
+            'source': '//storage.googleapis.com/...',
+            'datacontenttype': 'application/protobuf',
+          },
+        },
+      },
+      expectedBody: () => Buffer.from('bad-json', 'utf8'),
+      expectedHeaders: () => ({
+        'ce-type': 'google.cloud.storage.object.v1.finalized',
+        'ce-source': '//storage.googleapis.com/...',
+        'ce-datacontenttype': 'application/protobuf',
+      }),
+    },
   ];
 
   testData.forEach((test: TestData) => {
@@ -95,11 +142,15 @@ describe('legacyPubSubEventMiddleware', () => {
       const request = {
         path: test.path,
         body: test.body,
+        headers: {} as {[key: string]: string},
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         header: (_: string) => '',
       };
       legacyPubSubEventMiddleware(request as Request, {} as Response, next);
       assert.deepStrictEqual(request.body, test.expectedBody());
+      if (test.expectedHeaders) {
+        assert.deepStrictEqual(request.headers, test.expectedHeaders());
+      }
       assert.strictEqual(next.called, true);
       clock.restore();
     });

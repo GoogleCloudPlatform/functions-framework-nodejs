@@ -151,6 +151,59 @@ const marshalPubSubRequestBody = (
 });
 
 /**
+ * Attempt to restore a dropped CloudEvent that Eventarc sent as a Raw PubSub Message.
+ *
+ * This occurs when Eventarc's Push Subscription fails to unwrap CloudEvent HTTP 
+ * headers. For example, if a document ID contains a trailing space, the `ce-subject` 
+ * HTTP header is considered invalid by Node's strict HTTP parser and is stripped. 
+ * Eventarc gracefully falls back to delivering a raw Pub/Sub message body where 
+ * the CloudEvent metadata is buried inside the `attributes` dictionary.
+ * 
+ * This method rescues the event by mutating the Express request headers (promoting 
+ * the hidden attributes into standard `ce-` HTTP headers). This guarantees that
+ * downstream middlewares (like `isBinaryCloudEvent()`) will successfully validate 
+ * the request as a Binary Cloud Event.
+ *
+ * @param req - Express request object to hydrate with CloudEvent headers
+ * @param body - An unmarshalled http request body from a Pub/Sub push subscription
+ * @param attributes - The Pub/Sub message attributes
+ */
+const rehydrateCloudEvent = (
+  req: Request,
+  body: RawPubSubBody,
+  attributes: {[key: string]: string}
+): void => {
+  // 1. Promote attributes to HTTP headers. The official CloudEvents Pub/Sub Protocol 
+  // Binding dictates that attributes map without the `ce-` prefix. However, some 
+  // Google Cloud systems attach them with the `ce-` prefix. We handle both.
+  for (const [key, value] of Object.entries(attributes)) {
+    if (key.startsWith('ce-')) {
+      req.headers[key.toLowerCase()] = value;
+    } else if (['type', 'source', 'subject', 'id', 'time', 'specversion', 'datacontenttype'].includes(key.toLowerCase())) {
+      req.headers['ce-' + key.toLowerCase()] = value;
+    }
+  }
+  
+  // 2. Extract the binary payload. 
+  const dataBuf = Buffer.from(body.message.data || '', 'base64');
+  const contentType = req.headers['ce-datacontenttype'] || req.headers['content-type'] || '';
+  
+  // 3. Attempt JSON parse. If it fails (e.g. malformed JSON or a mismatched content-type 
+  // like application/protobuf), fallback to the raw Buffer. This mirrors `bodyParser.raw()` 
+  // and safely passes the binary payload to the user's function without crashing the HTTP stream.
+  if (typeof contentType === 'string' && contentType.includes('application/json')) {
+    try {
+      req.body = JSON.parse(dataBuf.toString('utf8'));
+      return;
+    } catch {
+      req.body = dataBuf;
+      return;
+    }
+  }
+  req.body = dataBuf;
+};
+
+/**
  * Express middleware used to marshal the HTTP request body received directly from a
  * Pub/Sub subscription into the format that is expected downstream by wrapEventFunction
  * @param req - Express request object
@@ -164,7 +217,12 @@ export const legacyPubSubEventMiddleware = (
 ) => {
   const {body, path} = req;
   if (isRawPubSubRequestBody(body) && !isBinaryCloudEvent(req)) {
-    req.body = marshalPubSubRequestBody(body, path);
+    const pubsubAttributes = body.message.attributes || {};
+    if ((pubsubAttributes['ce-type'] || pubsubAttributes['type']) && (pubsubAttributes['ce-source'] || pubsubAttributes['source'])) {
+      rehydrateCloudEvent(req, body, pubsubAttributes);
+    } else {
+      req.body = marshalPubSubRequestBody(body, path);
+    }
   }
   next();
 };
