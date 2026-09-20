@@ -17,7 +17,7 @@ import * as sinon from 'sinon';
 import * as supertest from 'supertest';
 
 import * as functions from '../../src/index';
-import {getTestServer} from '../../src/testing';
+import {getTestServer, TestServerOptions} from '../../src/testing';
 
 describe('HTTP Function', () => {
   let callCount = 0;
@@ -116,5 +116,70 @@ describe('HTTP Function', () => {
       assert.equal(response.get('etag'), null);
       assert.strictEqual(callCount, test.expectedCallCount);
     });
+  });
+
+  const defaultOptions: {name: string; options?: TestServerOptions}[] = [
+    {name: 'undefined options'},
+    {name: 'an empty options object', options: {}},
+    {name: 'an undefined route', options: {ignoredRoutes: undefined}},
+    {name: 'a null route', options: {ignoredRoutes: null}},
+  ];
+
+  for (const {name, options} of defaultOptions) {
+    for (const path of ['/favicon.ico', '/robots.txt']) {
+      it(`keeps ${path} ignored with ${name}`, async () => {
+        const response = await supertest(
+          getTestServer('testHttpFunction', options),
+        ).get(path);
+
+        assert.strictEqual(response.status, 404);
+        assert.strictEqual(callCount, 0);
+      });
+    }
+  }
+
+  for (const ignoredRoutes of ['', '  ']) {
+    for (const path of ['/favicon.ico', '/robots.txt']) {
+      it(`serves ${path} with ignoredRoutes=${JSON.stringify(ignoredRoutes)}`, async () => {
+        const response = await supertest(
+          getTestServer('testHttpFunction', {ignoredRoutes}),
+        )
+          .get(path)
+          .query({param: 'served'});
+
+        assert.strictEqual(response.status, 200);
+        assert.deepStrictEqual(response.body, {query: 'served'});
+        assert.strictEqual(callCount, 1);
+      });
+    }
+  }
+
+  for (const path of ['/healthz', '/favicon.ico', '/robots.txt', '/hello']) {
+    it(`uses custom ignored routes for ${path}`, async () => {
+      const response = await supertest(
+        getTestServer('testHttpFunction', {ignoredRoutes: '/healthz'}),
+      )
+        .get(path)
+        .query({param: 'served'});
+      const ignored = path === '/healthz';
+
+      assert.strictEqual(response.status, ignored ? 404 : 200);
+      assert.deepStrictEqual(response.body, ignored ? {} : {query: 'served'});
+      assert.strictEqual(callCount, ignored ? 0 : 1);
+    });
+  }
+
+  it('preserves the error for an unregistered function', () => {
+    assert.throws(
+      () => getTestServer('unregisteredHttpFunction', {ignoredRoutes: ''}),
+      /was not registered/,
+    );
+  });
+
+  it('propagates an invalid ignored route expression', () => {
+    assert.throws(
+      () => getTestServer('testHttpFunction', {ignoredRoutes: '['}),
+      TypeError,
+    );
   });
 });

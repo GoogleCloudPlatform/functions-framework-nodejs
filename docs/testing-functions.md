@@ -175,6 +175,14 @@ provides a developer friendly API for writing HTTP integration tests in javascri
 `testing` module includes a `getTestServer` helper to help you test your functions using
 SuperTest.
 
+By default, requests to `/favicon.ico` and `/robots.txt` return 404 without
+invoking the function. Pass an empty `ignoredRoutes` value to test a deployment
+that disables those default ignored routes:
+
+```js
+const server = getTestServer("HelloTests", {ignoredRoutes: ""});
+```
+
 ```js
 import supertest from 'supertest';
 import {getTestServer} from '@google-cloud/functions-framework/testing';

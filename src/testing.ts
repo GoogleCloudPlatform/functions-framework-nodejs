@@ -20,6 +20,19 @@ import {getRegisteredFunction} from './function_registry';
 import {getServer} from './server';
 
 /**
+ * Options for configuring a Functions Framework test server.
+ *
+ * @beta
+ */
+export interface TestServerOptions {
+  /**
+   * Routes that should return 404 without invoking the function. An empty
+   * string disables the default ignored routes.
+   */
+  ignoredRoutes?: string | null;
+}
+
+/**
  * Testing utility for retrieving a function registered with the Functions Framework
  * @param functionName - The name of the function to get
  * @returns A function that was registered with the Functions Framework
@@ -37,11 +50,15 @@ export const getFunction = (
  * registered with the Functions Framework. This is a useful utility for testing functions
  * using [supertest](https://www.npmjs.com/package/supertest).
  * @param functionName - The name of the function to wrap in the test server
- * @returns A function that was registered with the Functions Framework
+ * @param options - Options for configuring the test server
+ * @returns A server configured to invoke the registered function
  *
  * @beta
  */
-export const getTestServer = (functionName: string): Server => {
+export const getTestServer = (
+  functionName: string,
+  options: TestServerOptions = {},
+): Server => {
   const registeredFunction = getRegisteredFunction(functionName);
   if (!registeredFunction) {
     throw new Error(
@@ -56,6 +73,6 @@ export const getTestServer = (functionName: string): Server => {
     target: '',
     sourceLocation: '',
     printHelp: false,
-    ignoredRoutes: null,
+    ignoredRoutes: options.ignoredRoutes ?? null,
   });
 };
