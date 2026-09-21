@@ -183,9 +183,17 @@ function processData(data: Uint8Array | string, encoding?: BufferEncoding) {
   // strip any leading ANSI color codes from the decoded data
   // to parse colored JSON objects correctly
   decodedData = decodedData.replace(/\x1b[[(?);]{0,2}(;?\d)*./g, '');
+  let parsedData;
   try {
-    return {isJSON: true, processedData: JSON.parse(decodedData)};
+    parsedData = JSON.parse(decodedData);
   } catch (e) {
     return {isJSON: false, processedData: decodedData};
   }
+  // Numbers, booleans, null and JSON strings parse successfully but they are
+  // not log objects, so there is nowhere to attach the context fields added by
+  // getJSONWithContext. Log them as plain text instead.
+  if (typeof parsedData !== 'object' || parsedData === null) {
+    return {isJSON: false, processedData: decodedData};
+  }
+  return {isJSON: true, processedData: parsedData};
 }
