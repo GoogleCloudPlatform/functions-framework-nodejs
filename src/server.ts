@@ -21,6 +21,7 @@ import {setLatestRes} from './invoker';
 import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
+import {cloudEventPubSubBindingMiddleware} from './middleware/cloud_event_pubsub_binding';
 import {timeoutMiddleware} from './middleware/timeout';
 import {wrapUserFunction} from './function_wrappers';
 import {asyncLocalStorageMiddleware} from './async_local_storage';
@@ -110,6 +111,13 @@ export function getServer(
   // Store execution context to async local storge.
   if (logExecutionIdSupported) {
     app.use(asyncLocalStorageMiddleware);
+  }
+
+  if (options.signatureType === 'cloudevent') {
+    // Eventarc delivers some CloudEvents still wrapped in a Pub/Sub push envelope,
+    // so these must be unwrapped before the Pub/Sub middleware below treats them
+    // as plain Pub/Sub messages.
+    app.use(cloudEventPubSubBindingMiddleware);
   }
 
   if (
