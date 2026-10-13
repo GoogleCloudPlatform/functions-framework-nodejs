@@ -67,7 +67,7 @@
     "@types/sinon": "^17.0.4",
     "@types/supertest": "7.2.0",
     "google-artifactregistry-auth": "^3.5.0",
-    "gts": "6.0.2",
+    "gts": "7.0.0",
     "mocha": "^11.1 .0",
     "nise": "6.1.1",
     "pack-n-play": "4.2.2",
