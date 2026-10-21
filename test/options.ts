@@ -60,6 +60,7 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 0,
         ignoredRoutes: null,
+        trustProxy: 1,
       },
     },
     {
@@ -124,6 +125,7 @@ describe('parseOptions', () => {
         '--source=/source',
         '--timeout=3',
         '--ignored-routes=avocado',
+        '--trust-proxy=2',
       ],
       envVars: {
         PORT: '4567',
@@ -132,6 +134,7 @@ describe('parseOptions', () => {
         FUNCTION_SOURCE: '/somewhere/else',
         CLOUD_RUN_TIMEOUT_SECONDS: '5',
         IGNORED_ROUTES: 'banana',
+        TRUST_PROXY: 'true',
       },
       expectedOptions: {
         port: '1234',
@@ -142,6 +145,23 @@ describe('parseOptions', () => {
         enableExecutionId: false,
         timeoutMilliseconds: 3000,
         ignoredRoutes: 'avocado',
+        trustProxy: 2,
+      },
+    },
+    {
+      name: 'parses the trust proxy option as a hop count, a boolean, or an address list',
+      cliOpts: ['bin/node', '/index.js'],
+      envVars: {TRUST_PROXY: 'loopback, 10.0.0.0/8'},
+      expectedOptions: {
+        trustProxy: 'loopback, 10.0.0.0/8',
+      },
+    },
+    {
+      name: 'parses a boolean trust proxy option',
+      cliOpts: ['bin/node', '/index.js', '--trust-proxy=false'],
+      envVars: {},
+      expectedOptions: {
+        trustProxy: false,
       },
     },
   ];

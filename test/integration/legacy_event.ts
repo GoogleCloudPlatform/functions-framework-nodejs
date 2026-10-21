@@ -41,6 +41,7 @@ const testOptions = {
   sourceLocation: '',
   printHelp: false,
   ignoredRoutes: null,
+  trustProxy: 1,
 };
 
 describe('Event Function', () => {

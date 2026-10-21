@@ -95,7 +95,10 @@ export function getServer(
   // The parser will process ALL content types so MUST come last.
   // Subsequent parsers will be skipped when one is matched.
   app.use(bodyParser.raw(rawBodySavingOptions));
-  app.enable('trust proxy'); // To respect X-Forwarded-For header.
+  // Derive req.ip, req.hostname and req.protocol from the X-Forwarded-*
+  // headers, trusting only the configured number of proxy hops (one on Cloud
+  // Run) so that values a client put in those headers are not used.
+  app.set('trust proxy', options.trustProxy);
 
   // Disable Express 'x-powered-by' header:
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header

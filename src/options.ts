@@ -59,6 +59,12 @@ export interface FrameworkOptions {
    * Routes that should return a 404 without invoking the function.
    */
   ignoredRoutes: string | null;
+  /**
+   * The Express "trust proxy" setting: how many proxy hops in front of the
+   * function are trusted when deriving req.ip, req.hostname and req.protocol
+   * from the X-Forwarded-* headers.
+   */
+  trustProxy: boolean | number | string;
 }
 
 /**
@@ -139,6 +145,43 @@ const IgnoredRoutesOption = new ConfigurableOption<string | null>(
   null, // null by default so we can detect if it is explicitly set to ""
 );
 
+/**
+ * Express "trust proxy" setting. Cloud Run places one proxy in front of the
+ * function; it appends the address it accepted the connection from as the
+ * last X-Forwarded-For entry, and anything before that entry is whatever the
+ * client sent. Trusting every hop (true) makes req.ip, req.hostname and
+ * req.protocol follow client-supplied X-Forwarded-For, X-Forwarded-Host and
+ * X-Forwarded-Proto values instead of the platform's.
+ */
+const TrustProxyOption = new ConfigurableOption<boolean | number | string>(
+  'trust-proxy',
+  'TRUST_PROXY',
+  1,
+  (x: boolean | number | string) => {
+    if (typeof x === 'boolean' || typeof x === 'number') {
+      return x;
+    }
+    const value = x.trim();
+    if (value.toLowerCase() === 'true') {
+      return true;
+    }
+    if (value.toLowerCase() === 'false') {
+      return false;
+    }
+    if (/^\d+$/.test(value)) {
+      return parseInt(value, 10);
+    }
+    if (value === '') {
+      throw new OptionsError(
+        'Trust proxy must be a hop count, true, false, or a list of trusted addresses',
+      );
+    }
+    // Anything else is passed to Express as is: a comma-separated list of
+    // addresses or subnets, or one of its named presets.
+    return value;
+  },
+);
+
 export const requiredNodeJsVersionForLogExecutionID = '13.0.0';
 
 export const logExecutionIdSupported =
@@ -189,6 +232,7 @@ export const parseOptions = (
       SourceLocationOption.cliOption,
       TimeoutOption.cliOption,
       IgnoredRoutesOption.cliOption,
+      TrustProxyOption.cliOption,
     ],
   });
   return {
@@ -200,5 +244,6 @@ export const parseOptions = (
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
     enableExecutionId: ExecutionIdOption.parse(argv, envVars),
     ignoredRoutes: IgnoredRoutesOption.parse(argv, envVars),
+    trustProxy: TrustProxyOption.parse(argv, envVars),
   };
 };

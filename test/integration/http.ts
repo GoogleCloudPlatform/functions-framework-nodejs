@@ -18,6 +18,7 @@ import * as supertest from 'supertest';
 
 import * as functions from '../../src/index';
 import {getTestServer} from '../../src/testing';
+import {getServer} from '../../src/server';
 
 describe('HTTP Function', () => {
   let callCount = 0;
@@ -115,6 +116,60 @@ describe('HTTP Function', () => {
       assert.strictEqual(response.status, test.expectedStatus);
       assert.equal(response.get('etag'), null);
       assert.strictEqual(callCount, test.expectedCallCount);
+    });
+  });
+
+  describe('proxy headers', () => {
+    before(() => {
+      functions.http('testProxyHeaders', (req, res) => {
+        res.send({
+          ip: req.ip,
+          ips: req.ips,
+          hostname: req.hostname,
+          protocol: req.protocol,
+        });
+      });
+    });
+
+    it('derives the client address from the hop Cloud Run adds, not from a value the client sent', async () => {
+      // Cloud Run appends the connecting client's address to whatever the
+      // client already put in X-Forwarded-For, so the last entry is the one the
+      // platform vouches for.
+      const response = await supertest(getTestServer('testProxyHeaders'))
+        .get('/')
+        .set('X-Forwarded-For', '198.51.100.77, 203.0.113.9')
+        .set('X-Forwarded-Proto', 'https');
+      assert.strictEqual(response.status, 200);
+      assert.strictEqual(response.body.ip, '203.0.113.9');
+      assert.deepStrictEqual(response.body.ips, ['203.0.113.9']);
+      assert.strictEqual(response.body.protocol, 'https');
+    });
+
+    it('only trusts every hop when trust proxy is set to true explicitly', async () => {
+      const handler: functions.HttpFunction = (req, res) => {
+        res.send({ip: req.ip, ips: req.ips});
+      };
+      const server = getServer(handler, {
+        signatureType: 'http',
+        enableExecutionId: false,
+        timeoutMilliseconds: 0,
+        port: '0',
+        target: '',
+        sourceLocation: '',
+        printHelp: false,
+        ignoredRoutes: null,
+        trustProxy: true,
+      });
+      const response = await supertest(server)
+        .get('/')
+        .set('X-Forwarded-For', '198.51.100.77, 203.0.113.9');
+      assert.strictEqual(response.status, 200);
+      // The previous default: the first, client-supplied entry wins.
+      assert.strictEqual(response.body.ip, '198.51.100.77');
+      assert.deepStrictEqual(response.body.ips, [
+        '198.51.100.77',
+        '203.0.113.9',
+      ]);
     });
   });
 });
