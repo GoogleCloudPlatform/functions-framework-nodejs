@@ -69,6 +69,13 @@ export function getServer(
     limit: requestLimit,
     verify: rawBodySaver,
   };
+  // Parse structured syntax suffix types such as application/vnd.api+json as
+  // JSON too (RFC 6839). application/cloudevents+json is matched by the
+  // CloudEvents parser first.
+  const jsonBodySavingOptions = {
+    ...defaultBodySavingOptions,
+    type: ['application/json', 'application/*+json'],
+  };
   const cloudEventsBodySavingOptions = {
     type: 'application/cloudevents+json',
     limit: requestLimit,
@@ -89,7 +96,7 @@ export function getServer(
 
   // Apply middleware
   app.use(bodyParser.json(cloudEventsBodySavingOptions));
-  app.use(bodyParser.json(defaultBodySavingOptions));
+  app.use(bodyParser.json(jsonBodySavingOptions));
   app.use(bodyParser.text(defaultBodySavingOptions));
   app.use(bodyParser.urlencoded(urlEncodedOptions));
   // The parser will process ALL content types so MUST come last.

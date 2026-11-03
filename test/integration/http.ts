@@ -117,4 +117,18 @@ describe('HTTP Function', () => {
       assert.strictEqual(callCount, test.expectedCallCount);
     });
   });
+
+  ['application/vnd.api+json', 'application/merge-patch+json'].forEach(
+    contentType => {
+      it(`parses a ${contentType} body as JSON`, async () => {
+        const response = await supertest(getTestServer('testHttpFunction'))
+          .post('/')
+          .set('Content-Type', contentType)
+          .send(JSON.stringify({text: 'hello'}));
+
+        assert.deepStrictEqual(response.body, {result: 'hello'});
+        assert.strictEqual(response.status, 200);
+      });
+    },
+  );
 });
