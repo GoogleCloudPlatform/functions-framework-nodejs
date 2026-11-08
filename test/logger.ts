@@ -86,6 +86,41 @@ describe('getModifiedData', () => {
     assert.equal(modifiedData, expectedJSONOutput);
   });
 
+  it('json number value', () => {
+    const modifiedData = getModifiedData('42');
+    assert.equal(
+      modifiedData,
+      JSON.stringify(Object.assign({message: '42'}, expectedMetadata)) + '\n',
+    );
+  });
+
+  it('json boolean value', () => {
+    const modifiedData = getModifiedData('true');
+    assert.equal(
+      modifiedData,
+      JSON.stringify(Object.assign({message: 'true'}, expectedMetadata)) +
+        '\n',
+    );
+  });
+
+  it('json null value', () => {
+    const modifiedData = getModifiedData('null');
+    assert.equal(
+      modifiedData,
+      JSON.stringify(Object.assign({message: 'null'}, expectedMetadata)) +
+        '\n',
+    );
+  });
+
+  it('json string value', () => {
+    const modifiedData = getModifiedData('"abc"');
+    assert.equal(
+      modifiedData,
+      JSON.stringify(Object.assign({message: '"abc"'}, expectedMetadata)) +
+        '\n',
+    );
+  });
+
   it('json with user label', () => {
     const data = JSON.stringify({
       text: 'default text.',
